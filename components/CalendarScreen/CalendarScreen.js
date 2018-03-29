@@ -3,36 +3,47 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  View
+  View, 
+  Modal
 } from 'react-native';
+import { Container } from 'native-base';
 import {Calendar} from 'react-native-calendars';
 
 export default class CalendarsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onDayPress = this.onDayPress.bind(this);
+    // this.onDayPress = this.onDayPress.bind(this);
   }
 
   render() {
     console.log(this.state)
     return (
-      <ScrollView style={styles.container}>
-        <Calendar
-          onDayPress={this.onDayPress}
-          style={styles.calendar}
-          hideExtraDays
-          markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedColor: '#00aeef'}}}
-        />
-      </ScrollView>
+      <Container>
+        <Modal 
+          animationType="slide"
+          transparent={true}
+          visible={this.props.visible}
+          onRequestClose={() => this.props.showMenuItem('showCalendar')} >
+          <ScrollView style={styles.container}>
+            <Calendar
+              onDayPress={this.props.onDayPress}
+              style={styles.calendar}
+              hideExtraDays
+              markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedColor: '#00aeef'}}}
+            />
+          </ScrollView>
+        </Modal>
+      </Container>
+      
     );
   }
 
-  onDayPress(day) {
-    this.setState({
-      selected: day.dateString
-    });
-  }
+  // onDayPress(day) {    
+  //   this.setState({
+  //     selected: day.dateString
+  //   });
+  // }
 }
 
 const styles = StyleSheet.create({
