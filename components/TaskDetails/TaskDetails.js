@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, TouchableHighlight} from 'react-native';
 import { Container, Header, Left, Body, Right, Button, Title, Text, Input, Item, Content, Form, Footer,View } from 'native-base';
 import TaskDatePicker from './TaskDatePicker.js';
+import DurationPicker from './DurationPicker'
 import axios from 'axios';
 import Labels from './Labels';
 import IconE from 'react-native-vector-icons/Entypo';
@@ -26,11 +27,19 @@ export default class TaskDetails extends Component {
             user:'Brandon Allred',
             date:'',
             comment:'',
-            modalVisable:false,
-            LabelModalVisable:false
+            // modalVisable:false,
+            LabelModalVisable:false,
+            hours: '00',
+            minutes: '00',
+            milliseconds: 0,
+            DurationModalVisable: false
         }
         this.handleLabelColor = this.handleLabelColor.bind(this)
         this.selectDate = this.selectDate.bind(this)
+        this.updateHour = this.updateHour.bind(this)
+        this.updateMin = this.updateMin.bind(this)
+        this.saveDuration = this.saveDuration.bind(this)
+        this.cancelDuration = this.cancelDuration.bind(this)
     }
     // componentWillReceiveProps(props){
     // Componentwill receive task object from the app.js page
@@ -62,9 +71,26 @@ export default class TaskDetails extends Component {
     }
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
-    }
+  }
+  updateHour(value) {
+    console.log(value)
+    this.setState({ hours: value })
+  }
+  updateMin(value) {
+    this.setState({ minutes: value })
+  }
+  saveDuration(e){
+    const { minutes, hours, milliseconds } = this.state
+    let minuteMilliseconds = minutes*1*(1000*60*100)
+    let hourMilliseconds = hours*1*(60*60*1000)
+    this.setState({milliseconds:minuteMilliseconds+hourMilliseconds})
+  }
+  cancelDuration(e){
+    this.setState({hours:'00', minutes:'00',milliseconds:0})
+  }
     render() {
         console.log(this.state)
+        console.log(this.props, "these are the props")
         const { padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, listItems, createChecklist, Label, addItemMargin } = styles
         let checklist = this.state.checklistItems.map((item, i) => {
             return (
@@ -109,7 +135,8 @@ export default class TaskDetails extends Component {
                     <Item style={[inputSize, margin]}>
                         <IconF active name='clock' size={15} />
                         {/* <Input placeholder='Due date...' /> */}
-                        <TaskDatePicker selectDate={this.selectDate} date={this.state.date}/>
+                        <TaskDatePicker selectDate={this.selectDate} date={this.state.date}/>   
+                        {/* <DurationPicker /> */}
                     </Item>
                     <Item style={[{ height: 40, alignContent: 'center', backgroundColor: '#fff', paddingLeft: 10, flex: 1, alignItems:'center'}]}>
                         <IconSLI active name='tag' size={15} />

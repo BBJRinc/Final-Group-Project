@@ -5,6 +5,8 @@ import axios from 'axios';
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
 import TaskDetails from './components/TaskDetails/TaskDetails'
+// import DurationPicker from './components/TaskDetails/DurationPicker'
+
 
 
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
@@ -52,6 +54,9 @@ export default class App extends React.Component {
       return(
         <Container>
           <TaskDetails />
+          {/* <DurationPicker /> */}
+          {/* <DatePickerstuff /> */}
+          {/* <Testing /> */}
           <FooterMenu showMenuItem={this.showMenuItem} />
         </Container>
       )
