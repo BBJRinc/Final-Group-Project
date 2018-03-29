@@ -13,31 +13,41 @@ import IconMAT from 'react-native-vector-icons/MaterialIcons';
 
 const headerPic = './HeaderPic.jpg'
 
+function applyLetterSpacing(string, count = 10) {
+    return string.split('').join('\u200A'.repeat(count));
+}
+const appName = applyLetterSpacing('CALENTASK');
+
 
 export default class SideBar extends Component {
 
     render() {
+       console.log('Props on SideBar: ', this.props)
         return (
             <Container style={styles.root}>
 
-                <Header style={{ backgroundColor: "#4f6d7a" }}>
+                <Header style={{ backgroundColor: "#4f6d7a"}}>
                     <ImageBackground source={require(headerPic)} style={styles.header}>
+                        <Text style={{ color: '#ffffff', fontFamily: "AppleGothic", fontWeight: 'bold' }}>{appName}</Text>
                     </ImageBackground>
                 </Header>
 
                 <Content>
 
                     <Separator style={styles.separate}>
-                        <Text style={styles.sepText}>Calender</Text>
+                        <Text style={styles.sepText}>Calendar</Text>
                     </Separator>
                     <List>
-                        {/* CALENDER */}
+                        {/* CALENDAR */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconF name="calendar" color="#4f6d7a" size={25} style={styles.iconStyle} />
+                                <IconF name="calendar" color="#FFD700" size={25} style={styles.iconStyle} />
                             </Left>
                             <Body style={styles.listit}>
-                                <Text style={styles.text}>Calender</Text>
+                                <Text onPress={() =>{
+                                    this.props.onClose()
+                                    this.props.showMenuItem('showCalendar')
+                                }} style={styles.text}>Calendar</Text>
                             </Body>
                             <Right style={styles.listit}>
                             </Right>
@@ -46,7 +56,7 @@ export default class SideBar extends Component {
                         {/* VIEW TODAY */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconF name="log-out" color="#4f6d7a" size={25} style={styles.iconStyle} />
+                                <IconMAT name="view-day" color="#FFD700" size={25} style={styles.iconStyle} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text style={styles.text}>View Today</Text>
@@ -61,10 +71,10 @@ export default class SideBar extends Component {
                         {/* NEW TASK */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconMAT name="add-circle-outline" color="#F45B69" size={25} />
+                                <IconMAT name="add-circle-outline" color="#800000" size={25} />
                             </Left>
                             <Body style={styles.listit}>
-                                <Text style={styles.text}>Create new task</Text>
+                                <Text  style={styles.text}>Create new task</Text>
                             </Body>
                             <Right style={styles.listit}>
                             </Right>
@@ -73,7 +83,7 @@ export default class SideBar extends Component {
                         {/* ONGOING TASKS */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconF name="folder" color="#F45B69" size={25} />
+                                <IconF name="folder" color="#800000" size={25} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text style={styles.text}>Ongoing tasks</Text>
@@ -85,7 +95,7 @@ export default class SideBar extends Component {
                         {/* UNSCHEDULED TASKS*/}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconF name="check-square" color="#F45B69" size={25} />
+                                <IconF name="check-square" color="#800000" size={25} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text style={styles.text}>Unscheduled tasks</Text>
@@ -100,7 +110,7 @@ export default class SideBar extends Component {
                         {/* STYLE AND LAYOUT */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconMCI name="invert-colors" color="#c0c0c0" size={25} />
+                                <IconMCI name="invert-colors" color="#696969" size={25} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text style={styles.text}>Themes & Style</Text>
@@ -112,7 +122,7 @@ export default class SideBar extends Component {
                         {/* SETTINGS */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconMCI name="settings" color="#c0c0c0" size={25} />
+                                <IconMCI name="settings" color="#696969" size={25} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text style={styles.text}>Settings</Text>
@@ -124,7 +134,7 @@ export default class SideBar extends Component {
                         {/* HELP & FEEDBACK */}
                         <ListItem icon>
                             <Left>
-                                <IconE name="help-with-circle" color="#c0c0c0" size={25} />
+                                <IconE name="help-with-circle" color="#696969" size={25} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text style={styles.text}>Help & Feedback</Text>
@@ -133,23 +143,19 @@ export default class SideBar extends Component {
                             </Right>
                         </ListItem >
 
-                        {/* <ListItem style={styles.listit}>
-                        </ListItem> */}
-
-                        {/* LOG OUT BUTTON */}
-                        <ListItem Icon style={styles.listit}>
+                        {/* Log Out */}
+                        <ListItem icon>
                             <Left>
                                 <IconF name="log-out" color="#000000" size={25} />
                             </Left>
                             <Body style={styles.listit}>
-                            <Text style={styles.text}>Log Out</Text>
+                                <Text onPress={() => this.props.logout()} style={styles.text}>Log out</Text>
                             </Body>
                             <Right style={styles.listit}>
                             </Right>
-                        </ListItem>
+                        </ListItem >
 
                     </List>
-
                 </Content>
 
                 <Footer style={{ backgroundColor: "#ffffff" }} />
@@ -166,15 +172,16 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        width: '100%',
-        height: '100%',
         backgroundColor: "#4f6d7a",
+        justifyContent: 'center',
+        alignItems: 'center',
+        resizeMode: 'contain',
     },
     iconStyle: {
         paddingTop: 20,
         paddingBottom: 10,
     },
-    listit:{
+    listit: {
         borderBottomWidth: 0,
     },
     text: {
@@ -186,13 +193,13 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize: 16,
     },
-    separate:{
+    separate: {
         backgroundColor: '#ffffff',
         borderBottomWidth: 1,
         borderColor: 'rgba(0, 0, 0, 0.5)',
     },
-    button:{
-        backgroundColor:'transparent',
+    button: {
+        backgroundColor: 'transparent',
         width: '100%',
     }
 })

@@ -29,7 +29,13 @@ export default class Ongoing extends Component{
       }
 
     componentDidMount(){
-        axios.get(`http://${PubIpAdress}:4040/api/inprogress`).then(resp => {
+        axios({
+            method: 'get',
+            url: `http://${PubIpAdress}:4040/api/inprogress`,
+            headers: {
+                "token": this.props.token
+            }
+        }).then(resp => {
             this.setState({listViewData: resp.data});
         });
     }
