@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert, StatusBar, Image, AsyncStorage } from 'react-native';
-import { Container, Content } from 'native-base';
+import { Container, Content, Drawer } from 'native-base';
 import axios from 'axios';
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
@@ -8,9 +8,10 @@ import TaskDetails from './components/TaskDetails/TaskDetails';
 import CalendarScreen from './components/CalendarScreen/CalendarScreen';
 import Ongoing from './components/Ongoing/Ongoing';
 import SplashScreen from 'react-native-splash-screen';
-import LoginScreen from './components/LoginScreen/LoginScreen'
-import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator'
-import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
+import LoginScreen from './components/LoginScreen/LoginScreen';
+import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
+import SideBar from './components/DrawerMenu/SideBar';
+import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
 
 
 const PubIpAdress = '192.168.3.176'
@@ -34,12 +35,14 @@ export default class App extends React.Component {
     this.onDayPress = this.onDayPress.bind(this);
     this.onTaskPress = this.onTaskPress.bind(this);
     this.loginWindow = this.loginWindow.bind(this);
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
   }
 
   async componentDidMount() {
     SplashScreen.hide();
-    
-    let checkToken = await AsyncStorage.getItem('token').then(res =>{
+
+    let checkToken = await AsyncStorage.getItem('token').then(res => {
       return res;
     }).catch(err => console.log(err));
 
@@ -52,6 +55,15 @@ export default class App extends React.Component {
     }
   }
 
+  closeDrawer = () => {
+    console.log('drawer is closed')
+    this._drawer._root.close()
+  }
+
+  openDrawer = () => {
+    console.log('drawer is open')
+    this._drawer._root.open()
+  }
 
   showMenuItem(name) {
     this.setState({ [name]: !this.state[name] });
@@ -78,7 +90,7 @@ export default class App extends React.Component {
       .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
         axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
-          AsyncStorage.setItem('token', JSON.stringify(res.data), () => {
+          AsyncStorage.setItem('token', res.data, () => {
             AsyncStorage.getItem('token', (err, result) => {
               this.setState({
                 userToken: result,
@@ -89,6 +101,7 @@ export default class App extends React.Component {
         }).catch(err => console.log(err));
       }).catch(err => console.log(err));
   }
+
 
 
   render() {
@@ -103,15 +116,21 @@ export default class App extends React.Component {
 
     if (this.state.userToken && this.state.hasToken) {
       return (
-        <Container>
-          <Content>
-            <TaskDetails selectedTask={this.state.selectedTask} />
-            <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem} />
-            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
-            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
-          </Content>
-          <FooterMenu showMenuItem={this.showMenuItem} />
-        </Container>
+        <Drawer
+ 
+          ref={(ref) => { this._drawer = ref; }}
+          content={<SideBar navigator={this._navigator} />}
+          onClose={() => this.closeDrawer()}>
+          <Container>
+            <Content>
+              <TaskDetails selectedTask={this.state.selectedTask} />
+              <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem} />
+              <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
+              <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
+            </Content>
+            <FooterMenu showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} closeDrawer={this.closeDrawer} />
+          </Container>
+        </Drawer>
       )
     }
     else {

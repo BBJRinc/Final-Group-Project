@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 import { Container, Header, Content, Footer, FooterTab, Button, Icon, Text } from 'native-base';
 
 export default class FooterMenu extends Component{
+    
+
     render(){
         return(
                 <Footer>
@@ -22,7 +24,7 @@ export default class FooterMenu extends Component{
                             <Icon name="paper" />
                             <Text>WIP</Text>
                         </Button>
-                        <Button vertical onPress={() => this.props.showMenuItem('showMenu')}>
+                        <Button vertical onPress={() => this.props.openDrawer()}>
                             <Icon name="navigate" />
                             <Text>Menu</Text>
                         </Button>
