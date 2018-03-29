@@ -1,7 +1,6 @@
 module.exports = {
     getUnscheduled: function(req, res){
-        //need to correctly set userId 
-        let userId = 1;
+        let userId = req.userid;
         //first promise gets checklist items associated to task after getting the tasks themselves
         req.app.get('db').getUnscheduled([userId]).then(tasks => {
             let taskArray = tasks.map(task => {
@@ -27,8 +26,7 @@ module.exports = {
     }, 
 
     getInProgress: function(req, res){
-        //need to correctly set userId         
-        let userId = 1;
+        let userId = req.userid;
         req.app.get('db').getInProgress([userId]).then(tasks => {
             let taskArray = tasks.map(task => {
                  return req.app.get('db').getCheckItem([task.taskid]).then(items => {
@@ -53,8 +51,7 @@ module.exports = {
     }, 
 
     deleteOngoing: function(req, res){
-        //need to correctly set userId
-        let userId = 1;
+        let userId = req.userid;
         let id = req.params.taskid;
         req.app.get('db').deleteTask([id]).then(response => {
             req.app.get('db').getInProgress([userId]).then(resp => {
@@ -64,8 +61,7 @@ module.exports = {
     }, 
 
     deleteUnscheduled: function(req, res){
-        //need to correctly set userId        
-        let userId = 1;
+        let userId = req.userid;
         let id = req.params.taskid;
         req.app.get('db').deleteTask([id]).then(response => {
             req.app.get('db').getUnscheduled([userId]).then(resp => {

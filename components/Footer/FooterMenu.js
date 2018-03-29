@@ -6,11 +6,11 @@ import IconF from 'react-native-vector-icons/Feather';
 
 export default class FooterMenu extends Component{
     render(){
-        const badgeCount = 10;
+        const { unschedCount } = this.props;  
         return(
                 <Footer >
                     <FooterTab light style={{backgroundColor: 'rgba(0, 0, 0, .85)'}}>
-                        <Button vertical>
+                        <Button vertical onPress={() => this.props.logout()}>
                             <IconF name="plus" size={35} color={'#fff'}/>
                         </Button>
                         <Button  vertical > 
@@ -19,9 +19,14 @@ export default class FooterMenu extends Component{
                         
                         <Button  vertical onPress={() => this.props.showMenuItem('showTasks')}>
                             <IconF name="check-square" size={35} color={'#fff'} />
+                            {!unschedCount ? 
+                            null 
+                            :
                             <View style={styles.badge}>
-                                <Text style={{color: '#fff'}}>{this.props.unschedCount}</Text>
+                                <Text style={{color: '#fff'}}>{unschedCount}</Text>
                             </View>
+                             }
+                            
                         </Button>
                         <Button vertical onPress={() => this.props.showMenuItem('showOngoing')} >
                             <IconF name="folder" size={35} color={'#fff'} />

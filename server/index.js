@@ -5,10 +5,26 @@ const express = require('express')
     , app = express()
     , tdCtrl = require('./taskDetailsController')
     , userCtrl = require('./userController')
-    , taskCtrl = require('./taskController');
+    , taskCtrl = require('./taskController')
+    , tokenAuth = require('./tokenAuth');
 app.use(bodyParser.json());
 require('dotenv').config();
 const { CONNECTION_STRING, AUTH0_CLIENT_SECRET, JWT_SECRET, SERVER_PORT } = process.env;
+
+//function to filter which routes recieve the verifyToken middleware
+const unless = function(path, middleware){
+    return function(req, res, next){
+        if (path === req.path) {
+            return next();
+        } else {
+            return middleware(req, res, next);
+        }
+    };
+};
+
+//invoking unless filter then verifyToken middleware, excludes the auth route as a user will not yet have a token to verify
+app.use(unless('/api/auth', tokenAuth.verifyToken));
+
 
 massive(CONNECTION_STRING).then(db => {
     console.log('DB connected')
@@ -38,7 +54,7 @@ app.post('/api/auth', (req, res, next) => {
                 });
             }
             else {
-                id = user.id;
+                id = user.userid;
                 let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' })
                 console.log('token if user exists: ', token)
                 res.status(200).send(token);
@@ -49,7 +65,7 @@ app.post('/api/auth', (req, res, next) => {
 
 //task endpoints
 app.get('/api/unscheduled', taskCtrl.getUnscheduled);
-app.delete('/api/unscheduled/:taskid', taskCtrl.deleteUnscheduled)
+app.delete('/api/unscheduled/:taskid', taskCtrl.deleteUnscheduled);
 app.get('/api/inprogress', taskCtrl.getInProgress);
 app.delete('/api/inprogress/:taskid', taskCtrl.deleteOngoing);
 
@@ -61,6 +77,10 @@ app.post('/api/task', tdCtrl.addTask);
 
 //user endpoints
 app.get('/api/user', userCtrl.getUser);
+
+app.post('/api/testtoken', (req, res) => {
+    console.log(req.userid);
+})
 
 
 app.listen(SERVER_PORT, () => {

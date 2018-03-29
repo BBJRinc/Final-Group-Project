@@ -13,7 +13,7 @@ import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator'
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
 
 
-const PubIpAdress = '192.168.3.176'
+const PubIpAdress = '192.168.3.149'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -36,6 +36,7 @@ export default class App extends React.Component {
     this.onTaskPress = this.onTaskPress.bind(this);
     this.loginWindow = this.loginWindow.bind(this);
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
+    this.onLogout = this.onLogout.bind(this);
   }
 
   async componentDidMount() {
@@ -76,6 +77,15 @@ export default class App extends React.Component {
     this.showMenuItem(listName);
   }
 
+  onLogout(){
+    AsyncStorage.removeItem('token', (err) => {
+      if (err){
+        console.log('Error deleting token: ' + err);
+      }
+      this.setState({userToken: null});
+    });
+  }
+
 
 
   loginWindow() {
@@ -84,7 +94,7 @@ export default class App extends React.Component {
       .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
         axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
-          AsyncStorage.setItem('token', JSON.stringify(res.data), () => {
+          AsyncStorage.setItem('token', res.data, () => {
             AsyncStorage.getItem('token', (err, result) => {
               this.setState({
                 userToken: result,
@@ -113,10 +123,10 @@ export default class App extends React.Component {
           <Content>
             <TaskDetails selectedTask={this.state.selectedTask} />
             <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem} />
-            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
-            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} />
+            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
+            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
           </Content>
-          <FooterMenu showMenuItem={this.showMenuItem} />
+          <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} unschedCount={this.state.unscheduledCount}/>
         </Container>
       )
     }
