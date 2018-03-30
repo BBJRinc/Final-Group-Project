@@ -15,7 +15,6 @@ export default class TaskDatePicker extends Component {
         date={this.state.date}
         showIcon={true}
         mode="datetime"
-        placeholderTextColor='#000000'
         placeholder={this.props.date === "" ? "Due date..." : this.props.date}
         format="YYYY-MM-DD"
         minDate="2017-05-01"
@@ -26,7 +25,7 @@ export default class TaskDatePicker extends Component {
         customStyles={{
           dateInput:{borderWidth: 0},
           btnConfirm:{height:20, margin:0, marginRight:10, marginTop:10, padding:0},
-          btnCancel:{height:20, margin:0, marginLeft:10, marginTop:10, padding:0}
+          btnCancel:{height:20, margin:0, marginLeft:10, marginTop:10, padding:0},
           }}
         onDateChange={(date) => {this.props.selectDate(date)}}
       />

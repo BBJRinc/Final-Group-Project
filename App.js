@@ -13,7 +13,7 @@ import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator'
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
 
 
-const PubIpAdress = '192.168.3.149'
+const PubIpAdress = '192.168.3.132'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -121,7 +121,7 @@ export default class App extends React.Component {
       return (
         <Container>
           <Content>
-            <TaskDetails selectedTask={this.state.selectedTask} />
+            <TaskDetails selectedTask={this.state.selectedTask} visibleDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem}/>
             <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem} />
             <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
             <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
