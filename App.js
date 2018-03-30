@@ -8,9 +8,10 @@ import TaskDetails from './components/TaskDetails/TaskDetails';
 import CalendarScreen from './components/CalendarScreen/CalendarScreen';
 import Ongoing from './components/Ongoing/Ongoing';
 import SplashScreen from 'react-native-splash-screen';
-import LoginScreen from './components/LoginScreen/LoginScreen'
-import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator'
-import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
+import LoginScreen from './components/LoginScreen/LoginScreen';
+import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
+import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
+import moment from 'moment';
 
 
 const PubIpAdress = '192.168.3.149'
@@ -65,8 +66,10 @@ export default class App extends React.Component {
   }
 
   onDayPress(day) {
+    let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
+    console.log("test time " + unixDay)
     this.setState({
-      selectedDay: day.dateString
+      selectedDay: unixDay
     });
     this.showMenuItem('showCalendar');
   }
@@ -116,6 +119,7 @@ export default class App extends React.Component {
     console.log('state.user: ', this.state.user)
     console.log('state.hasToken: ', this.state.hasToken)
     console.log('state.userToken: ', this.state.userToken)
+    console.log('selected date' + this.state.selectedDay);
 
     if (this.state.userToken && this.state.hasToken) {
       return (

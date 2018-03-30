@@ -14,6 +14,13 @@ module.exports={
 
     }, 
 
+    udpateCheckItem: function(req, res){
+        let checkItem = [
+            req.body.content,
+
+        ]
+    },
+
     addComment: function(req, res){
         console.log('add comment endpoint hit')
         const taskid = Number(req.params.taskid);
