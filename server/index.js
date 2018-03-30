@@ -29,9 +29,7 @@ app.use(unless('/api/auth', tokenAuth.verifyToken));
 
 massive(CONNECTION_STRING).then(indb => {
     console.log('DB connected')
-    
     app.set('db', indb);
-    db = indb
 })
 
 //Auth login endpoints
@@ -74,7 +72,10 @@ app.delete('/api/inprogress/:taskid', taskCtrl.deleteOngoing);
 //task details endpoints
 app.post('/api/checklist/:taskid', tdCtrl.addCheckItem);
 app.put('/api/checklist/:itemid', tdCtrl.updateCheckItem);
+app.delete('/api/checklist/:itemid', tdCtrl.deleteCheckItem);
 app.post('/api/comment/:taskid', tdCtrl.addComment);
+app.put('/api/comment/:commentid', tdCtrl.editComment);
+app.delete('/api/comment/:commentid', tdCtrl.deleteComment);
 app.put('/api/task/:taskid', tdCtrl.editTask);
 app.post('/api/task', tdCtrl.addTask);
 
@@ -89,7 +90,6 @@ app.post('/api/testtoken', (req, res) => {
 })
 
 
-module.export = db;
 
 
 app.listen(SERVER_PORT, () => {
