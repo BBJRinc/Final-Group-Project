@@ -11,12 +11,9 @@ import SplashScreen from 'react-native-splash-screen';
 import LoginScreen from './components/LoginScreen/LoginScreen';
 import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
-<<<<<<< HEAD
 import moment from 'moment';
 import SideBar from './components/DrawerMenu/SideBar';
-=======
-import DayView from './components/DayView/DayView.js'
->>>>>>> master
+import DayView from './components/DayView/DayView';
 
 
 const PubIpAdress = '192.168.3.176'
@@ -51,6 +48,7 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
+    console.log('COMPONENT MOUNTED!!!!!');
     SplashScreen.hide();
 
     let checkToken = await AsyncStorage.getItem('token').then(res => {
@@ -141,16 +139,6 @@ export default class App extends React.Component {
 
 
   render() {
-    // if (!this.state.isLoaded && !this.state.user) {
-    //   return (
-    //     <LoadingIndicator />
-    //   )
-    // }
-    console.log('state.user: ', this.state.user)
-    console.log('state.hasToken: ', this.state.hasToken)
-    console.log('state.userToken: ', this.state.userToken)
-    console.log('selected date' + this.state.selectedDay);
-
     if (this.state.userToken && this.state.hasToken) {
       return (
         <Drawer
