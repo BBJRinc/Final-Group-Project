@@ -11,11 +11,17 @@ import SplashScreen from 'react-native-splash-screen';
 import LoginScreen from './components/LoginScreen/LoginScreen';
 import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
+<<<<<<< HEAD
 import moment from 'moment';
 import SideBar from './components/DrawerMenu/SideBar';
+=======
+import DayView from './components/DayView/DayView.js'
+>>>>>>> master
 
 
 const PubIpAdress = '192.168.3.176'
+
+
 
 export default class App extends React.Component {
   constructor(props) {
@@ -153,7 +159,8 @@ export default class App extends React.Component {
           onClose={() => this.closeDrawer()}>
           <Container>
             <Content>
-              <TaskDetails selectedTask={this.state.selectedTask} />
+              {/* <TaskDetails selectedTask={this.state.selectedTask} /> */}
+              <DayView />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
