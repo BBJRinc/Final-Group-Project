@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Modal, TouchableHighlight } from 'react-native';
 import { Container, Header, CheckBox, Left, Body, Right, Button, Title, Text, Input, Item, Content, Form, Footer, View } from 'native-base';
 import TaskDatePicker from './TaskDatePicker.js';
-import DurationPicker from './DurationPicker'
+import DurationPicker from './DurationPicker';
+import Activity from './Activity';
+import Checklist from './Checklist';
 import axios from 'axios';
 import Labels from './Labels';
 import IconE from 'react-native-vector-icons/Entypo';
@@ -15,25 +17,32 @@ export default class TaskDetails extends Component {
     constructor(props) {
         super(props)
         this.state = {
+
+            userID: '',
+            taskId: '',
+            createdDate: '',
             description: '',
             duedate: '',
             label: '',
-            members: [],
-            checklistItems: ['hello'],
-            newChecklistItem: '',
+            checklistItems: [],
             activity: [],
             name: '',
             color: '#838C91',
             user: 'Brandon Allred',
-            date: '',
             comment: '',
-            // modalVisable:false,
-            LabelModalVisable: false,
+            comments: [],
             hours: '00',
             minutes: '00',
             milliseconds: 0,
+            completed: false,
             durationModalVisable: false,
-            checked: false
+            showChecklist: false,
+            LabelModalVisable: false,
+            startTime: null
+            // members: [],
+            // newChecklistItem: '',
+            // date: '',
+            // modalVisable:false,
         }
         this.handleLabelColor = this.handleLabelColor.bind(this)
         this.selectDate = this.selectDate.bind(this)
@@ -41,27 +50,55 @@ export default class TaskDetails extends Component {
         this.cancelDuration = this.cancelDuration.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
     }
-    // componentWillReceiveProps(props){
-    // Componentwill receive task object from the app.js page
+    componentWillReceiveProps(nextProps) {
+        const { taskid, taskname, updatedat,
+            userid, starttime, isrecurring, duration,
+            duedate, description, createdat, completed,
+            comments, color, checkItems } = nextProps.selectedTask
 
-    // }
+            // [duedate, createdat]=(moment.unix(date).format('MM-DD-YYYY'))
+
+        this.setState({
+            userID: userid,
+            taskId: taskid,
+            name: taskname,
+            createdDate: createdat,
+            description: description,
+            duedate: duedate,
+            label: color,
+            checklistItems: checkItems,
+            color: color,
+            date: duedate,
+            comments: comments,
+            milliseconds: duration,
+            completed: completed,
+            startTime: starttime
+        });
+    }
+    //
+    //
     handleChecklistItem(item) {
         console.log(item)
-        this.setState({ newChecklistItem: [item.item] })
+        this.setState({ newChecklistItem: item.item })
     }
     completeChecklistItem(e) {
         console.log(e)
     }
     addChecklistItem(e) {
         // add an axios call to get all checklist items by id from the database
-        console.log(e)
+
+        e.preventDefault();
         const { checklistItems, newChecklistItem } = this.state
-        this.setState({ checklistItems: newChecklistItem, newChecklistItem: '' });
+        this.setState({ checklistItems:[...checklistItems, newChecklistItem] });
+        this.setState({newChecklistItem:''})
+        // this.newChecklistItem.clear()
         // axios.put('/api/checklistItem').then(res=>{
         //     console.log(res)
         //     this.setState({checklistItems:res.data})
         // })
     }
+    ////
+    ////
     addComment(text) {
         this.setState({ comment: text })
     }
@@ -80,6 +117,7 @@ export default class TaskDetails extends Component {
     setModalVisible() {
         this.setState({ durationModalVisable: !this.state.durationModalVisable });
     }
+
     saveDuration(e, state) {
         console.log(state)
         const { minutes, hours } = state
@@ -95,25 +133,26 @@ export default class TaskDetails extends Component {
     }
     render() {
         console.log(this.state)
-        console.log(this.props, "these are the props")
+        // console.log(this.props.selectedTask)
+
         const { padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
-        let checklist = this.state.checklistItems.map((item, i) => {
-            // if (this.state.checked === false){
-            //     return (
-            //         <Item key={i}>
-            //             <CheckBox checked={false} style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 15, width: 15, backgroundColor:'transparent' }} /><Text>{item}</Text>
-            //             <Text placeholder='Add item...' style={[padding, addItemMargin, inputSize]} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistItem(e)} />
-            //         </Item>
-            //     )
-            // }
-            // else {
-                return (
-                <Item key={i}>
-                    <CheckBox checked={true} style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 15, width: 15, backgroundColor:'transparent', fontColor:'gray' }} /><Text>{item}</Text>
-                    <Text placeholder='Add item...' style={[padding, addItemMargin, inputSize]} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistItem(e)} />
-                </Item>)
-            // }
-        })
+        // let checklist = this.state.checklistItems.map((item, i) => {
+        // if (this.state.checked === false){
+        //     return (
+        //         <Item key={i}>
+        //             <CheckBox checked={false} style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 15, width: 15, backgroundColor:'transparent' }} /><Text>{item}</Text>
+        //             <Text placeholder='Add item...' style={[padding, addItemMargin, inputSize]} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistItem(e)} />
+        //         </Item>
+        //     )
+        // }
+        // else {
+        //         return (
+        //         <Item key={i}>
+        //             <CheckBox checked={this.state.checked} onPress={()=>this.setState({checked:!this.state.checked})} style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 20, width: 20, backgroundColor:this.state.color }} /><Text>{item}</Text>
+        //             <Text placeholder='Add item...' style={[padding, addItemMargin, inputSize]} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistItem(e)} />
+        //         </Item>)
+        //     // }
+        // })
         return (
             <View style={{ marginTop: 22 }}>
                 <Modal animationType="slide"
@@ -169,30 +208,29 @@ export default class TaskDetails extends Component {
                                 isVisable={this.state.LabelModalVisable} />
                             {this.state.color !== '' ? <View style={{ height: 10, width: 25, backgroundColor: this.state.color, justifyContent: 'flex-end', marginLeft: 230 }} /> : null}
                         </Item>
-                        <Item style={margin}>
-                            <IconI active name='ios-person-outline' size={25} />
-                            <Input placeholder='Members...' style={[padding, inputSize]} />
-                        </Item>
-                        <Item style={separate}>
+
+                        <Checklist showChecklist={this.state.showChecklist} color={this.state.color} checklistItems={this.state.checklistItems}/>
+                        {/* <Item style={separate}>
                             <IconI active name='md-checkbox-outline' size={15} style={padding} />
                             <Input disabled placeholder='Checklist...' style={[inputSize]} name='checklist' onChangeText={(text) => this.handleChecklistName({ id: i, name: text })} />
-                        </Item>
-                        {checklist}
+                        </Item> */}
+                        {/* {checklist}
                         <Item>
-                            <Input placeholder='Add item...' style={[padding, addItemMargin, inputSize]} onChangeText={(item) => this.handleChecklistItem({ item })} onEndEditing={(e) => this.addChecklistItem(e)} />
-                        </Item>
+                            <Input placeholder='Add item...' style={[padding, addItemMargin, inputSize]} value={this.state.newChecklistItem} onChangeText={(item) => this.handleChecklistItem({ item })} onEndEditing={(e) => this.addChecklistItem(e)} />
+                        </Item> */}
                         <Item disabled style={separate}>
                             <IconF name='activity' style={[iconSize, padding]} />
                             <Input disabled placeholder='Activity' style={[padding, inputSize]} placeholder='Activity' />
                             <IconSLI name='settings' style={{ paddingRight: 15 }} size={15} />
                         </Item>
                     </Content>
-                    <Content style={activityContent}>
+                    {/* <Content style={activityContent}>
                         <Item>
                             <View style={userInitialStyle}><Text><Text>{this.state.user.split(' ').map((item, i) => { if (i <= 1) return item[0] }).join('')}</Text></Text></View>
                             <Input placeholder='Add a comment...' style={commentStyle} onChangeText={(text) => this.addComment(text)} />
                         </Item>
-                    </Content>
+                    </Content> */}
+                    <Activity user={this.state.user} />
                 </Modal>
             </View>
         );
@@ -202,6 +240,7 @@ const styles = ({
     padding: {
         paddingLeft: 10
     },
+
     margin: {
         paddingLeft: 10,
         backgroundColor: '#fff',

@@ -8,7 +8,6 @@ export default class TaskDatePicker extends Component {
     this.state = {}
   }
   render(){
-    console.log(this.props)
     return (
       <DatePicker
         style={{width: 125}}

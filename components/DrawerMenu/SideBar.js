@@ -22,7 +22,7 @@ const appName = applyLetterSpacing('CALENTASK');
 export default class SideBar extends Component {
 
     render() {
-        console.log('Props on SideBar: ', this.props)
+        // console.log('Props on SideBar: ', this.props)
         return (
             <Container style={styles.root}>
 

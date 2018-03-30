@@ -19,7 +19,6 @@ export default class Labels extends Component {
     }
 
     render() {
-        console.log(this.state)
         const { LabelPadding, headerText, colorMargin, buttonStyle, labelStyle } = styles
         return (
             <View style={{ marginTop: 22 }}>
