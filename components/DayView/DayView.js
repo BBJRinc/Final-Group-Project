@@ -52,7 +52,7 @@ export default class DayView extends React.Component {
     this.state = {
       // pan: new Animated.ValueXY(),
       day: 0,
-      tasks: {},
+      tasks: [],
         // id: {     Task data structure
         //   id: 0,
         //   title: '',
@@ -75,28 +75,28 @@ export default class DayView extends React.Component {
 ------------------------------------------------------------------------------*/
   componentDidMount() {
     // Axios call to pull array of tasks for the given day
-    // let newList = {}
+    let newList = {}
 
 
 
-    // inTasks.forEach(task => {
+    inTasks.forEach(task => {
 
-    //   let id = task.taskId;
+      let id = task.taskId;
 
-    //   if(!task.isReccuring) {
-    //     task.startTime = task.startTime.trimDay();
-    //   }
-
-
-    // })
+      if(!task.isReccuring) {
+        task.startTime = task.startTime.trimDay();
+      }
 
 
+    })
 
-    // this.setState({tasks: newList})
+
+
+    this.setState({tasks: newList})
   }
 
   genChronoList(inTasks = this.state.tasks) {
-    let chronList = [][];
+    let chronList = [];
     
     this.state.tasks.forEach((task) => {
       let block = this.toBlock(task.startTime);
