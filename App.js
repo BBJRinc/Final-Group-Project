@@ -16,6 +16,8 @@ import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
 
 const PubIpAdress = '192.168.3.176'
 
+
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);

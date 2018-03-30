@@ -94,7 +94,6 @@ export default class HeaderIconTextExample extends Component {
                     <View style={header_bottom}>
                         <Left>
                             <Title style={{ color: '#fff' }}>Task Name</Title>
-                        {/* //add props from the component in order to get the task name they create */}
                         </Left>
                     </View>
                 </View>
