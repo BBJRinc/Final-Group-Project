@@ -6,6 +6,16 @@ import gStyle from './../gStyle.js';
 import TaskCard from './TaskCard.js';
 
 
+/*------------------------------------------------------------------------------
+-----Props----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------------------------------------------------------------------*/
+
   // DayView segment structure
 const HOURS_TO_RENDER = 24;
 const BLOCK_SIZE = 15;
@@ -22,7 +32,7 @@ let theme = 'blue';
 const DAYS = 24*60*60*1000;
 
   // Maximum number of parallel tasks to display
-const MAX_TASK_WIDTH = 10; 
+const MAX_TASK_WIDTH = 5;
 
 // Style variables
 const SEGMENT_HEIGHT = 30;
@@ -42,22 +52,67 @@ export default class DayView extends React.Component {
     this.state = {
       // pan: new Animated.ValueXY(),
       day: 0,
-      tasks: [],
-        // {     Task data structure
+      tasks: {},
+        // id: {     Task data structure
+        //   id: 0,
         //   title: '',
-        //   color: '#000000',
+        //   color: '#999999',
         //   startTime: 0,
-        //   endTime/Duration: 0
+        //   duration: 0,
         // }
       day: 0,
+      chronoTasks: [],
+    }
+    
+    // this.state.tasks.forEach((task) => {
+      //   let time = this.trimDay(task.startTime)
+      //   task.blockStart = this.toBlock(time);
+      // })
     }
 
-    // this.state.tasks.forEach((task) => {
-    //   let time = this.trimDay(task.startTime)
-    //   task.blockStart = this.toBlock(time);
+/*------------------------------------------------------------------------------
+-----Fetches and formats day data-----------------------------------------------
+------------------------------------------------------------------------------*/
+  componentDidMount() {
+    // Axios call to pull array of tasks for the given day
+    // let newList = {}
+
+
+
+    // inTasks.forEach(task => {
+
+    //   let id = task.taskId;
+
+    //   if(!task.isReccuring) {
+    //     task.startTime = task.startTime.trimDay();
+    //   }
+
+
     // })
+
+
+
+    // this.setState({tasks: newList})
   }
 
+  genChronoList(inTasks = this.state.tasks) {
+    let chronList = [][];
+    
+    this.state.tasks.forEach((task) => {
+      let block = this.toBlock(task.startTime);
+      if(block > SEGMENTS_TO_RENDER) {
+        console.log('Something went wrong! Day overflowed with block =', block);
+      }
+      let duration = this.toBlock(task.duration);
+
+      chronList[block] = [
+        id,
+        duuration,
+      ]
+    })
+
+  }
+    
   trimDay(time) {
       // Find time after midnight;
     return time % DAYS
@@ -95,16 +150,9 @@ export default class DayView extends React.Component {
     
   }
 
-  componentDidMount() {
-    // Axios call to pull array of tasks for the given day
-    let newList = []
-    inTasks.forEach(task => {
-      newList[task.id] = {...task}
-    })
-
-    this.setState({tasks: newList})
-  }
-
+/*------------------------------------------------------------------------------
+-----Renders the timeline for the day-------------------------------------------
+------------------------------------------------------------------------------*/
   renderTimeline() {
     let timeArr = [];
     let time = 1; // Represents the hour
@@ -118,6 +166,9 @@ export default class DayView extends React.Component {
         // Determines if the day segment is on the hour
       if(i%4 === 0) {
         timeArr.push(
+          /*--------------------------------------------------------------------
+          -----On-hour display segement-----------------------------------------
+          --------------------------------------------------------------------*/
           <Row style={styles.daySectionHour} key={i}>
             <Badge style={styles.timeBadge}>
               <Text style={styles.timeBadgeText}>{time}{tag}</Text>
@@ -133,6 +184,9 @@ export default class DayView extends React.Component {
         }
       } else { // Fills between-hour segments
         timeArr.push(
+          /*-------------------------------------------------------------------
+          -----Non-hour row display--------------------------------------------
+          -------------------------------------------------------------------*/
           <Row style={styles.daySection} key={i}>
           </Row>
         )
