@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, PanResponder } from 'react-native'
+import { StyleSheet, Animated, PanResponder } from 'react-native'
 import { Text, Container } from 'native-base';
 
 import gStyle from './../gStyle.js';
@@ -18,35 +18,52 @@ const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
 ------------------------------------------------------------------------------*/
 
 class TaskCard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    
+    this.state = {
+      pan: new Animated.ValueXY(),
+      ghostStyle: {
+        width: 0,
+        height: 0,
+      },
+    }
+  }
+
 
   componentWillMount() {
+    this.animatedValueX = 0;
+    this.animatedValueY = 0;
+    this.state.pan.x.addListener((value) => this.animatedValueX = value.value);
+    this.state.pan.y.addListener((value) => this.animatedValueY = value.value);
+    
 /*------------------------------------------------------------------------------
 -----Change bottom--------------------------------------------------------------
 ------------------------------------------------------------------------------*/
-    this._panResponderBot = PanResponder.create({
+    this.panResponderBot = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
       onMoveShouldSetPanResponderCapture: () => true,
   
       onPanResponderGrant: (e, gestureState) => {
-        // this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value})
-        // this.state.pan.setValue({x:0, y:0});
+        
       },
   
       onPanResponderMove: (e, gestureState) => {
-        let newHeight = Math.max(30, Math.floor(gestureState.moveY - this.props.itemStart))
-        this.props.changeDimensions(this.props.id, null, newHeight);
+        let newHeight = Math.max(30, Math.floor(e.nativeEvent.pageY - this.props.itemStart))
+        // this.props.changeDimensions(null, newHeight);
       },
   
       onPanResponderRelease: (e, gestureState) => {
         // this.state.pan.flattenOffset();
-        let newHeight = Math.max(30, Math.floor(gestureState.moveY - this.props.itemStart))
-        this.props.changeDimensions(this.props.id, null, newHeight);
+        let newHeight = Math.max(30, Math.floor(e.nativeEvent.pageY - this.props.itemStart))
+        this.props.setNewTimes(this.props.id, null, newHeight);
       }
     });
 /*------------------------------------------------------------------------------
 -----Change top-----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
-    this._panResponderTop = PanResponder.create({
+    this.panResponderTop = PanResponder.create({
       onMoveShouldSetResponderCapture: () => true,
       onMoveShouldSetPanResponderCapture: () => true,
   
@@ -58,44 +75,88 @@ class TaskCard extends React.Component {
       },
   
       onPanResponderMove: (e, gestureState) => {
-        let newStart = Math.max(0, Math.floor(gestureState.moveY))
+        let newStart = Math.max(0, Math.floor(e.nativeEvent.pageY))
         let newHeight = Math.max(30, Math.floor(this.initialHeight + (this.initialStart - newStart)))
-        this.props.changeDimensions(this.props.id, newStart, newHeight);
+        // this.props.changeDimensions(this.props.id, newStart, newHeight);
       },
   
       onPanResponderRelease: (e, gestureState) => {
         // this.state.pan.flattenOffset();
-        let newStart = Math.max(0, Math.floor(gestureState.moveY))
+        let newStart = Math.max(0, Math.floor(e.nativeEvent.pageY))
         let newHeight = Math.max(30, Math.floor(this.initialHeight + (this.initialStart - newStart)))
-        this.props.changeDimensions(this.props.id, newStart, newHeight);
+        this.props.setNewTimes(this.props.id, newStart, newHeight);
         this.initialHeight = null;
       }
     });
 /*------------------------------------------------------------------------------
 -----Move entire component------------------------------------------------------
 ------------------------------------------------------------------------------*/
-    this._panResponderMid = PanResponder.create({
+    this.panResponderMid = PanResponder.create({
+
       onMoveShouldSetResponderCapture: () => true,
       onMoveShouldSetPanResponderCapture: () => true,
+      // onStartShouldSetPanResponder: () => true,
   
       onPanResponderGrant: (e, gestureState) => {
-        // this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value})
-        // this.state.pan.setValue({x:0, y:0});
+        this.state.pan.setOffset({x: this.animatedValueX, y: this.animatedValueY});
+        this.state.pan.setValue({x: 0, y: 0});
       },
   
-      onPanResponderMove: (e, gestureState) => {
-        let newStart = Math.max(0, Math.floor(gestureState.moveY-this.props.itemHeight/2))
-        this.props.changeDimensions(this.props.id, newStart)
-      },
+      onPanResponderMove: Animated.event([null, {
+        dx: this.state.pan.x,
+        dy: this.state.pan.y,
+      }]),
   
       onPanResponderRelease: (e, gestureState) => {
-        // this.state.pan.flattenOffset();
-        let newStart = Math.max(0, Math.floor(gestureState.moveY-this.props.itemHeight/2))
-        this.props.changeDimensions(this.props.id, newStart)
+        this.state.pan.flattenOffset();
+        let newStart = Math.max(0, Math.floor(e.nativeEvent.pageY))
+        this.props.setNewTimes(this.props.id, newStart);
+        // this.animatedValueX = 0;
+        // this.animatedValueY = 0;
+
+        this.state.pan.setValue({x: 0, y: 0})
+        // this.setState({ghostStyle: {...this.state.ghostStyle, top: 0, left: 0}})
+        // console.log('this.state:', this.state);
+        // Animated.spring(this.state.pan, {toValue: {x:0, y:0}}).start();
       }
     });
   }
 
+  componentWillUnmount() {
+    this.state.pan.x.removeAllListeners();  
+    this.state.pan.y.removeAllListeners();
+  }
+
+  ghostAnimate(ghostY, ghostHeight, ghostX) {
+
+  }
+
+  // hexToRGBA(hex) {
+    
+  //   let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+  //   if(!result) {
+  //     console.log('Invalid hex value:', hex);
+  //     return `rgba(255,255,255,${GHOST_TRANSPARENCY})`;
+  //   }
+    
+  //   let r = parseInt(result[1], 16),
+  //       g = parseInt(result[2], 16),
+  //       b = parseInt(result[3], 16);
+
+  //   return `rgba(${r},${g},${b},${GHOST_TRANSPARENCY})`
+  // }
+
+  onLayout(event) {
+    console.log(event.nativeEvent.layout);
+    let ghostDimensions = {
+      ...this.state.ghostStyle,
+      width: event.nativeEvent.layout.width,
+      height: event.nativeEvent.layout.width,
+    }
+
+    this.setState({ghostStyle: {...ghostDimensions}})
+  }
 
   render() {
     // console.log('this.props.itemStart:', this.props.itemStart);
@@ -104,12 +165,19 @@ class TaskCard extends React.Component {
     let color = {backgroundColor: this.props.color};
     
     return(
-      <Container>
-        <Container style={[styles.card, color]} {...this._panResponderMid.panHandlers} >
+      <Container onLayout={(event) => {this.onLayout(event)}}>
+        <Container style={[styles.card, color]}  {...this.panResponderMid.panHandlers} >
           <Text>{this.props.title}</Text>
         </Container>
-        <Container style={styles.topGrab} {...this._panResponderTop.panHandlers} />
-        <Container style={styles.botGrab} {...this._panResponderBot.panHandlers} />
+        <Container style={styles.topGrab} {...this.panResponderTop.panHandlers} />
+        <Container style={styles.botGrab} {...this.panResponderBot.panHandlers} />
+        <Animated.View style={[this.state.ghostStyle, this.state.pan.getLayout(), styles.ghost]}
+          pointerEvents='none'
+          >
+          <Container style={[styles.card, color]}>
+            <Text>{this.props.title}</Text>
+          </Container>
+        </Animated.View>
       </Container>
     )
   }
@@ -134,6 +202,11 @@ let styles = StyleSheet.create({
   },
   textBox: {
     color: 'black',
+  },
+  ghost: {
+    position: 'absolute',
+    opacity: 0.4,
+    // backgroundColor: 'black',
   },
   topGrab: {
     backgroundColor: GRABBER_BACKGROUND,

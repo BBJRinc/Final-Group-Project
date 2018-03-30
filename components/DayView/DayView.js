@@ -128,7 +128,7 @@ export default class DayView extends React.Component {
       return time / (BLOCK_SIZE*60*1000) // (converts minutes to ms)
   }
   
-  changeDimensions(id, newStart, newHeight) {
+  setNewTimes(id, newStart, newHeight) {
 
     newStart = newStart || this.state.tasks[id].blockStart*SEGMENT_HEIGHT;
     newHeight = newHeight || this.state.tasks[id].blockDuration*SEGMENT_HEIGHT;
@@ -257,7 +257,7 @@ export default class DayView extends React.Component {
                   id={task.id}
                   color={task.color}
                   title={task.title}
-                  changeDimensions={(x, y, z) => this.changeDimensions(x, y, z)}
+                  setNewTimes={(x, y, z) => this.setNewTimes(x, y, z)}
                   itemStart={specificStyle.top}
                   itemHeight={specificStyle.height} />
               </Container>

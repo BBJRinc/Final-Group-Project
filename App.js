@@ -139,7 +139,7 @@ export default class App extends React.Component {
     console.log('state.hasToken: ', this.state.hasToken)
     console.log('state.userToken: ', this.state.userToken)
 
-    if (this.state.userToken && this.state.hasToken) {
+    if (true) {
       return (
         <Drawer
           ref={(ref) => { this._drawer = ref; }}
