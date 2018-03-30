@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Alert, StatusBar, Image, AsyncStorage } from 'react-native';
-import { Container, Content } from 'native-base';
+import { Container, Content, Drawer } from 'native-base';
 import axios from 'axios';
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
@@ -8,12 +8,13 @@ import TaskDetails from './components/TaskDetails/TaskDetails';
 import CalendarScreen from './components/CalendarScreen/CalendarScreen';
 import Ongoing from './components/Ongoing/Ongoing';
 import SplashScreen from 'react-native-splash-screen';
-import LoginScreen from './components/LoginScreen/LoginScreen'
-import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator'
-import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0'
+import LoginScreen from './components/LoginScreen/LoginScreen';
+import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
+import SideBar from './components/DrawerMenu/SideBar';
+import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
 
 
-const PubIpAdress = '192.168.3.149'
+const PubIpAdress = '192.168.3.176'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -35,14 +36,16 @@ export default class App extends React.Component {
     this.onDayPress = this.onDayPress.bind(this);
     this.onTaskPress = this.onTaskPress.bind(this);
     this.loginWindow = this.loginWindow.bind(this);
+    this.openDrawer = this.openDrawer.bind(this);
+    this.closeDrawer = this.closeDrawer.bind(this);
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
   }
 
   async componentDidMount() {
     SplashScreen.hide();
-    
-    let checkToken = await AsyncStorage.getItem('token').then(res =>{
+
+    let checkToken = await AsyncStorage.getItem('token').then(res => {
       return res;
     }).catch(err => console.log(err));
 
@@ -55,12 +58,27 @@ export default class App extends React.Component {
     }
   }
 
+  closeDrawer = () => {
+    console.log('drawer is closed')
+    this._drawer._root.close()
+  }
+
+  openDrawer = () => {
+    console.log('drawer is open')
+    this._drawer._root.open()
+  }
+  
   setUnscheduledCount(count){
     console.log('function unschedCount' + count);
     this.setState({unscheduledCount: count});
   }
 
-  showMenuItem(name){
+  showMenuItem(name, clearTask){
+    if(clearTask){
+      this.setState({
+        selectedTask: {}
+      })
+    }
     this.setState({[name]: !this.state[name]});
   }
 
@@ -82,7 +100,7 @@ export default class App extends React.Component {
       if (err){
         console.log('Error deleting token: ' + err);
       }
-      this.setState({userToken: null});
+      this.setState({userToken: null, hasToken:false});
     });
   }
 
@@ -107,6 +125,7 @@ export default class App extends React.Component {
   }
 
 
+
   render() {
     // if (!this.state.isLoaded && !this.state.user) {
     //   return (
@@ -119,15 +138,20 @@ export default class App extends React.Component {
 
     if (this.state.userToken && this.state.hasToken) {
       return (
-        <Container>
-          <Content>
-            <TaskDetails selectedTask={this.state.selectedTask} />
-            <CalendarScreen onDayPress={this.onDayPress} visible={this.state.showCalendar} showMenuItem={this.showMenuItem} />
-            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
-            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
-          </Content>
-          <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} unschedCount={this.state.unscheduledCount}/>
-        </Container>
+        <Drawer
+          ref={(ref) => { this._drawer = ref; }}
+          content={<SideBar navigator={this._navigator} logout={this.onLogout} showMenuItem={this.showMenuItem} onClose={this.closeDrawer} />}
+          onClose={() => this.closeDrawer()}>
+          <Container>
+            <Content>
+              <TaskDetails selectedTask={this.state.selectedTask} />
+              <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
+              <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
+              <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
+            </Content>
+            <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount}/>
+          </Container>
+        </Drawer>
       )
     }
     else {
