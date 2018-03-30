@@ -7,6 +7,8 @@ import gStyle from './../gStyle.js';
 let theme = 'blue';
 let testTheme = global.theme
 
+const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
+
 /*------------------------------------------------------------------------------
 -----Takes props of:------------------------------------------------------------
 -------title: Text on the card--------------------------------------------------
@@ -96,9 +98,9 @@ class TaskCard extends React.Component {
 
 
   render() {
-    console.log('this.props.itemStart:', this.props.itemStart);
+    // console.log('this.props.itemStart:', this.props.itemStart);
     
-    console.log('this.props.itemHeight:', this.props.itemHeight);
+    // console.log('this.props.itemHeight:', this.props.itemHeight);
     let color = {backgroundColor: this.props.color};
     
     return(
@@ -134,7 +136,8 @@ let styles = StyleSheet.create({
     color: 'black',
   },
   topGrab: {
-    backgroundColor: 'yellow',
+    backgroundColor: GRABBER_BACKGROUND,
+    // backgroundColor: 'yellow',
     position: 'absolute',
     left: 0,
     right: 0,
@@ -142,7 +145,8 @@ let styles = StyleSheet.create({
     height: GRABBER_HEIGHT,
   },
   botGrab: {
-    backgroundColor: 'lime',
+    backgroundColor: GRABBER_BACKGROUND,
+    // backgroundColor: 'lime',
     position: 'absolute',
     left: 0,
     right: 0,
