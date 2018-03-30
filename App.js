@@ -13,6 +13,7 @@ import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
 import SideBar from './components/DrawerMenu/SideBar';
 import DayView from './components/DayView/DayView';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
+import DayView from './components/DayView/DayView.js'
 
 
 const PubIpAdress = '192.168.3.176'
