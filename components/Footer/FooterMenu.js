@@ -5,12 +5,14 @@ import IconF from 'react-native-vector-icons/Feather';
 
 
 export default class FooterMenu extends Component{
+    
+
     render(){
         const { unschedCount } = this.props;  
         return(
                 <Footer >
                     <FooterTab light style={{backgroundColor: 'rgba(0, 0, 0, .85)'}}>
-                        <Button vertical onPress={() => this.props.logout()}>
+                        <Button vertical onPress={() => this.props.showMenuItem('showTaskDetails', true)}>
                             <IconF name="plus" size={35} color={'#fff'}/>
                         </Button>
                         <Button  vertical > 
@@ -31,7 +33,7 @@ export default class FooterMenu extends Component{
                         <Button vertical onPress={() => this.props.showMenuItem('showOngoing')} >
                             <IconF name="folder" size={35} color={'#fff'} />
                         </Button>
-                        <Button vertical>
+                        <Button vertical onPress={() => this.props.openDrawer()}>
                             <IconF name="menu" size={35} color={'#fff'}/>
                         </Button>
                     </FooterTab>
