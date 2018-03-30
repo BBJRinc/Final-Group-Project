@@ -52,7 +52,7 @@ export default class DayView extends React.Component {
     this.state = {
       // pan: new Animated.ValueXY(),
       day: 0,
-      tasks: {},
+      tasks: [],
         // id: {     Task data structure
         //   id: 0,
         //   title: '',
@@ -75,12 +75,12 @@ export default class DayView extends React.Component {
 ------------------------------------------------------------------------------*/
   componentDidMount() {
     // Axios call to pull array of tasks for the given day
-    // let newList = {}
+    let newList = [];
 
 
 
-    // inTasks.forEach(task => {
-
+    testData.forEach(task => {
+      newList[task.id] = task;
     //   let id = task.taskId;
 
     //   if(!task.isReccuring) {
@@ -88,15 +88,15 @@ export default class DayView extends React.Component {
     //   }
 
 
-    // })
+    })
 
 
 
-    // this.setState({tasks: newList})
+    this.setState({tasks: newList})
   }
 
   genChronoList(inTasks = this.state.tasks) {
-    let chronList = [][];
+    let chronList = [];
     
     this.state.tasks.forEach((task) => {
       let block = this.toBlock(task.startTime);
@@ -107,7 +107,7 @@ export default class DayView extends React.Component {
 
       chronList[block] = [
         id,
-        duuration,
+        duration,
       ]
     })
 
@@ -140,11 +140,11 @@ export default class DayView extends React.Component {
       blockStart: Math.floor((newStart / SEGMENT_HEIGHT)),
       blockDuration: Math.floor(((newHeight+SEGMENT_HEIGHT-1) / SEGMENT_HEIGHT))}
 
-    console.log('newCardStats:', newCardStats);
+    // console.log('newCardStats:', newCardStats);
     
     let newList = [...this.state.tasks];
     newList[id] = {...newList[id], ...newCardStats}
-    console.log('newList:', newList);
+    // console.log('newList:', newList);
     
     this.setState({...this.state, tasks: [...newList]});
     
@@ -209,7 +209,7 @@ export default class DayView extends React.Component {
         // Cycles through all tasks. Find tasks to insert
       this.state.tasks.forEach((task) =>{
           // Checks to see if a task belongs in the current timeslot
-          console.log('task:', task);
+          // console.log('task:', task);
         if(task) {
           if(task.blockStart === i) {
               // Set the initial style object that determines
@@ -248,7 +248,7 @@ export default class DayView extends React.Component {
                 }
               }
             }
-            console.log('specificStyle.height:', specificStyle.height);
+            // console.log('specificStyle.height:', specificStyle.height);
             
               // Pushes the current card with styling onto the timeline
             cardArr.push(
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
 
 
 
-let inTasks = [
+let testData = [
   {
     id: 1,
     title: 'Card one',
