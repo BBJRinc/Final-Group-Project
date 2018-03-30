@@ -10,9 +10,13 @@ import Ongoing from './components/Ongoing/Ongoing';
 import SplashScreen from 'react-native-splash-screen';
 import LoginScreen from './components/LoginScreen/LoginScreen';
 import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
-import SideBar from './components/DrawerMenu/SideBar';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
+<<<<<<< HEAD
+import moment from 'moment';
+import SideBar from './components/DrawerMenu/SideBar';
+=======
 import DayView from './components/DayView/DayView.js'
+>>>>>>> master
 
 
 const PubIpAdress = '192.168.3.176'
@@ -43,6 +47,7 @@ export default class App extends React.Component {
     this.closeDrawer = this.closeDrawer.bind(this);
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
+    this.getDay = this.getDay.bind(this);
   }
 
   async componentDidMount() {
@@ -86,8 +91,10 @@ export default class App extends React.Component {
   }
 
   onDayPress(day) {
+    let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
+    console.log("test time " + unixDay)
     this.setState({
-      selectedDay: day.dateString
+      selectedDay: unixDay
     });
     this.showMenuItem('showCalendar');
   }
@@ -96,6 +103,10 @@ export default class App extends React.Component {
     this.setState({ selectedTask: task });
     this.showMenuItem('showTaskDetails');
     this.showMenuItem(listName);
+  }
+
+  getDay(){
+    console.log('GET DAY CALLED!!!!');
   }
 
   onLogout(){
@@ -138,6 +149,7 @@ export default class App extends React.Component {
     console.log('state.user: ', this.state.user)
     console.log('state.hasToken: ', this.state.hasToken)
     console.log('state.userToken: ', this.state.userToken)
+    console.log('selected date' + this.state.selectedDay);
 
     if (this.state.userToken && this.state.hasToken) {
       return (

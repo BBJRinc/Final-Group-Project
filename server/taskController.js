@@ -1,3 +1,4 @@
+const db = require('./index.js')
 module.exports = {
     getUnscheduled: function(req, res){
         let userId = req.userid;
@@ -11,13 +12,13 @@ module.exports = {
             })
             //second promise gets comments for each task after getting the checklist items is complete
             Promise.all(taskArray).then((values) => {
-                let test = values.map(task => {
+                let commentArray = values.map(task => {
                     return req.app.get('db').getComments([task.taskid]).then(comments => {
                         task.comments = comments;
                         return task;
                     })
                 });
-                Promise.all(test).then(completeTaskArray => {
+                Promise.all(commentArray).then(completeTaskArray => {
                     res.status(200).send(completeTaskArray);
                 });
             });
