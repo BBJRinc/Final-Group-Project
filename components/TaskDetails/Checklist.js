@@ -67,9 +67,11 @@ export default class Checklist extends Component {
                             {
                                 this.state.editting === false
                                     ?
-                                    <View style={{borderColor:'transparent'}}><Text
-                                        style={{borderColor:'transparent'}}
-                                        onLongPress={(e, item) => this.editContent(e, item)}>{item.content}</Text></View>
+                                    <View
+                                        style={{ borderColor: 'transparent' }}>
+                                        <Text
+                                            style={{ borderColor: 'transparent' }}
+                                            onLongPress={(e, item) => this.editContent(e, item)}>{item.content}</Text></View>
 
                                     :
                                     <View><Input
