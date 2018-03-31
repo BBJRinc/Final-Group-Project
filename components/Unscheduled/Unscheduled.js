@@ -4,7 +4,8 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-const PubIpAdress = '192.168.3.132';
+const PubIpAdress = '192.168.0.105'
+// '192.168.3.132';
 
 const datas = [
     {name: 'Simon Mignolet', age: 31},

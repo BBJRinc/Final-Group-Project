@@ -51,12 +51,13 @@ export default class TaskDetails extends Component {
         this.setModalVisible = this.setModalVisible.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-        const { taskid, taskname, updatedat,
+        const { 
+            taskid, taskname, updatedat,
             userid, starttime, isrecurring, duration,
             duedate, description, createdat, completed,
             comments, color, checkItems } = nextProps.selectedTask
 
-            // [duedate, createdat]=(moment.unix(date).format('MM-DD-YYYY'))
+        // [duedate, createdat]=(moment.unix(date).format('MM-DD-YYYY'))
 
         this.setState({
             userID: userid,
@@ -77,26 +78,26 @@ export default class TaskDetails extends Component {
     }
     //
     //
-    handleChecklistItem(item) {
-        console.log(item)
-        this.setState({ newChecklistItem: item.item })
-    }
-    completeChecklistItem(e) {
-        console.log(e)
-    }
-    addChecklistItem(e) {
-        // add an axios call to get all checklist items by id from the database
+    // handleChecklistItem(item) {
+    //     console.log(item)
+    //     this.setState({ newChecklistItem: item.item })
+    // }
+    // completeChecklistItem(e) {
+    //     console.log(e)
+    // }
+    // addChecklistItem(e) {
+    //     // add an axios call to get all checklist items by id from the database
 
-        e.preventDefault();
-        const { checklistItems, newChecklistItem } = this.state
-        this.setState({ checklistItems:[...checklistItems, newChecklistItem] });
-        this.setState({newChecklistItem:''})
-        // this.newChecklistItem.clear()
-        // axios.put('/api/checklistItem').then(res=>{
-        //     console.log(res)
-        //     this.setState({checklistItems:res.data})
-        // })
-    }
+    //     e.preventDefault();
+    //     const { checklistItems, newChecklistItem } = this.state
+    //     this.setState({ checklistItems:[...checklistItems, newChecklistItem] });
+    //     this.setState({newChecklistItem:''})
+    //     // this.newChecklistItem.clear()
+    //     // axios.put('/api/checklistItem').then(res=>{
+    //     //     console.log(res)
+    //     //     this.setState({checklistItems:res.data})
+    //     // })
+    // }
     ////
     ////
     addComment(text) {
@@ -104,18 +105,26 @@ export default class TaskDetails extends Component {
     }
 
     //methods used on the Labels comp
+
     handleLabelColor(color) {
-        this.setState({ color: color.color, ModalVisable: this.state.LabelModalVisable })
+        this.setState({
+            color: color.color,
+            ModalVisable: this.state.LabelModalVisable
+        })
     }
     selectDate(date) {
         console.log(date)
-        this.setState({ date: date })
+        this.setState({
+            date: date
+        })
     }
 
     //   These methods are used on the DurationPicker component
 
     setModalVisible() {
-        this.setState({ durationModalVisable: !this.state.durationModalVisable });
+        this.setState({
+            durationModalVisable: !this.state.durationModalVisable
+        });
     }
 
     saveDuration(e, state) {
@@ -123,19 +132,22 @@ export default class TaskDetails extends Component {
         const { minutes, hours } = state
         let minuteMilliseconds = minutes * 1 * (1000 * 60 * 100)
         let hourMilliseconds = hours * 1 * (60 * 60 * 1000)
-        this.setState({ milliseconds: minuteMilliseconds + hourMilliseconds });
+        this.setState({
+            milliseconds: minuteMilliseconds + hourMilliseconds
+        });
         this.setModalVisible();
     }
     cancelDuration(e) {
         console.log(e)
-        this.setState({ hours: '00', minutes: '00', milliseconds: 0 });
+        this.setState({
+            hours: '00',
+            minutes: '00',
+            milliseconds: 0
+        });
         this.setModalVisible();
     }
     render() {
-        console.log(this.state)
-        // console.log(this.props.selectedTask)
-
-        const { padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
+        const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         // let checklist = this.state.checklistItems.map((item, i) => {
         // if (this.state.checked === false){
         //     return (
@@ -155,7 +167,8 @@ export default class TaskDetails extends Component {
         // })
         return (
             <View style={{ marginTop: 22 }}>
-                <Modal animationType="slide"
+                <Modal
+                    animationType="slide"
                     transparent={false}
                     visible={this.props.showTaskDetails}>
                     <View style={[header, { backgroundColor: this.state.color }]}>
@@ -187,7 +200,9 @@ export default class TaskDetails extends Component {
                         <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
                             <IconF active name='clock' size={15} />
                             {/* <Input placeholder='Due date...' placeholderTextColor={'black'}/> */}
-                            <TaskDatePicker selectDate={this.selectDate} date={this.state.date} />
+                            <TaskDatePicker
+                                selectDate={this.selectDate}
+                                date={this.state.date} />
                             <DurationPicker
                                 showDurationPicker={this.state.durationModalVisable}
                                 saveDuration={this.saveDuration}
@@ -206,10 +221,9 @@ export default class TaskDetails extends Component {
                                 labelColor={this.handleLabelColor}
                                 color={this.state.color}
                                 isVisable={this.state.LabelModalVisable} />
-                            {this.state.color !== '' ? <View style={{ height: 10, width: 25, backgroundColor: this.state.color, justifyContent: 'flex-end', marginLeft: 230 }} /> : null}
+                            {this.state.color !== '' ? <View style={[inlineLabelStyle, { backgroundColor: this.state.color }]} /> : null}
                         </Item>
-
-                        <Checklist showChecklist={this.state.showChecklist} color={this.state.color} checklistItems={this.state.checklistItems}/>
+                        <Checklist showChecklist={this.state.showChecklist} color={this.state.color} checklistItems={this.state.checklistItems} style={{margin:0, padding:0}} />
                         {/* <Item style={separate}>
                             <IconI active name='md-checkbox-outline' size={15} style={padding} />
                             <Input disabled placeholder='Checklist...' style={[inputSize]} name='checklist' onChangeText={(text) => this.handleChecklistName({ id: i, name: text })} />
@@ -240,7 +254,12 @@ const styles = ({
     padding: {
         paddingLeft: 10
     },
-
+    inlineLabelStyle: {
+        height: 10,
+        width: 25,
+        justifyContent: 'flex-end',
+        marginLeft: 230
+    },
     margin: {
         paddingLeft: 10,
         backgroundColor: '#fff',
