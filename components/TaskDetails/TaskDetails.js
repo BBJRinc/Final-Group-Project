@@ -20,6 +20,7 @@ export default class TaskDetails extends Component {
 
             userID: '',
             taskId: '',
+            userToken:'',            
             createdDate: '',
             description: '',
             duedate: '',
@@ -55,12 +56,12 @@ export default class TaskDetails extends Component {
             taskid, taskname, updatedat,
             userid, starttime, isrecurring, duration,
             duedate, description, createdat, completed,
-            comments, color, checkItems } = nextProps.selectedTask
-
+            comments, color, checkItems, token } = nextProps.selectedTask
         // [duedate, createdat]=(moment.unix(date).format('MM-DD-YYYY'))
 
         this.setState({
             userID: userid,
+            userToken:this.props.token,
             taskId: taskid,
             name: taskname,
             createdDate: createdat,
@@ -147,6 +148,7 @@ export default class TaskDetails extends Component {
         this.setModalVisible();
     }
     render() {
+        console.log(this.state)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         // let checklist = this.state.checklistItems.map((item, i) => {
         // if (this.state.checked === false){
@@ -207,7 +209,8 @@ export default class TaskDetails extends Component {
                                 showDurationPicker={this.state.durationModalVisable}
                                 saveDuration={this.saveDuration}
                                 cancelDuration={this.cancelDuration}
-                                setModalVisible={this.setModalVisible} />
+                                setModalVisible={this.setModalVisible} 
+                                duration={this.state.milliseconds}/>
                             <TouchableHighlight style={{ alignItems: 'center' }}
                                 onPress={() => {
                                     this.setModalVisible(!this.state.LabelModalVisable);
@@ -223,7 +226,12 @@ export default class TaskDetails extends Component {
                                 isVisable={this.state.LabelModalVisable} />
                             {this.state.color !== '' ? <View style={[inlineLabelStyle, { backgroundColor: this.state.color }]} /> : null}
                         </Item>
-                        <Checklist showChecklist={this.state.showChecklist} color={this.state.color} checklistItems={this.state.checklistItems} style={{margin:0, padding:0}} />
+                        <Checklist 
+                        showChecklist={this.state.showChecklist} 
+                        color={this.state.color} 
+                        checklistItems={this.state.checklistItems} 
+                        taskId={this.state.taskId} 
+                        token={this.state.userToken}/>
                         {/* <Item style={separate}>
                             <IconI active name='md-checkbox-outline' size={15} style={padding} />
                             <Input disabled placeholder='Checklist...' style={[inputSize]} name='checklist' onChangeText={(text) => this.handleChecklistName({ id: i, name: text })} />

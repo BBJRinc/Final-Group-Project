@@ -14,6 +14,9 @@ export default class DurationPicker extends Component {
     this.updateMin = this.updateMin.bind(this)
 
   }
+  componentWillReceiveProps(props){
+    console.log(this.props.duration)
+  }
   updateHour(value) {
     this.setState({ hours: value })
   }
