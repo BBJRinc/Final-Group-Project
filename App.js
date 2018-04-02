@@ -10,11 +10,13 @@ import Ongoing from './components/Ongoing/Ongoing';
 import SplashScreen from 'react-native-splash-screen';
 import LoginScreen from './components/LoginScreen/LoginScreen';
 import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
-import SideBar from './components/DrawerMenu/SideBar';
-import DayView from './components/DayView/DayView';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
+import moment from 'moment';
+import SideBar from './components/DrawerMenu/SideBar';
+import DayView from './components/DayView/DayView.js'
 
-const PubIpAdress = '192.168.3.176'
+
+const PubIpAdress = '192.168.3.132'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -41,6 +43,7 @@ export default class App extends React.Component {
     this.closeDrawer = this.closeDrawer.bind(this);
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
+    this.getDay = this.getDay.bind(this);
   }
 
   async componentDidMount() {
@@ -80,8 +83,10 @@ export default class App extends React.Component {
   }
 
   onDayPress(day) {
+    let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
+    console.log("test time " + unixDay)
     this.setState({
-      selectedDay: day.dateString
+      selectedDay: unixDay
     });
     this.showMenuItem('showCalendar');
   }
@@ -92,7 +97,11 @@ export default class App extends React.Component {
     this.showMenuItem(listName);
   }
 
-  onLogout() {
+  getDay(){
+    console.log('GET DAY CALLED!!!!');
+  }
+
+  onLogout(){
     AsyncStorage.removeItem('token', (err) => {
       if (err) {
         console.log('Error deleting token: ' + err);
@@ -108,6 +117,7 @@ export default class App extends React.Component {
       .webAuth
       .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
+        // console.log(credentials)
         axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
           AsyncStorage.setItem('token', res.data, () => {
             AsyncStorage.getItem('token', (err, result) => {
@@ -129,6 +139,11 @@ export default class App extends React.Component {
     //     <LoadingIndicator />
     //   )
     // }
+    console.log('state.user: ', this.state.user)
+    console.log('state.hasToken: ', this.state.hasToken)
+    console.log('state.userToken: ', this.state.userToken)
+    console.log('selected date' + this.state.selectedDay);
+
     if (this.state.userToken && this.state.hasToken) {
       return (
         <Drawer
@@ -137,8 +152,8 @@ export default class App extends React.Component {
           onClose={() => this.closeDrawer()}>
           <Container>
             <Content>
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user}/>
               <DayView />
-              {/* <TaskDetails visible={this.state.showTaskDetails} selectedTask={this.state.selectedTask} /> */}
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />

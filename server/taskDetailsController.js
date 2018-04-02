@@ -9,10 +9,33 @@ module.exports={
         req.app.get('db').addCheckItem(item).then(() => {
             req.app.get('db').getChecklist([taskid]).then(resp => {
                 res.status(200).send(resp);
-            });
-        });
+            }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
 
     }, 
+
+    updateCheckItem: function(req, res){
+        let itemid = Number(req.params.itemid);
+        let checkItem = [
+            itemid,
+            req.body.content,
+            req.body.completed
+        ];
+        req.app.get('db').udpateCheckItem(checkItem).then(resp => {
+            req.app.get('db').getChecklist([resp[0].taskid]).then(checklist => {
+                res.status(200).send(checklist)
+            }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
+    },
+
+    deleteCheckItem: function(req, res){
+        let itemid = Number(req.params.itemid);
+        req.app.get('db').deleteCheckItem([itemid]).then(resp => {
+            req.app.get('db').getChecklist([resp[0].taskid]).then(checklist => {
+                res.status(200).send(checklist);
+            }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
+    },
 
     addComment: function(req, res){
         console.log('add comment endpoint hit')
@@ -25,9 +48,31 @@ module.exports={
         req.app.get('db').addComment(comment).then(() => {
             req.app.get('db').getComments([taskid]).then(resp => {
                 res.status(200).send(resp);
-            });
-        });
-    }, 
+            }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
+    },
+    
+    editComment: function(req, res){
+        let commentid = Number(req.params.commentid);
+        let comment = [
+            commentid,
+            req.body.content
+        ];
+        req.app.get('db').updateComment([comment]).then(resp => {
+            req.app.get('db').getComments([resp[0].taskid]).then(comments => {
+                res.status(200).send(comments);
+            }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
+    },
+
+    deleteComment: function(req, res){
+        let commentid = Number(req.params.commentid);
+        req.app.get('db').deleteComment([commentid]).then(resp => {
+            req.app.get('db').getComments([resp[0].taskid]).then(coments => {
+                res.status(200).send(comments);
+            }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
+    },
 
     editTask: function(req, res){
         const taskid = Number(req.params.taskid);
@@ -44,7 +89,7 @@ module.exports={
         ];
         req.app.get('db').updateTask(task).then(resp => {
             res.status(200).send(resp);
-        });
+        }).catch(err => console.log(err));
     },
 
     addTask: function(req, res){
@@ -61,6 +106,6 @@ module.exports={
         ];
         req.app.get('db').addTask(task).then(resp => {
             res.status(200).send(resp);
-        });
+        }).catch(err => console.log(err));
     }
 }

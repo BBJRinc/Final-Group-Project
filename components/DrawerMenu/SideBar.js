@@ -22,7 +22,7 @@ const appName = applyLetterSpacing('CALENTASK');
 export default class SideBar extends Component {
 
     render() {
-        const { unschedCount } = this.props; 
+        // console.log('Props on SideBar: ', this.props)
         return (
             <Container style={styles.root}>
 
@@ -131,11 +131,11 @@ export default class SideBar extends Component {
                                     style={styles.text}>Unscheduled tasks</Text>
                             </Body>
                             <Right style={styles.listit}>
-                            {!unschedCount ? 
+                            {!this.props.unschedCount ? 
                             null 
                             :
                             <View style={styles.badge}>
-                                <Text style={{color: '#fff'}}>{unschedCount}</Text>
+                                <Text style={{color: '#fff'}}>{this.props.unschedCount}</Text>
                             </View>
                              }
                             </Right>

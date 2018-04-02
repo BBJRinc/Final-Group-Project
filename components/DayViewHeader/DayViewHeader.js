@@ -5,9 +5,30 @@ import moment from 'moment';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
 
-moment()
 
 export default class DayViewHeader extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            yesterday: '',
+            today: '',
+            tomorrow: '',
+            currentDate: ''
+        }
+    }
+
+    componentDidMount() {
+        let date = moment().format("YYYY-MM-DD")
+        let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
+        console.log('todaysDate in Unix: ', todaysDate)
+        this.setState({
+            currentDate: todaysDate
+        })
+    }
+
+
+
     render() {
         return (
             <Container>
@@ -23,7 +44,7 @@ export default class DayViewHeader extends Component {
                     </Left>
 
                     <Body>
-                        
+                        {this.state.currentDate}
                     </Body>
 
                     <Right>

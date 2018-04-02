@@ -6,11 +6,12 @@ const express = require('express')
     , tdCtrl = require('./taskDetailsController')
     , userCtrl = require('./userController')
     , taskCtrl = require('./taskController')
+    , dayCtrl = require('./dayController')
     , tokenAuth = require('./tokenAuth');
 app.use(bodyParser.json());
 require('dotenv').config();
 const { CONNECTION_STRING, AUTH0_CLIENT_SECRET, JWT_SECRET, SERVER_PORT } = process.env;
-
+let db = null;
 //function to filter which routes recieve the verifyToken middleware
 const unless = function(path, middleware){
     return function(req, res, next){
@@ -26,15 +27,14 @@ const unless = function(path, middleware){
 app.use(unless('/api/auth', tokenAuth.verifyToken));
 
 
-massive(CONNECTION_STRING).then(db => {
+massive(CONNECTION_STRING).then(indb => {
     console.log('DB connected')
-    
-    app.set('db', db);
-});
+    app.set('db', indb);
+})
 
 //Auth login endpoints
 app.post('/api/auth', (req, res, next) => {
-    // console.log('req.token index.js: ', req.body)
+    console.log('req.token index.js: ', req.body)
     jwt.verify(req.body.token, AUTH0_CLIENT_SECRET, (err, decoded) => {
         let db = app.get('db');
         if (err) {
@@ -71,16 +71,25 @@ app.delete('/api/inprogress/:taskid', taskCtrl.deleteOngoing);
 
 //task details endpoints
 app.post('/api/checklist/:taskid', tdCtrl.addCheckItem);
+app.put('/api/checklist/:itemid', tdCtrl.updateCheckItem);
+app.delete('/api/checklist/:itemid', tdCtrl.deleteCheckItem);
 app.post('/api/comment/:taskid', tdCtrl.addComment);
+app.put('/api/comment/:commentid', tdCtrl.editComment);
+app.delete('/api/comment/:commentid', tdCtrl.deleteComment);
 app.put('/api/task/:taskid', tdCtrl.editTask);
 app.post('/api/task', tdCtrl.addTask);
 
 //user endpoints
 app.get('/api/user', userCtrl.getUser);
 
+//day endpoints
+app.get('/api/day/:day', dayCtrl.getDay);
+
 app.post('/api/testtoken', (req, res) => {
     console.log(req.userid);
 })
+
+
 
 
 app.listen(SERVER_PORT, () => {
