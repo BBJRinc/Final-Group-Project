@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAdress = '192.168.0.105'
+const PubIpAdress = '192.168.3.132'
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -22,7 +22,7 @@ export default class Checklist extends Component {
     }
 
     componentDidMount() {
-        const{checklistItems, taskId, duration} = this.props
+        const { checklistItems, taskId, duration } = this.props
         console.log(checklistItems, taskId)
         this.setState({ checklistItems: checklistItems, taskid: taskId })
     }
@@ -66,31 +66,24 @@ export default class Checklist extends Component {
     }
 
     addChecklistItem(e) {
-        // add an axios call to get all checklist items by id from the database
         const { checklistItems, newChecklistItem, taskid } = this.state
         let itemid = taskid
         console.log(newChecklistItem)
         console.log(itemid)
-        // let body = {
-        //     content: newChecklistItem
-        // }
-        // console.log(body)
         axios({
             method: 'post',
-            url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`, 
+            url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
             data: {
-                content:newChecklistItem
+                content: newChecklistItem
             },
             headers: {
                 "token": this.props.token,
-            }, 
+            },
         }).then(resp => {
             console.log(resp.data)
-            this.setState({checklistItems: resp.data});           
+            this.setState({ checklistItems: resp.data });
         });
         this.setState({ newChecklistItem: '' })
-
-
     }
     deleteRow(secId, rowId, rowMap, data) {
         const { checklistitemid } = data
@@ -108,15 +101,9 @@ export default class Checklist extends Component {
             }
         }).then(resp => {
             console.log(resp.data)
-            this.setState({checklistItems: resp.data});           
+            this.setState({ checklistItems: resp.data });
         });
     }
-        // axios.delete(`/api/checklist/:{itemid}`).then(res => {
-        //     console.log(res.data)
-        //     this.setState({ checklistItems: res.data })
-        // })
-    // }
-
     render() {
         const { padding, addItemMargin, inputSize, separate } = styles
         console.log(this.state)
@@ -179,91 +166,3 @@ const styles = ({
         backgroundColor: '#fff'
     },
 })
-
-
-
-
-
-
-
-// render() {
-//     const { padding, addItemMargin, inputSize, separate } = styles
-//     console.log(this.state)
-//     let checklist = this.state.checklistItems.map((item, i) => {
-//         if (this.state.editting === false) {
-//             return (<SwipeRow
-//                 rightOpenValue={-75}
-//                 backgroundColor="#efefef"
-//                 borderColor='#fff'
-//                 right={
-//                     <Button danger onPress={() => alert('Trash')}>
-//                         <IconI active name="ios-trash-outline" size={20} />
-//                     </Button>
-//                 }
-//                 body={
-//                     <Item key={i}>
-//                         <CheckBox checked={this.state.checked}
-//                             onPress={() => this.setState({ checked: !this.state.checked })}
-//                             style={{ borderColor: 'gray', border:0, marginRight: 20, height: 20, width: 20, borderRadius: 2 }} />
-//                         {
-//                             this.state.editting === false
-//                                 ?
-//                                 <View
-//                                     style={{ borderWidth:0, height:35 }}>
-//                                     <Text
-//                                         style={{ borderColor: 'transparent' }}
-//                                         onLongPress={(e, item) => this.editContent(e, item)}>{item.content}</Text></View>
-
-//                                 :
-//                                 <View><Input
-//                                     disabled style={[padding, addItemMargin, inputSize]}
-//                                     onChangeText={(item) => this.handleChecklistItem({ id: i, item })}
-//                                     onEndEditing={(e) => this.addChecklistItem(e)} />
-//                                 </View>
-//                         }
-//                     </Item>
-//                 }
-
-//             />)
-//         } 
-//         else {
-//             return (<Item key={i}>
-//                 <CheckBox
-//                     checked={this.state.checked}
-//                     onPress={() => this.setState({ checked: !this.state.checked })}
-//                     style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 20, width: 20, borderRadius: 2 }} />
-//                 <Input style={[padding, addItemMargin, inputSize]} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(text) => this.updateContent({ id: item.checklistitemid, text })} >{item.content}</Input>
-//             </Item>
-//             )
-//         }
-//     })
-//     return (
-//         <View>
-//             <Item style={separate}>
-//                 <IconI active name='md-checkbox-outline' size={15} style={padding} />
-//                 <Input disabled placeholder='Checklist...' style={[inputSize]} name='checklist' onChangeText={(text) => this.handleChecklistName({ id: i, name: text })} />
-//             </Item>
-//             {checklist}
-//             <Item>
-//                 <Input placeholder='Add item...' style={[padding, addItemMargin, inputSize]} value={this.state.newChecklistItem} onChangeText={(item) => this.handleChecklistItem({ item })} onEndEditing={(e) => this.addChecklistItem(e)} />
-//             </Item>
-//         </View>
-//     )
-// }
-// }
-// const styles = ({
-// padding: {
-//     paddingLeft: 10
-// },
-// inputSize: {
-//     height: 40,
-// },
-// addItemMargin: {
-//     marginLeft: 10
-// },
-// separate: {
-//     marginTop: 10,
-//     paddingLeft: 10,
-//     backgroundColor: '#fff'
-// },
-// })

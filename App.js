@@ -16,9 +16,7 @@ import SideBar from './components/DrawerMenu/SideBar';
 import DayView from './components/DayView/DayView.js'
 
 
-const PubIpAdress = '192.168.0.236'
-// home'192.168.0.105';
-// '192.168.3.132'
+const PubIpAdress = '192.168.3.132'
 
 
 
