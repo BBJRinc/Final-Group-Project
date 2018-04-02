@@ -30,6 +30,10 @@ export default class App extends React.Component {
       showOngoing: false,
       selectedDay: '',
       selectedTask: {},
+      daysTasks: [],
+      todaysDateInUnix: '',
+      nextDay: {},
+      previousDay: {},
       unscheduledCount: null,
       isLoaded: false,
       hasToken: false,
@@ -59,6 +63,13 @@ export default class App extends React.Component {
         userToken: checkToken
       })
     }
+
+    let today = moment().format("YYYY-MM-DD")
+    unixToday = moment(today).valueOf()
+      this.setState({
+        todaysDateInUnix: unixToday
+      })
+      console.log("todays date in unix: ", this.state.todaysDateInUnix)
   }
 
   closeDrawer = () => {
@@ -82,13 +93,42 @@ export default class App extends React.Component {
     this.setState({ [name]: !this.state[name] });
   }
 
+  getNextDay() {
+    // let date = moment().format("YYYY-MM-DD");
+    if (this.state.selectedDay) {
+
+    }
+    let tomorrowDate = moment(date).add(1, 'days');
+    let tomorrowsUnixDate = moment(tomorrowDate, "YYYY-MM-DD").valueOf();
+    console.log('tomorrowsUnixDate in Unix: ', tomorrowsUnixDate)
+    axios.get(`/api/day/${tomorrowsUnixDate}`).then(response => {
+      console.log(response)
+      this.setState({
+        nextDate: response.data
+      })
+    })
+  }
+
   onDayPress(day) {
     let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
     console.log("test time " + unixDay)
     this.setState({
       selectedDay: unixDay
     });
+    getNextDay();
     this.showMenuItem('showCalendar');
+  }
+
+  nextDayPress() {
+    let date = moment().format("YYYY-MM-DD")
+    let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
+    console.log('todaysDate in Unix: ', todaysDate)
+    axios.get(`/api/day/${todaysDate}`).then(response => {
+      console.log(response)
+      this.setState({
+        daysTasks: response
+      });
+    }).catch(err => console.log(err));
   }
 
   onTaskPress(task, listName) {
@@ -97,11 +137,11 @@ export default class App extends React.Component {
     this.showMenuItem(listName);
   }
 
-  getDay(){
+  getDay() {
     console.log('GET DAY CALLED!!!!');
   }
 
-  onLogout(){
+  onLogout() {
     AsyncStorage.removeItem('token', (err) => {
       if (err) {
         console.log('Error deleting token: ' + err);
@@ -152,7 +192,7 @@ export default class App extends React.Component {
           onClose={() => this.closeDrawer()}>
           <Container>
             <Content>
-              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user}/>
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} />
               <DayView />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />

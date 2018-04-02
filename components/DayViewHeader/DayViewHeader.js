@@ -4,6 +4,7 @@ import { Container, Separator, Content, Icon, Header, ListIcon, Footer, Button, 
 import moment from 'moment';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
+import axios from 'axios';
 
 
 export default class DayViewHeader extends Component {
@@ -11,25 +12,19 @@ export default class DayViewHeader extends Component {
         super(props)
 
         this.state = {
-            yesterday: '',
-            today: '',
-            tomorrow: '',
             currentDate: ''
         }
     }
 
     componentDidMount() {
-        let date = moment().format("YYYY-MM-DD")
-        let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
-        console.log('todaysDate in Unix: ', todaysDate)
+        let today = moment().format("MMM Do YY")
         this.setState({
-            currentDate: todaysDate
+            currentDate: today
         })
     }
 
-
-
     render() {
+        const { nextDay, previousDay } = this.props
         return (
             <Container>
 
@@ -39,12 +34,14 @@ export default class DayViewHeader extends Component {
                         <IconF name="chevron-left"
                             color="#000000"
                             size={15}
-                            onPress={() => { }}
+                            onPress={() => previousDay()}
                         />
                     </Left>
 
                     <Body>
-                        {this.state.currentDate}
+                        <Text>
+                            {this.state.currentDate}
+                        </Text>
                     </Body>
 
                     <Right>
@@ -52,7 +49,7 @@ export default class DayViewHeader extends Component {
                             name="chevron-right"
                             color="#000000"
                             size={15}
-                            onPress={() => { }}
+                            onPress={() => nextDay()}
                         />
                     </Right>
 
@@ -62,3 +59,15 @@ export default class DayViewHeader extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    header: {
+        height: 10,
+        width: '100%',
+        backgroundColor: '#ffffff',
+    },
+    text: {
+        color: "#000000"
+    }
+
+})
