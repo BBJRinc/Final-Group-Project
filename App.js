@@ -16,7 +16,7 @@ import SideBar from './components/DrawerMenu/SideBar';
 import DayView from './components/DayView/DayView.js'
 
 
-const PubIpAdress = '192.168.3.132'
+const PubIpAdress = '192.168.3.176'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -30,10 +30,10 @@ export default class App extends React.Component {
       showOngoing: false,
       selectedDay: '',
       selectedTask: {},
-      daysTasks: [],
       todaysDateInUnix: '',
-      nextDay: {},
-      previousDay: {},
+      previousDayTasks: [],
+      currentTasks: [],
+      nextDayTasks: [],
       unscheduledCount: null,
       isLoaded: false,
       hasToken: false,
@@ -64,12 +64,40 @@ export default class App extends React.Component {
       })
     }
 
+    // Getting todays date and converting it to UNIX time
     let today = moment().format("YYYY-MM-DD")
     unixToday = moment(today).valueOf()
+    this.setState({
+      selectedDay: unixToday
+    })
+    console.log("todays date in unix: ", this.state.selectedDay)
+
+    // Yesterdays Tasks
+    let yesterdaysDate = moment(today).subtract(1, 'days');
+    let yesterdaysDateInUnix = moment(yesterdaysDateInUnix, "YYYY-MM-DD").valueOf();
+
+    axios.get(`/api/day/${yesterdaysDateInUnix}`).then(response => {
       this.setState({
-        todaysDateInUnix: unixToday
+        previousDayTasks: response.data
       })
-      console.log("todays date in unix: ", this.state.todaysDateInUnix)
+    }).catch(err => console.log(err))
+
+    // Todays Tasks
+    axios.get(`/api/day/${this.state.selectedDay}`).then(response => {
+      this.setState({
+        currentTasks: response.data,
+      })
+    }).catch(err => console.log(err));
+
+    // Tomorrows Tasks
+    let tomorrowDate = moment(today).add(1, 'days');
+    let tomorrowsDateInUnix = moment(tomorrowsDateInUnix, "YYYY-MM-DD").valueOf();
+
+    axios.get(`/api/day/${tomorrowsDateInUnix}`).then(response => {
+      this.setState({
+        nextDayTasks: response.data
+      })
+    }).catch(err => console.log(err));
   }
 
   closeDrawer = () => {
@@ -93,20 +121,25 @@ export default class App extends React.Component {
     this.setState({ [name]: !this.state[name] });
   }
 
-  getNextDay() {
-    // let date = moment().format("YYYY-MM-DD");
-    if (this.state.selectedDay) {
-
-    }
-    let tomorrowDate = moment(date).add(1, 'days');
-    let tomorrowsUnixDate = moment(tomorrowDate, "YYYY-MM-DD").valueOf();
-    console.log('tomorrowsUnixDate in Unix: ', tomorrowsUnixDate)
-    axios.get(`/api/day/${tomorrowsUnixDate}`).then(response => {
-      console.log(response)
+  getPreviousDay() {
+    let previousDateTasks = moment(this.state.selectedDay).subtract(86400000, 'milliseconds');
+    axios.get(`/api/day/${previousDateTasks}`).then(response => {
       this.setState({
-        nextDate: response.data
+        nextDayTasks: this.state.currentTasks,
+        currentTasks: response.data
       })
-    })
+    }).catch(err => console.log(err));
+  }
+
+  getNextDay() {
+    let nextDateTasks = moment(this.state.selectedDay).add(86400000, 'milliseconds');
+    console.log('tomorrowsUnixDate in Unix: ', nextDateTasks)
+    axios.get(`/api/day/${nextDateTasks}`).then(response => {
+      this.setState({
+        previousDayTasks: this.state.currentTasks,
+        currentTasks: response.data
+      })
+    }).catch(err => console.log(err));
   }
 
   onDayPress(day) {

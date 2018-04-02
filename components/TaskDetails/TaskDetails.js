@@ -31,7 +31,7 @@ export default class TaskDetails extends Component {
             activity: [],
             name: '',
             color: '#838C91',
-            user: 'Brandon Allred',
+            user: '',
             comment: '',
             comments: [],
             hours: '00',
@@ -191,9 +191,9 @@ export default class TaskDetails extends Component {
                             body={
                                 this.state.completed === false
                                     ?
-                                         <Text>  Swipe to complete</Text>
+                                    <Text>  Swipe to complete</Text>
                                     :
-                                         <Text style={{ backgroundColor: 'lightgreen', height: 30, width: 400 }}>Complete</Text>
+                                    <Text style={{ backgroundColor: 'lightgreen', height: 30, width: 400 }}>Complete</Text>
 
                             }
                             right={
@@ -229,9 +229,9 @@ export default class TaskDetails extends Component {
                                     this.setModalVisible(!this.state.LabelModalVisable);
                                 }}>
                                 <Text style={{ color: '#585858', fontSize: 17 }}>
-                                  <IconE name='time-slot' size={15} color={'#303030'} />
+                                    <IconE name='time-slot' size={15} color={'#303030'} />
                                     {this.state.milliseconds === null ? 'Duration' : this.state.milliseconds / (60 * 60 * 1000)}
-                                     </Text>
+                                </Text>
                             </TouchableHighlight>
                         </Item>
                         <Item style={labelStyle}>

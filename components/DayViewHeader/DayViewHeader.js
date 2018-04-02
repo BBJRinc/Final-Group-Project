@@ -34,7 +34,7 @@ export default class DayViewHeader extends Component {
                         <IconF name="chevron-left"
                             color="#000000"
                             size={15}
-                            onPress={() => previousDay()}
+                            onPress={() => getPreviousDay()}
                         />
                     </Left>
 
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: '#ffffff',
     },
-    text: {
+    text:{
         color: "#000000"
     }
 
