@@ -26,7 +26,6 @@ export default class TaskDetails extends Component {
             createdDate: '',
             description: '',
             duedate: '',
-            label: '',
             checklistItems: [],
             activity: [],
             name: '',
@@ -74,7 +73,6 @@ export default class TaskDetails extends Component {
             createdDate: createdat,
             description: description,
             duedate: duedate,
-            label: color,
             checklistItems: checkItems,
             color: color,
             date: duedate,
@@ -82,6 +80,26 @@ export default class TaskDetails extends Component {
             milliseconds: duration,
             completed: completed,
             startTime: starttime
+        });
+    }
+    componentWillUnmount(){
+        console.log(e)
+        axios({
+            method: 'put',
+            url: `http://${ipaddress}:4040/api/task/${this.props.selectedTask.taskid}`,
+            headers: {
+                "token": this.props.token
+            },
+            data: {
+                taskname: this.state.taskname,
+                duedate: this.state.duedate,
+                starttime: this.state.starttime,
+                description: this.state.description,
+                completed: this.state.completed,
+                color: this.state.completed,
+                isrecurring: this.state.isrecurring,
+                duration: this.state.duration
+            }
         });
     }
     editDescription(value) {
@@ -181,8 +199,6 @@ export default class TaskDetails extends Component {
                         <SwipeRow
                             leftOpenValue={75}
                             rightOpenValue={-75}
-                            padding={0}
-                            margin={0}
                             left={
                                 <Button success onPress={() => alert('Add')}>
                                     <IconF active name="check" />

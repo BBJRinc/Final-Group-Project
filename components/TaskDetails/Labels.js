@@ -60,7 +60,7 @@ export default class Labels extends Component {
                     onPress={() => {
                         this.setModalVisible(true);
                     }}>
-                    <Text style={LabelPadding}>{this.props.color==='' ? 'Label...' : <View style={[labelStyle,{backgroundColor:this.props.color}]}><Text style={{color:'#fff', paddingLeft:10, justifyContent:'center' }}>Tap to change task color</Text></View>}</Text>
+                    <View style={[labelStyle,{backgroundColor:this.props.color,marginBottom:20 }]}> {this.props.color==='' ? 'Label...' : <Text style={{color:'#fff', paddingLeft:10, justifyContent:'center' }}>Tap to change task color</Text>}</View>
                 </TouchableHighlight>
             </View>
         );

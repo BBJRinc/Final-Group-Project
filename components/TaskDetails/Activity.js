@@ -20,7 +20,7 @@ export default class Activity extends Component {
                 > */}
                     <Content style={activityContent}>
                         <Item>
-                            <View style={userInitialStyle}><Text><Text>{this.props.user.split(' ').map((item, i) => { if (i <= 1) return item[0] }).join('')}</Text></Text></View>
+                            <View style={userInitialStyle}><Text>{this.props.user.split(' ').map((item, i) => { if (i <= 1) return item[0] }).join('')}</Text></View>
                             <Input placeholder='Add a comment...' style={commentStyle} onChangeText={(text) => this.addComment(text)} />
                         </Item>
                     </Content>
