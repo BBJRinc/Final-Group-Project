@@ -13,12 +13,17 @@ import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
 import moment from 'moment';
 import SideBar from './components/DrawerMenu/SideBar';
+<<<<<<< HEAD
 import DayView from './components/DayView/DayView';
 
 
 const PubIpAdress = '192.168.3.176'
+=======
+import DayView from './components/DayView/DayView.js'
+>>>>>>> master
 
 
+const PubIpAdress = '192.168.3.132'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -36,6 +41,7 @@ export default class App extends React.Component {
       isLoaded: false,
       hasToken: false,
     }
+
     this.showMenuItem = this.showMenuItem.bind(this);
     this.onDayPress = this.onDayPress.bind(this);
     this.onTaskPress = this.onTaskPress.bind(this);
@@ -56,7 +62,6 @@ export default class App extends React.Component {
     }).catch(err => console.log(err));
 
     if (checkToken !== null) {
-      console.log('CheckToken data: ', checkToken)
       this.setState({
         hasToken: true,
         userToken: checkToken
@@ -65,27 +70,24 @@ export default class App extends React.Component {
   }
 
   closeDrawer = () => {
-    console.log('drawer is closed')
     this._drawer._root.close()
   }
 
   openDrawer = () => {
-    console.log('drawer is open')
     this._drawer._root.open()
   }
-  
-  setUnscheduledCount(count){
-    console.log('function unschedCount' + count);
-    this.setState({unscheduledCount: count});
+
+  setUnscheduledCount(count) {
+    this.setState({ unscheduledCount: count });
   }
 
-  showMenuItem(name, clearTask){
-    if(clearTask){
+  showMenuItem(name, clearTask) {
+    if (clearTask) {
       this.setState({
         selectedTask: {}
       })
     }
-    this.setState({[name]: !this.state[name]});
+    this.setState({ [name]: !this.state[name] });
   }
 
   onDayPress(day) {
@@ -109,10 +111,10 @@ export default class App extends React.Component {
 
   onLogout(){
     AsyncStorage.removeItem('token', (err) => {
-      if (err){
+      if (err) {
         console.log('Error deleting token: ' + err);
       }
-      this.setState({userToken: null, hasToken:false});
+      this.setState({ userToken: null, hasToken: false });
     });
   }
 
@@ -123,6 +125,7 @@ export default class App extends React.Component {
       .webAuth
       .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
+        // console.log(credentials)
         axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
           AsyncStorage.setItem('token', res.data, () => {
             AsyncStorage.getItem('token', (err, result) => {
@@ -143,17 +146,23 @@ export default class App extends React.Component {
       return (
         <Drawer
           ref={(ref) => { this._drawer = ref; }}
-          content={<SideBar navigator={this._navigator} logout={this.onLogout} showMenuItem={this.showMenuItem} onClose={this.closeDrawer} />}
+          content={<SideBar navigator={this._navigator} logout={this.onLogout} showMenuItem={this.showMenuItem} onClose={this.closeDrawer} unschedCount={this.state.unscheduledCount} />}
           onClose={() => this.closeDrawer()}>
           <Container>
             <Content>
+<<<<<<< HEAD
               <TaskDetails selectedTask={this.state.selectedTask} token={this.state.userToken}/>
               {/* <DayView /> */}
+=======
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user}/>
+              <DayView />
+>>>>>>> master
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
-              <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
+              <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
             </Content>
-            <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount}/>
+            <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount} />
+
           </Container>
         </Drawer>
       )

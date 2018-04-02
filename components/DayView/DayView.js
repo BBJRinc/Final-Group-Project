@@ -83,9 +83,9 @@ export default class DayView extends React.Component {
       newList[task.id] = task;
     //   let id = task.taskId;
 
-    //   if(!task.isReccuring) {
-    //     task.startTime = task.startTime.trimDay();
-    //   }
+      // if(!task.isReccuring) {
+      //   task.startTime = task.startTime.trimDay();
+      // }
 
 
     })
