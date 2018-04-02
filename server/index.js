@@ -34,7 +34,7 @@ massive(CONNECTION_STRING).then(indb => {
 
 //Auth login endpoints
 app.post('/api/auth', (req, res, next) => {
-    // console.log('req.token index.js: ', req.body)
+    console.log('req.token index.js: ', req.body)
     jwt.verify(req.body.token, AUTH0_CLIENT_SECRET, (err, decoded) => {
         let db = app.get('db');
         if (err) {
