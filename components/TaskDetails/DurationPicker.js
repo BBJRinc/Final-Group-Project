@@ -9,13 +9,14 @@ export default class DurationPicker extends Component {
     this.state = {
       hours: '00',
       minutes: '00',
+      milliseconds:'00'
     }
     this.updateHour = this.updateHour.bind(this)
     this.updateMin = this.updateMin.bind(this)
 
   }
-  componentWillReceiveProps(props){
-    console.log(this.props.duration)
+  componentDidMount() {
+    this.setState({milliseconds:this.props.duration})
   }
   updateHour(value) {
     this.setState({ hours: value })
@@ -25,6 +26,7 @@ export default class DurationPicker extends Component {
   }
 
   render() {
+    console.log(this.props.duration)
     const { text, pickerView, headerBackground, pickerContainer, pickerViewLeft, pickerViewRight, picker, bottomView } = style
     return (
       <View>
@@ -36,11 +38,14 @@ export default class DurationPicker extends Component {
           <View style={{ backgroundColor: 'black' }}>
             <Header style={headerBackground}>
               <StatusBar backgroundColor='red' barStyle='light-content' />
-              <Text style={text}>Duration</Text>
+              {/* <Text style={text}>{this.props.duration===null ? 'Duration' : this.state.milliseconds}</Text> */}
             </Header>
-            <View style={ pickerContainer}>
-              <View style={ pickerView }><Text style={ pickerViewLeft }>hours</Text><Text style={ pickerViewRight }>min</Text></View>
-              <Picker selectedValue={this.state.hours} onValueChange={(value) => this.updateHour(value)} style={ picker }>
+            <View style={pickerContainer}>
+              <View style={pickerView}><Text style={pickerViewLeft}>hours</Text><Text style={pickerViewRight}>min</Text></View>
+              <Picker
+                selectedValue={this.state.hours}
+                onValueChange={(value) => this.updateHour(value)}
+                style={picker}>
                 <Picker.Item label="00" value="00" color='#fff' />
                 <Picker.Item label="01" value="01" color='#fff' />
                 <Picker.Item label="02" value="02" color='#fff' />
@@ -67,16 +72,19 @@ export default class DurationPicker extends Component {
                 <Picker.Item label="23" value="23" color='#fff' />
                 <Picker.Item label="24" value="24" color='#fff' />
               </Picker>
-              <Picker selectedValue={this.state.minutes} onValueChange={this.updateMin} style={{ width: 200, paddingRight: 50 }}>
+              <Picker
+                selectedValue={this.state.minutes}
+                onValueChange={this.updateMin}
+                style={{ width: 200, paddingRight: 50 }}>
                 <Picker.Item label="00" value="00" color='#fff' />
                 <Picker.Item label="15" value=".15" color='#fff' />
                 <Picker.Item label="30" value=".30" color='#fff' />
                 <Picker.Item label="45" value=".45" color='#fff' />
               </Picker>
             </View>
-            <View style={ bottomView }>
-                <Text style={text} onPress={(e)=>this.props.cancelDuration(e)}>Cancel</Text>
-              <Text style={text} onPress={(e)=>this.props.saveDuration((e),this.state)}>Save</Text>
+            <View style={bottomView}>
+              <Text style={text} onPress={(e) => this.props.cancelDuration(e)}>Cancel</Text>
+              <Text style={text} onPress={(e) => this.props.saveDuration((e), this.state)}>Save</Text>
             </View>
           </View>
         </Modal>
@@ -99,41 +107,41 @@ const style = {
     justifyContent: 'space-between',
     flexDirection: 'row'
   },
-  headerBackground:{
-    backgroundColor: '#1b1b1b', 
+  headerBackground: {
+    backgroundColor: '#1b1b1b',
     alignItems: 'center'
-  }, 
-  pickerContainer:{
-    flexDirection: 'row', 
-    backgroundColor: '#000', 
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#000',
     justifyContent: 'center'
   },
-  pickerViewLeft:{
-    color: '#fff', 
-    paddingTop: 8, 
+  pickerViewLeft: {
+    color: '#fff',
+    paddingTop: 8,
     fontSize: 15
   },
-  pickViewRight:{
-    color: '#fff', 
-    paddingTop: 8, 
-    paddingRight: 15, 
+  pickViewRight: {
+    color: '#fff',
+    paddingTop: 8,
+    paddingRight: 15,
     fontSize: 15
   },
-  picker:{
-    width: 200, 
+  picker: {
+    width: 200,
     paddingLeft: 25
   },
-  bottomView:{
-    height: 35, 
-    backgroundColor: '#1b1b1b', 
-    justifyContent: 'space-between', 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingRight: 20, 
-    paddingLeft: 20, 
+  bottomView: {
+    height: 35,
+    backgroundColor: '#1b1b1b',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 20,
+    paddingLeft: 20,
     marginBottom: 300
   },
-  text:{
-    color:'#fff'
+  text: {
+    color: '#fff'
   }
 }

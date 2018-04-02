@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAdress = '192.168.0.236'
+const PubIpAdress = '192.168.0.105'
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -22,9 +22,9 @@ export default class Checklist extends Component {
     }
 
     componentDidMount() {
-        // const{checklistitemid, content} = this.props.checklistItems
-        this.setState({ checklistItems: this.props.checklistItems, taskid: this.props.taskId })
-
+        const{checklistItems, taskId, duration} = this.props
+        console.log(checklistItems, taskId)
+        this.setState({ checklistItems: checklistItems, taskid: taskId })
     }
 
     editContent(e) {
