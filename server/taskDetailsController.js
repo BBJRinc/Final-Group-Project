@@ -103,7 +103,7 @@ module.exports={
             req.body.color,
             req.body.isrecurring,
             req.body.duration,
-            req.body.userid
+            req.userid
         ];
         req.app.get('db').addTask(task).then(resp => {
             res.status(200).send(resp);

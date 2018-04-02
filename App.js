@@ -13,17 +13,10 @@ import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
 import moment from 'moment';
 import SideBar from './components/DrawerMenu/SideBar';
-<<<<<<< HEAD
-import DayView from './components/DayView/DayView';
-
-
-const PubIpAdress = '192.168.3.176'
-=======
 import DayView from './components/DayView/DayView.js'
->>>>>>> master
 
 
-const PubIpAdress = '192.168.3.132'
+const PubIpAdress = '192.168.3.149'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -150,13 +143,8 @@ export default class App extends React.Component {
           onClose={() => this.closeDrawer()}>
           <Container>
             <Content>
-<<<<<<< HEAD
-              <TaskDetails selectedTask={this.state.selectedTask} token={this.state.userToken}/>
-              {/* <DayView /> */}
-=======
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user}/>
               <DayView />
->>>>>>> master
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />

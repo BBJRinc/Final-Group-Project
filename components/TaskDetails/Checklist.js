@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAdress = '192.168.3.132'
+const PubIpAdress = '192.168.3.149'
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -112,7 +112,7 @@ export default class Checklist extends Component {
 
         return (
             <View style={{ backgroundColor: '#efefef' }}>
-                <List
+                    <List
                     dataSource={this.ds.cloneWithRows(this.state.checklistItems)}
                     renderRow={data =>
                         <ListItem style={{ paddingLeft: 10, alignContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }} onLongPress={(e, item) => this.editContent(e, item)}>
@@ -136,7 +136,6 @@ export default class Checklist extends Component {
                     }
                     rightOpenValue={-75}
                 />
-
                 <View>
 
                     <Item>
