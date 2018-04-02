@@ -15,7 +15,7 @@ export default class Labels extends Component {
         this.setState({ modalVisible: visible });
     }
     componentWillReceiveProps() {
-        this.setState({modalVisible:this.props.isVisable})
+        this.setState({ modalVisible: this.props.isVisable })
     }
 
     render() {
@@ -26,11 +26,11 @@ export default class Labels extends Component {
                     animationType="slide"
                     transparent={false}
                     visible={this.state.modalVisible}
-                    >
+                >
                     <Header style={{ backgroundColor: this.props.color }}>
                         <Left>
                             <Button transparent >
-                                <TouchableHighlight 
+                                <TouchableHighlight
                                     onPress={() => {
                                         this.setModalVisible(false);
                                     }}>
@@ -47,20 +47,26 @@ export default class Labels extends Component {
                     </Header>
                     <Content>
                         <Content>
-                            <Button block style={[buttonStyle, { backgroundColor: '#EB5A46' }]} onPress={(e) => this.props.labelColor({ color: '#EB5A46', modalVisible:'false'})}>{this.props.color === '#EB5A46' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
-                            <Button block style={[buttonStyle, { backgroundColor: '#FFAB4A' }]} onPress={(e) => this.props.labelColor({ color: '#FFAB4A', modalVisible:'false' })}>{this.props.color === '#FFAB4A' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
-                            <Button block style={[buttonStyle, { backgroundColor: '#51E898' }]} onPress={(e) => this.props.labelColor({ color: '#51E898', modalVisible:'false' })}>{this.props.color === '#51E898' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
-                            <Button block style={[buttonStyle, { backgroundColor: '#F5DD29' }]} onPress={(e) => this.props.labelColor({ color: '#F5DD29', modalVisible:'false' })}>{this.props.color === '#F5DD29' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
-                            <Button block style={[buttonStyle, { backgroundColor: '#00C2E0' }]} onPress={(e) => this.props.labelColor({ color: '#00C2E0', modalVisible:'false' })}>{this.props.color === '#00C2E0' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
-                            <Button block style={[buttonStyle, { backgroundColor: '#838C91' }]} onPress={(e) => this.props.labelColor({ color: '#838C91', modalVisible:'false' })}>{this.props.color === '#838C91' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#EB5A46' }]} onPress={(e) => this.props.labelColor({ color: '#EB5A46', modalVisible: 'false' })}>{this.props.color === '#EB5A46' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#FFAB4A' }]} onPress={(e) => this.props.labelColor({ color: '#FFAB4A', modalVisible: 'false' })}>{this.props.color === '#FFAB4A' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#51E898' }]} onPress={(e) => this.props.labelColor({ color: '#51E898', modalVisible: 'false' })}>{this.props.color === '#51E898' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#F5DD29' }]} onPress={(e) => this.props.labelColor({ color: '#F5DD29', modalVisible: 'false' })}>{this.props.color === '#F5DD29' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#00C2E0' }]} onPress={(e) => this.props.labelColor({ color: '#00C2E0', modalVisible: 'false' })}>{this.props.color === '#00C2E0' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
+                            <Button block style={[buttonStyle, { backgroundColor: '#838C91' }]} onPress={(e) => this.props.labelColor({ color: '#838C91', modalVisible: 'false' })}>{this.props.color === '#838C91' ? <IconF name='check' size={25} style={{ color: '#fff' }} /> : null}</Button>
                         </Content>
                     </Content>
                 </Modal>
-                <TouchableHighlight style={{alignItems:'center'}}
+                <TouchableHighlight style={{ alignItems: 'center' }}
                     onPress={() => {
                         this.setModalVisible(true);
                     }}>
-                    <Text style={LabelPadding}>{this.props.color==='' ? 'Label...' : <View style={[labelStyle,{backgroundColor:this.props.color}]}><Text style={{color:'#fff', paddingLeft:10, justifyContent:'center' }}>Tap to change task color</Text></View>}</Text>
+                    {/* <View style={}> */}
+                    <View style={[labelStyle, { backgroundColor: this.props.color, marginBottom: 20 }]}>
+                        {this.props.color === '' ? 'Label...' :
+                            <Text style={{ color: '#fff', paddingLeft: 10, justifyContent: 'center' }}>Tap to change task color</Text>
+                        }
+                    </View>
+                    {/* </View> */}
                 </TouchableHighlight>
             </View>
         );
@@ -72,8 +78,8 @@ const styles = ({
         marginLeft: 10,
         color: '#C7C7CD',
         alignItems: 'center',
-        justifyContent:'center',
-        alignContent:'center',
+        justifyContent: 'center',
+        alignContent: 'center',
     },
     headerText: {
         color: '#fff',
@@ -88,12 +94,12 @@ const styles = ({
         margin: 5,
         justifyContent: 'flex-end',
         paddingRight: 15
-    }, 
-    labelStyle:{
-        height:25, 
-        width: 225, 
-        borderRadius:3, 
-        marginLeft:10, 
-        alignItems:'center'
+    },
+    labelStyle: {
+        height: 25,
+        width: 225,
+        borderRadius: 3,
+        marginLeft: 10,
+        alignItems: 'center'
     }
 })

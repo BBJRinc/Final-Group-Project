@@ -22,7 +22,7 @@ export default class Checklist extends Component {
     }
 
     componentDidMount() {
-        const { checklistItems, taskId, duration } = this.props
+        const { checklistItems, taskId } = this.props
         console.log(checklistItems, taskId)
         this.setState({ checklistItems: checklistItems, taskid: taskId })
     }
