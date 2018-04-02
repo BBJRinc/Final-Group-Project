@@ -55,17 +55,13 @@ export default class TaskDetails extends Component {
         this.setModalVisible = this.setModalVisible.bind(this)
     }
     componentWillReceiveProps(nextProps) {
+       if (nextProps.selectedTask.taskid){
         const {
             taskid, taskname, updatedat,
             userid, starttime, isrecurring, duration,
             duedate, description, createdat, completed,
-            comments, color, checkItems, token } = nextProps.selectedTask
-        //     console.log(this.props.user)
-        //     console.log(nextProps.selectedTask.duedate)
-        //     console.log(duedate, createdat)
-        // value=moment.unix(duedate).format('MM-DD-YYYY')
-        // console.log(value)
-
+            comments, color, checkitems, token } = nextProps.selectedTask
+ 
         this.setState({
             userID: userid,
             userToken: this.props.token,
@@ -75,7 +71,7 @@ export default class TaskDetails extends Component {
             description: description,
             duedate: duedate,
             label: color,
-            checklistItems: checkItems,
+            checklistItems: checkitems,
             color: color,
             date: duedate,
             comments: comments,
@@ -83,6 +79,35 @@ export default class TaskDetails extends Component {
             completed: completed,
             startTime: starttime
         });
+       } else {
+        this.setState({
+            userID: '',
+            taskId: '',
+            userToken: this.props.token,
+            createdDate: '',
+            description: '',
+            duedate: '',
+            label: '',
+            checklistItems: [],
+            activity: [],
+            name: '',
+            color: '#838C91',
+            user: 'Brandon Allred',
+            comment: '',
+            comments: [],
+            hours: '00',
+            minutes: '00',
+            milliseconds: 0,
+            completed: false,
+            durationModalVisable: false,
+            showChecklist: false,
+            LabelModalVisable: false,
+            startTime: null,
+            editTitle: false
+        });
+       }
+       
+        
     }
     editDescription(value) {
         console.log(value)
@@ -146,6 +171,7 @@ export default class TaskDetails extends Component {
                 <Modal
                     animationType="slide"
                     transparent={false}
+                    onRequestClose={() => this.props.showMenuItem('showTaskDetails')}
                     visible={this.props.showTaskDetails}>
                     <View style={[header, { backgroundColor: this.state.color }]}>
                         <View style={header_top}>
