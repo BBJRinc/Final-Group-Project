@@ -22,7 +22,7 @@ export default class Checklist extends Component {
     }
 
     componentDidMount() {
-        const { checklistItems, taskId, duration } = this.props
+        const { checklistItems, taskId } = this.props
         console.log(checklistItems, taskId)
         this.setState({ checklistItems: checklistItems, taskid: taskId })
     }
@@ -123,7 +123,7 @@ export default class Checklist extends Component {
 
         return (
             <View style={{ backgroundColor: '#efefef' }}>
-                <List
+                    <List
                     dataSource={this.ds.cloneWithRows(this.state.checklistItems)}
                     renderRow={data =>
                         <ListItem style={{ paddingLeft: 10, alignContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }} onLongPress={(e, item) => this.editContent(e, item)}>
@@ -147,7 +147,6 @@ export default class Checklist extends Component {
                     }
                     rightOpenValue={-75}
                 />
-
                 <View>
 
                     <Item>

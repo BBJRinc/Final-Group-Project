@@ -54,17 +54,13 @@ export default class TaskDetails extends Component {
         this.setModalVisible = this.setModalVisible.bind(this)
     }
     componentWillReceiveProps(nextProps) {
+       if (nextProps.selectedTask.taskid){
         const {
             taskid, taskname, updatedat,
             userid, starttime, isrecurring, duration,
             duedate, description, createdat, completed,
-            comments, color, checkItems, token } = nextProps.selectedTask
-        //     console.log(this.props.user)
-        //     console.log(nextProps.selectedTask.duedate)
-        //     console.log(duedate, createdat)
-        // value=moment.unix(duedate).format('MM-DD-YYYY')
-        // console.log(value)
-
+            comments, color, checkitems, token } = nextProps.selectedTask
+ 
         this.setState({
             userID: userid,
             userToken: this.props.token,
@@ -73,7 +69,8 @@ export default class TaskDetails extends Component {
             createdDate: createdat,
             description: description,
             duedate: duedate,
-            checklistItems: checkItems,
+            label: color,
+            checklistItems: checkitems,
             color: color,
             date: duedate,
             comments: comments,
@@ -81,6 +78,35 @@ export default class TaskDetails extends Component {
             completed: completed,
             startTime: starttime
         });
+       } else {
+        this.setState({
+            userID: '',
+            taskId: '',
+            userToken: this.props.token,
+            createdDate: '',
+            description: '',
+            duedate: '',
+            label: '',
+            checklistItems: [],
+            activity: [],
+            name: '',
+            color: '#838C91',
+            user: 'Brandon Allred',
+            comment: '',
+            comments: [],
+            hours: '00',
+            minutes: '00',
+            milliseconds: 0,
+            completed: false,
+            durationModalVisable: false,
+            showChecklist: false,
+            LabelModalVisable: false,
+            startTime: null,
+            editTitle: false
+        });
+       }
+       
+        
     }
     componentWillUnmount(){
         console.log(e)
@@ -164,6 +190,7 @@ export default class TaskDetails extends Component {
                 <Modal
                     animationType="slide"
                     transparent={false}
+                    onRequestClose={() => this.props.showMenuItem('showTaskDetails')}
                     visible={this.props.showTaskDetails}>
                     <View style={[header, { backgroundColor: this.state.color }]}>
                         <View style={header_top}>
@@ -207,9 +234,10 @@ export default class TaskDetails extends Component {
                             body={
                                 this.state.completed === false
                                     ?
-                                    <Text>  Swipe to complete</Text>
+                                         <Text>  Swipe to complete</Text>
                                     :
-                                    <Text style={{ backgroundColor: 'lightgreen', height: 30, width: 400 }}>  Complete</Text>
+                                         <Text style={{ backgroundColor: 'lightgreen', height: 30, width: 400 }}>Complete</Text>
+
                             }
                             right={
                                 <Button danger onPress={() => alert('Trash')}>
@@ -243,8 +271,10 @@ export default class TaskDetails extends Component {
                                 onPress={() => {
                                     this.setModalVisible(!this.state.LabelModalVisable);
                                 }}>
-                                <Text style={{ color: '#585858', fontSize: 17 }}>  <IconE name='time-slot' size={15} color={'#303030'} />
-                                    {this.state.milliseconds === null ? 'Duration' : this.state.milliseconds / (60 * 60 * 1000)} </Text>
+                                <Text style={{ color: '#585858', fontSize: 17 }}>
+                                  <IconE name='time-slot' size={15} color={'#303030'} />
+                                    {this.state.milliseconds === null ? 'Duration' : this.state.milliseconds / (60 * 60 * 1000)}
+                                     </Text>
                             </TouchableHighlight>
                         </Item>
                         <Item style={labelStyle}>
