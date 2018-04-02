@@ -1,7 +1,6 @@
 module.exports={
     addCheckItem: function(req, res){
         const taskid = Number(req.params.taskid)
-        console.log(typeof taskid);
         let item = [
             taskid,
             req.body.content
@@ -15,17 +14,19 @@ module.exports={
     }, 
 
     updateCheckItem: function(req, res){
-        let itemid = Number(req.params.itemid);
-        let checkItem = [
-            itemid,
-            req.body.content,
-            req.body.completed
-        ];
-        req.app.get('db').udpateCheckItem(checkItem).then(resp => {
-            req.app.get('db').getChecklist([resp[0].taskid]).then(checklist => {
-                res.status(200).send(checklist)
+        let checklist = req.body.checklistItems.map((item) => {
+            let checkItem = [
+                item.checklistitemid,
+                item.content,
+                item.completed
+            ];
+            return req.app.get('db').updateCheckItem(checkItem).then(resp => {
+                return resp[0];
             }).catch(err => console.log(err));
-        }).catch(err => console.log(err));
+        });
+        Promise.all(checklist).then(results => {
+            res.status(200).send(results);
+        });
     },
 
     deleteCheckItem: function(req, res){

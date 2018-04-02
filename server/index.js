@@ -71,7 +71,7 @@ app.delete('/api/inprogress/:taskid', taskCtrl.deleteOngoing);
 
 //task details endpoints
 app.post('/api/checklist/:taskid', tdCtrl.addCheckItem);
-app.put('/api/checklist/:itemid', tdCtrl.updateCheckItem);
+app.put('/api/checklist', tdCtrl.updateCheckItem);
 app.delete('/api/checklist/:itemid', tdCtrl.deleteCheckItem);
 app.post('/api/comment/:taskid', tdCtrl.addComment);
 app.put('/api/comment/:commentid', tdCtrl.editComment);

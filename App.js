@@ -147,8 +147,8 @@ export default class App extends React.Component {
           onClose={() => this.closeDrawer()}>
           <Container>
             <Content>
-              {/* <TaskDetails selectedTask={this.state.selectedTask} /> */}
-              <DayView />
+              <TaskDetails selectedTask={this.state.selectedTask} token={this.state.userToken}/>
+              {/* <DayView /> */}
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken}/>
