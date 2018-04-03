@@ -26,6 +26,7 @@ export default class Labels extends Component {
                     animationType="slide"
                     transparent={false}
                     visible={this.state.modalVisible}
+                    onRequestClose={() => this.setModalVisible(false)}
                 >
                     <Header style={{ backgroundColor: this.props.color }}>
                         <Left>

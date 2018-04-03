@@ -33,7 +33,7 @@ export default class Checklist extends Component {
                 "token": this.props.token
             },
             data: {
-                checklistItems: this.state.checklistItems
+                "checklistItems": this.state.checklistItems
             }
         });
     }
@@ -75,6 +75,9 @@ export default class Checklist extends Component {
     addChecklistItem(e) {
         const { checklistItems, newChecklistItem, taskid } = this.state
         let itemid = taskid
+        if(newChecklistItem===''){
+            return null
+        } else {
         axios({
             method: 'post',
             url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
@@ -88,6 +91,7 @@ export default class Checklist extends Component {
             this.setState({ checklistItems: resp.data });
         });
         this.setState({ newChecklistItem: '' })
+    }
     }
     deleteRow(secId, rowId, rowMap, data) {
         const { checklistitemid } = data
