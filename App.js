@@ -16,7 +16,6 @@ import SideBar from './components/DrawerMenu/SideBar';
 import DayView from './components/DayView/DayView.js';
 import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 
-
 const PubIpAddress = '192.168.3.176'
 
 export default class App extends React.Component {
@@ -70,10 +69,13 @@ export default class App extends React.Component {
       })
     }
 
+
     let newToday = Math.round(new Date().getTime())
+    let offSet = moment().utcOffset()
+    offSet = (offSet * 1000) * 60;
+    newToday += offSet;
     // One day in milliseconds
     let oneDay = 86400000;
-
     // Todays Tasks
     let todayConv = moment(newToday).format("YYYY-MM-DD")
     let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
@@ -261,7 +263,7 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             <Content>
-              <DayView tasksToRender={this.state.currentTasks}/>
+              <DayView tasksToRender={this.state.currentTasks} />
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
