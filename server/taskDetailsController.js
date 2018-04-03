@@ -14,19 +14,21 @@ module.exports={
     }, 
 
     updateCheckItem: function(req, res){
-        let checklist = req.body.checklistItems.map((item) => {
-            let checkItem = [
-                item.checklistitemid,
-                item.content,
-                item.completed
-            ];
-            return req.app.get('db').updateCheckItem(checkItem).then(resp => {
-                return resp[0];
-            }).catch(err => console.log(err));
-        });
-        Promise.all(checklist).then(results => {
-            res.status(200).send(results);
-        });
+        if (req.body.checklistItems.length){
+            let checklist = req.body.checklistItems.map((item) => {
+                let checkItem = [
+                    item.checklistitemid,
+                    item.content,
+                    item.completed
+                ];
+                return req.app.get('db').updateCheckItem(checkItem).then(resp => {
+                    return resp[0];
+                }).catch(err => console.log(err));
+            });
+            Promise.all(checklist).then(results => {
+                res.status(200).send(results);
+            });
+        }
     },
 
     deleteCheckItem: function(req, res){
@@ -39,11 +41,11 @@ module.exports={
     },
 
     addComment: function(req, res){
-        console.log('add comment endpoint hit')
+        // console.log('add comment endpoint hit')
         const taskid = Number(req.params.taskid);
         let comment = [
             taskid,
-            req.body.userid,
+            req.userid,
             req.body.content
         ];
         req.app.get('db').addComment(comment).then(() => {
@@ -96,13 +98,6 @@ module.exports={
     addTask: function(req, res){
         let task = [
             req.body.taskname,
-            req.body.duedate,
-            req.body.starttime,
-            req.body.description,
-            req.body.completed,
-            req.body.color,
-            req.body.isrecurring,
-            req.body.duration,
             req.userid
         ];
         req.app.get('db').addTask(task).then(resp => {

@@ -1,25 +1,9 @@
--- select * from task where userid = $1 and starttime is not null and completed = false;
-select t.taskid, t.taskname, t.duedate, t.starttime, t.description, t.completed, t.createdat, t.color, t.isrecurring, t.userid, t.duration, 
-json_agg(
-    json_build_object(
-    'checklistitemid', c.checklistitemid,
-    'content', c.content,
-    'createdat', c.createdat,
-    'taskid', c.taskid,
-    'completed', c.completed
-    )
-) as checkItems,
-json_agg(
-    json_build_object(
-        'commentid', co.commentid,
-    'content', co.content,
-    'createdat', co.createdat,
-    'taskid', co.taskid,
-    'userid', co.userid
-    )
-) as comments
-from task as t
-left join checklistitem as c on c.taskid = t.taskid 
-left join comments as co on co.taskid = t.taskid 
-where t.userid = $1 and t.starttime is not null
-group by t.taskid
+select task.taskid, task.taskname,task.duedate, task.starttime, task.description, task.completed, task.createdat, task.color, task.isrecurring, task.userid, task.duration,
+coalesce((select json_agg(checklistitem.*)
+from checklistitem
+where checklistitem.taskid = task.taskid), '{}'::json) as checkItems,
+coalesce((select json_agg(comments.*)
+from comments
+where comments.taskid = task.taskid), '{}'::json) as comments
+from task
+where task.userid = $1 and task.starttime is not null

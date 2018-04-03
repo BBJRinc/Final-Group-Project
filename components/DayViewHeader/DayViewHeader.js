@@ -58,7 +58,7 @@ export default class DayViewHeader extends Component {
 
 const styles = StyleSheet.create({
     header: {
-        height: 30,
+        height: 35,
         backgroundColor: 'rgba(0, 0, 0, .85)',
         justifyContent: "center"
 

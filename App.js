@@ -15,6 +15,7 @@ import moment from 'moment';
 import SideBar from './components/DrawerMenu/SideBar';
 import DayView from './components/DayView/DayView.js';
 import DayViewHeader from './components/DayViewHeader/DayViewHeader';
+import AddTask from './components/TaskDetails/AddTask';
 
 const PubIpAddress = '192.168.3.176'
 
@@ -28,6 +29,7 @@ export default class App extends React.Component {
       showCalendar: false,
       showTaskDetails: false,
       showOngoing: false,
+      showAddTask: false,
       selectedDay: '',
       selectedTask: {},
       todaysDateInUnix: '',
@@ -48,6 +50,8 @@ export default class App extends React.Component {
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
     this.getDay = this.getDay.bind(this);
+    this.selectedTaskUpdate = this.selectedTaskUpdate.bind(this);
+    this.setSelectedTask = this.setSelectedTask.bind(this);
     this.getNextDay = this.getNextDay.bind(this);
     this.getPreviousDay = this.getPreviousDay.bind(this);
   }
@@ -55,7 +59,6 @@ export default class App extends React.Component {
 
 
   async componentDidMount() {
-    // console.log('COMPONENT MOUNTED!!!!!');
     SplashScreen.hide();
 
     let checkToken = await AsyncStorage.getItem('token').then(res => {
@@ -146,6 +149,7 @@ export default class App extends React.Component {
   }
 
   showMenuItem(name, clearTask) {
+    // console.log(name)
     if (clearTask) {
       this.setState({
         selectedTask: {}
@@ -227,11 +231,20 @@ export default class App extends React.Component {
   onLogout() {
     AsyncStorage.removeItem('token', (err) => {
       if (err) {
-        console.log('Error deleting token: ' + err);
+        // console.log('Error deleting token: ' + err);
       }
       this.setState({ userToken: null, hasToken: false });
     });
   }
+  selectedTaskUpdate() {
+    this.setState({ selectedTask: {} })
+  }
+  setSelectedTask(createdTask) {
+    let task = createdTask[0]
+    // console.log(task)
+    this.setState({ selectedTask: task })
+  }
+
 
   loginWindow() {
     auth0
@@ -256,26 +269,23 @@ export default class App extends React.Component {
   render() {
     if (this.state.userToken && this.state.hasToken) {
       return (
-          <Drawer
-            ref={(ref) => { this._drawer = ref }}
-            content={<SideBar navigator={this._navigator} logout={this.onLogout} showMenuItem={this.showMenuItem} onClose={this.closeDrawer} unschedCount={this.state.unscheduledCount} />}
-            onClose={() => this.closeDrawer()}>
-            <StatusBar
-            backgroundColor="#4f6d7a"
-            barStyle="light-content"
-          />
-            <Container>
-              <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
-              <Content>
-                <DayView tasksToRender={this.state.currentTasks} />
-                <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} />
-                <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
-                <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
-                <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
-              </Content>
-              <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount} />
-            </Container>
-          </Drawer>
+        <Drawer
+          ref={(ref) => { this._drawer = ref; }}
+          content={<SideBar navigator={this._navigator} logout={this.onLogout} showMenuItem={this.showMenuItem} onClose={this.closeDrawer} unschedCount={this.state.unscheduledCount} />}
+          onClose={() => this.closeDrawer()}>
+          <Container>
+            <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
+            <Content>
+              <DayView tasksToRender={this.state.currentTasks} />
+              <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} />
+              <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
+              <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
+              <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
+            </Content>
+            <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount} />
+          </Container>
+        </Drawer>
       )
     }
     else {
