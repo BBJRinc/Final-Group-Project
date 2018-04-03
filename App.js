@@ -17,7 +17,7 @@ import DayView from './components/DayView/DayView.js';
 import AddTask from './components/TaskDetails/AddTask';
 
 
-const PubIpAdress = '192.168.3.149'
+const PubIpAdress = '192.168.3.132'
 
 export default class App extends React.Component {
   constructor(props) {

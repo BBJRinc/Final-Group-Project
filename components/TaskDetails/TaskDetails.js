@@ -15,7 +15,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
-const PubIpAdress = '192.168.3.149';
+const PubIpAdress = '192.168.3.132';
 
 export default class TaskDetails extends Component {
     constructor(props) {
