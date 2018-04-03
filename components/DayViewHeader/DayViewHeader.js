@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Container, Icon, Header, Left, Right, Body, Title, } from 'native-base';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
@@ -28,7 +28,7 @@ export default class DayViewHeader extends Component {
         return (
                 <Header style={styles.header}>
 
-                    <Left Icon style={styles.flex}>
+                    <Left Icon style={styles.left}>
                         <IconF name="chevron-left"
                             color="#ffffff"
                             size={25}
@@ -42,7 +42,7 @@ export default class DayViewHeader extends Component {
                         </Title>
                     </Body>
 
-                    <Right style={styles.flex}>
+                    <Right Icon style={styles.right}>
                         <IconF
                             name="chevron-right"
                             color="#ffffff"
@@ -63,14 +63,16 @@ const styles = StyleSheet.create({
 
     },
     body: {
+        width: '100%',
+    },
+    right: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        paddingLeft:0
     },
-    flex:{
-        flex: 1
+    left:{
+        flex: 1,
+        paddingRight:0
     },
-
     text: {
         color: "#ffffff",
     }
