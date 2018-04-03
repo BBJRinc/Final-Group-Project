@@ -6,7 +6,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import Comments from './Comments';
 
-const PubIpAdress = '192.168.3.132';
+const PubIpAdress = '192.168.3.149';
 
 export default class Activity extends Component {
     constructor(props) {
@@ -18,6 +18,7 @@ export default class Activity extends Component {
     }
 
     componentDidMount(){
+        console.log("The comments received as props: " + this.props.comments)
         this.setState({comments: this.props.comments});
     }
 
@@ -38,7 +39,7 @@ export default class Activity extends Component {
 
     render() {
         const { activityContent, userInitialStyle, commentStyle, separate, padding, inputSize } = styles
-        const comments = this.state.comments.map(comment => {
+        const comments = !this.state.comments.length ? null : this.state.comments.map(comment => {
             return(
                 <Comments key={comment.commentid} comment={comment} user={this.props.user} />
             )

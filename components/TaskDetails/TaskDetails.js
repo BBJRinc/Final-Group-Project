@@ -15,7 +15,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
-const PubIpAdress = '192.168.3.132';
+const PubIpAdress = '192.168.3.149';
 
 export default class TaskDetails extends Component {
     constructor(props) {
@@ -25,9 +25,9 @@ export default class TaskDetails extends Component {
             userID: '',
             taskid: '',
             userToken: '',
-            createdDate: '',
+            createdDate: null,
             description: '',
-            duedate: '',
+            duedate: null,
             checklistItems: [],
             activity: [],
             taskname: '',
@@ -44,7 +44,7 @@ export default class TaskDetails extends Component {
             LabelModalVisable: false,
             startTime: null,
             editTitle: false,
-            date: ''
+            date: null
             // members: [],
             // newChecklistItem: '',
             // modalVisable:false,
@@ -57,7 +57,7 @@ export default class TaskDetails extends Component {
         this.updateChecklist = this.updateChecklist.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.selectedTask)
+        console.log("The Selected Task Is: " + nextProps.selectedTask)
         if (nextProps.selectedTask.taskid) {
             const {
             taskid, taskname, updatedat,
@@ -66,21 +66,21 @@ export default class TaskDetails extends Component {
                 comments, color, checkitems, token } = nextProps.selectedTask
 
             this.setState({
-                userID: userid,
+                userID: userid || '',
                 userToken: this.props.token,
                 taskid: taskid,
-                taskname: taskname,
-                createdDate: '',
-                description: description,
-                duedate: duedate,
-                label: color,
+                taskname: taskname ,
+                createdDate: createdat,
+                description: description || '',
+                duedate: duedate || null,
+                // label: color || '#838C91',
                 checklistItems: checkitems || [],
-                color: color,
-                date: duedate,
+                color: color || '#838C91',
+                date: duedate || null,
                 comments: comments || [],
-                milliseconds: duration,
-                completed: completed,
-                startTime: starttime
+                milliseconds: duration || 0,
+                completed: completed || false,
+                startTime: starttime || null
             });
         } else {
             this.setState({
@@ -111,9 +111,7 @@ export default class TaskDetails extends Component {
 
         }
     }
-    componentDidMount() {
 
-    }
     updateTaskOnClick() {
         axios({
             method: 'put',
@@ -195,7 +193,6 @@ export default class TaskDetails extends Component {
         this.setState({ editTitle: !this.state.editting })
     }
     render() {
-        console.log(this.state)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
             <View style={{ marginTop: 22 }}>

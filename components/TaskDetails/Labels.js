@@ -25,6 +25,7 @@ export default class Labels extends Component {
                 <Modal
                     animationType="slide"
                     transparent={false}
+                    onRequestClose={() => this.setState({modalVisible: false})}
                     visible={this.state.modalVisible}
                     onRequestClose={() => this.setModalVisible(false)}
                 >
@@ -61,7 +62,8 @@ export default class Labels extends Component {
                     onPress={() => {
                         this.setModalVisible(true);
                     }}>
-                    <View style={[labelStyle,{backgroundColor:this.props.color,marginBottom:20 }]}> {this.props.color==='' ? 'Label...' : <Text style={{color:'#fff', paddingLeft:10, justifyContent:'center' }}>Tap to change task color</Text>}</View>
+                    <View style={[labelStyle,{backgroundColor:this.props.color,marginBottom:20 }]}>
+                         {this.props.color==='' ? <Text>Label...</Text> : <Text style={{color:'#fff', paddingLeft:10, justifyContent:'center' }}>Tap to change task color</Text>}</View>
                 </TouchableHighlight>
             </View>
         );
