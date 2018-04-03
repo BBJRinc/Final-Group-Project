@@ -14,19 +14,21 @@ module.exports={
     }, 
 
     updateCheckItem: function(req, res){
-        let checklist = req.body.checklistItems.map((item) => {
-            let checkItem = [
-                item.checklistitemid,
-                item.content,
-                item.completed
-            ];
-            return req.app.get('db').updateCheckItem(checkItem).then(resp => {
-                return resp[0];
-            }).catch(err => console.log(err));
-        });
-        Promise.all(checklist).then(results => {
-            res.status(200).send(results);
-        });
+        if (req.body.checklistItems.length){
+            let checklist = req.body.checklistItems.map((item) => {
+                let checkItem = [
+                    item.checklistitemid,
+                    item.content,
+                    item.completed
+                ];
+                return req.app.get('db').updateCheckItem(checkItem).then(resp => {
+                    return resp[0];
+                }).catch(err => console.log(err));
+            });
+            Promise.all(checklist).then(results => {
+                res.status(200).send(results);
+            });
+        }
     },
 
     deleteCheckItem: function(req, res){
@@ -76,8 +78,6 @@ module.exports={
     },
 
     editTask: function(req, res){
-        console.log(req.body)
-        console.log(req.params.taskid)
         const taskid = Number(req.params.taskid);
         let task = [
             taskid,

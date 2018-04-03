@@ -17,7 +17,7 @@ import DayView from './components/DayView/DayView.js';
 import AddTask from './components/TaskDetails/AddTask';
 
 
-const PubIpAdress = '192.168.3.132'
+const PubIpAdress = '192.168.3.149'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -80,7 +80,7 @@ export default class App extends React.Component {
   }
 
   showMenuItem(name, clearTask) {
-    console.log(name)
+    // console.log(name)
     if (clearTask) {
       this.setState({
         selectedTask: {}
@@ -91,7 +91,7 @@ export default class App extends React.Component {
 
   onDayPress(day) {
     let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
-    console.log("test time " + unixDay)
+    // console.log("test time " + unixDay)
     this.setState({
       selectedDay: unixDay
     });
@@ -105,13 +105,13 @@ export default class App extends React.Component {
   }
 
   getDay() {
-    console.log('GET DAY CALLED!!!!');
+    // console.log('GET DAY CALLED!!!!');
   }
 
   onLogout() {
     AsyncStorage.removeItem('token', (err) => {
       if (err) {
-        console.log('Error deleting token: ' + err);
+        // console.log('Error deleting token: ' + err);
       }
       this.setState({ userToken: null, hasToken: false });
     });
@@ -121,7 +121,7 @@ export default class App extends React.Component {
   }
   setSelectedTask(createdTask) {
     let task = createdTask[0]
-    console.log(task)
+    // console.log(task)
     this.setState({ selectedTask: task })
   }
 

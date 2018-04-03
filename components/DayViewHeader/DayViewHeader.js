@@ -21,7 +21,7 @@ export default class DayViewHeader extends Component {
     componentDidMount() {
         let date = moment().format("YYYY-MM-DD")
         let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
-        console.log('todaysDate in Unix: ', todaysDate)
+        // console.log('todaysDate in Unix: ', todaysDate)
         this.setState({
             currentDate: todaysDate
         })
