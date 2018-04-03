@@ -5,16 +5,21 @@ import NativeMethodsMixin from 'NativeMethodsMixin';
 
 import gStyle from './../gStyle.js';
 
-let theme = 'blue';
+let theme = 'brown';
 let testTheme = global.theme
 
+// 
 const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
 const GHOST_OPACITY = 0.4;
+const BORDER_RADIUS = 5;
+const PADDING_VERT = 5;
+const PADDING_LEFT = 10;
+const GRABBER_HEIGHT = 10;
 
 const LONG_PRESS_TIME = 10;
 
-const DBG = true;
-// const DBG = false;
+// const DBG = true;
+const DBG = false;
 
 /*------------------------------------------------------------------------------
 -----Takes props of:------------------------------------------------------------
@@ -197,7 +202,7 @@ class TaskCard extends React.Component {
   }
 
   endResizeGesture() {
-    this.hideGhost();
+    // this.hideGhost();
     this.setState({gestureShield: false});
     this.clearZIndex()
     // if(DBG) console.log('this.state:', this.state);
@@ -277,12 +282,11 @@ class TaskCard extends React.Component {
 
 
   onLayout(event) {
-    console.log('Layout:', event.nativeEvent.layout);
+    if (DBG) console.log('Layout:', event.nativeEvent.layout);
     let ghostDimensions = {
       ...this.state.ghostStyle,
       width: event.nativeEvent.layout.width,
       height: event.nativeEvent.layout.height,
-      // opacity: 0,
     }
     this.setState({ghostStyle: {...this.state.ghostStyle, ...ghostDimensions}})
   }
@@ -309,15 +313,10 @@ class TaskCard extends React.Component {
       height:  this.props.cardHeight,
       left: this.props.cardLeft,
       right: this.props.cardRight,
-      // width: 200,
     };
-    // propStyles.top = 20;
     let color = {
       backgroundColor: this.props.color,
     }
-    // console.log('propStyles:', propStyles);
-    // if(DBG) console.log('this.state.unlocked:', this.state.unlocked);
-    // if(DBG) console.log('this.props:', this.props);
     
     
     return(
@@ -325,13 +324,23 @@ class TaskCard extends React.Component {
           // this.state.zIndexVal
         ]}
         onPress={() => console.log(this.props.title)}>
+
+        {/*-----------------------------------------------------------------------------
+        ------Debugging infobox---------------------------------------------------------
+        ------------------------------------------------------------------------------*/}
         {DBG? 
-          <Container style={{position: 'absolute', top: 5, right: 20}}>
-            <Text>{this.state.gestureShield ? 'Shields up' : 'Shields down'}</Text>
-            <Text>{this.props.scrollable ? 'Scrollable' : 'Scroll Locked'}</Text>
-            <Text>{this.state.zIndexVal.zIndex}</Text>
+          <Container style={{position: 'absolute',
+            top: 5,
+            right: 20,
+            // backgroundColor: 'black',
+            // color: 'white',
+            display: 'flex',
+            flex: 0}}>
+            <Text style={styles.debugText}>{this.props.title}</Text>
+            <Text style={styles.debugText}>{this.state.gestureShield ? 'Shields up' : 'Shields down'}</Text>
+            <Text style={styles.debugText}>{this.props.scrollable ? 'Scrollable' : 'Scroll Locked'}</Text>
+            <Text style={styles.debugText}>{this.state.zIndexVal.zIndex}</Text>
           </Container>
-          
           : null
         }
         <Container pointerEvents='none' style={[styles.card, propStyles]} onLayout={(event) => {this.onLayout(event)}} >
@@ -370,13 +379,11 @@ class TaskCard extends React.Component {
     )
   }
 }
-// this.state.pan.getLayout(), 
+
 export default TaskCard;
 
-const BORDER_RADIUS = 5;
-const PADDING_VERT = 3;
-const PADDING_LEFT = 10;
-const GRABBER_HEIGHT = 10;
+
+
 
 let styles = StyleSheet.create({
   cardHolder: { 
@@ -393,6 +400,8 @@ let styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 2,
     borderColor: gStyle[theme].dark,
+    paddingTop: PADDING_VERT,
+    paddingBottom: PADDING_VERT,
   },
   cardGrab: {
     ...StyleSheet.absoluteFillObject,
@@ -403,7 +412,6 @@ let styles = StyleSheet.create({
   },
   ghost: {
     position: 'absolute',
-    // zIndex: 100,
   },
   topGrab: {
     backgroundColor: GRABBER_BACKGROUND,
@@ -420,5 +428,9 @@ let styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: GRABBER_HEIGHT,
+  },
+  debugText: {
+    backgroundColor: 'black',
+    color: 'grey'
   }
 })

@@ -16,8 +16,8 @@ import TaskCard from './TaskCard.js';
 --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 
-const DBG = true;
-// const DBG = false;
+// const DBG = true;
+const DBG = false;
 
   // DayView segment structure
 const HOURS_TO_RENDER = 24;
@@ -29,7 +29,7 @@ const SEGMENTS_TO_RENDER = HOURS_TO_RENDER * SEGMENTS_PER_HOUR;
 
   // User settings
 const TWENTYFOUR_HOUR = false;
-let theme = 'blue';
+let theme = 'brown';
 
   // Time constants
 const DAYS = 24*60*60*1000;
@@ -45,7 +45,7 @@ const BADGE_MARGIN_LEFT = 3;
 const BADGE_MARGIN_RIGHT = 20;
 const BADGE_WIDTH = 58;
 const BADGE_SPACE = BADGE_MARGIN_LEFT + BADGE_MARGIN_RIGHT + BADGE_WIDTH;
-const CARD_NONOVERLAP = 5; 
+const CARD_NONOVERLAP = 30; 
 
 
 
@@ -431,60 +431,60 @@ let testData = [
     blockStart: 2,
     blockDuration: 2,
   },
-  // {
-  //   id: 13,
-  //   title: 'Card four',
-  //   color: 'blue',
-  //   blockStart: 3,
-  //   blockDuration: 2,
-  // },
-  // {
-  //   id: 14,
-  //   title: 'Card five',
-  //   color: 'green',
-  //   blockStart: 4,
-  //   blockDuration: 5,
-  // },
-  // {
-  //   id: 15,
-  //   title: 'Right 1',
-  //   color: 'green',
-  //   blockStart: 11,
-  //   blockDuration: 2,
-  // },
-  // {
-  //   id: 16,
-  //   title: 'Right 2',
-  //   color: 'blue',
-  //   blockStart: 12,
-  //   blockDuration: 9,
-  // },
-  // {
-  //   id: 17,
-  //   title: 'Right 3',
-  //   color: 'green',
-  //   blockStart: 13,
-  //   blockDuration: 5,
-  // },
-  // {
-  //   id: 18,
-  //   title: 'Right 4',
-  //   color: 'red',
-  //   blockStart: 14,
-  //   blockDuration: 4,
-  // },
-  // {
-  //   id: 19,
-  //   title: 'Right 4',
-  //   color: 'purple',
-  //   blockStart: 15,
-  //   blockDuration: 4,
-  // },
-  // {
-  //   id: 20,
-  //   title: 'Right 5',
-  //   color: 'green',
-  //   blockStart: 21,
-  //   blockDuration: 2,
-  // }
+  {
+    id: 13,
+    title: 'Card four',
+    color: 'blue',
+    blockStart: 3,
+    blockDuration: 2,
+  },
+  {
+    id: 14,
+    title: 'Card five',
+    color: 'green',
+    blockStart: 4,
+    blockDuration: 5,
+  },
+  {
+    id: 15,
+    title: 'Right 1',
+    color: 'green',
+    blockStart: 11,
+    blockDuration: 2,
+  },
+  {
+    id: 16,
+    title: 'Right 2',
+    color: 'blue',
+    blockStart: 12,
+    blockDuration: 9,
+  },
+  {
+    id: 17,
+    title: 'Right 3',
+    color: 'green',
+    blockStart: 13,
+    blockDuration: 5,
+  },
+  {
+    id: 18,
+    title: 'Right 4',
+    color: 'red',
+    blockStart: 14,
+    blockDuration: 4,
+  },
+  {
+    id: 19,
+    title: 'Right 4',
+    color: 'purple',
+    blockStart: 15,
+    blockDuration: 4,
+  },
+  {
+    id: 20,
+    title: 'Right 5',
+    color: 'green',
+    blockStart: 21,
+    blockDuration: 2,
+  }
 ]
