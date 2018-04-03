@@ -37,7 +37,7 @@ export default class Activity extends Component {
 
     render() {
         const { activityContent, userInitialStyle, commentStyle, separate, padding, inputSize } = styles
-        const comments = this.state.comments.map(comment => {
+        const comments = this.state.comments.length < 1 ? null : this.state.comments.map(comment => {
             return(
                 <Comments key={comment.commentid} comment={comment} user={this.props.user} />
             )

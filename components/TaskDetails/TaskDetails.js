@@ -71,10 +71,10 @@ export default class TaskDetails extends Component {
             description: description,
             duedate: duedate,
             label: color,
-            checklistItems: checkitems,
+            checklistItems: checkitems || [],
             color: color,
             date: duedate,
-            comments: comments,
+            comments: comments || [],
             milliseconds: duration,
             completed: completed,
             startTime: starttime
