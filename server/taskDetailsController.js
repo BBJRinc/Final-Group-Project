@@ -43,7 +43,7 @@ module.exports={
         const taskid = Number(req.params.taskid);
         let comment = [
             taskid,
-            req.body.userid,
+            req.userid,
             req.body.content
         ];
         req.app.get('db').addComment(comment).then(() => {
@@ -98,13 +98,6 @@ module.exports={
     addTask: function(req, res){
         let task = [
             req.body.taskname,
-            req.body.duedate,
-            req.body.starttime,
-            req.body.description,
-            req.body.completed,
-            req.body.color,
-            req.body.isrecurring,
-            req.body.duration,
             req.userid
         ];
         req.app.get('db').addTask(task).then(resp => {

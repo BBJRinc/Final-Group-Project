@@ -326,8 +326,14 @@ export default class TaskDetails extends Component {
                             <Input disabled placeholder='Activity' style={[padding, inputSize]} placeholder='Activity' />
                             <IconSLI name='settings' style={{ paddingRight: 15 }} size={15} />
                         </Item>
+                        <Activity 
+                        user={this.state.user} 
+                        taskid={this.state.taskId} 
+                        comments={this.state.comments}
+                        token={this.state.userToken}
+                         />
                     </Content>
-                    <Activity user={this.state.user} />
+                    
                 </Modal>
             </View>
         );
