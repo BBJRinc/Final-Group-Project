@@ -1,4 +1,3 @@
--- select * from task where userid = $1 and starttime is null;
 select task.taskid, task.taskname,task.duedate, task.starttime, task.description, task.completed, task.createdat, task.color, task.isrecurring, task.userid, task.duration,
 coalesce((select json_agg(checklistitem.*)
 from checklistitem
@@ -7,4 +6,4 @@ coalesce((select json_agg(comments.*)
 from comments
 where comments.taskid = task.taskid), '{}'::json) as comments
 from task
-where task.userid = $1 and task.starttime is null
+where task.starttime >= $1 and task.starttime < $2 and task.userid = $3

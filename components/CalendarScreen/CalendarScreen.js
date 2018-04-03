@@ -6,7 +6,7 @@ import {
   View, 
   Modal
 } from 'react-native';
-import { Container } from 'native-base';
+import { Container, Button } from 'native-base';
 import {Calendar} from 'react-native-calendars';
 
 export default class CalendarsScreen extends Component {
@@ -25,13 +25,25 @@ export default class CalendarsScreen extends Component {
           transparent={true}
           visible={this.props.visible}
           onRequestClose={() => this.props.showMenuItem('showCalendar')} >
-          <ScrollView style={styles.container}>
+          <ScrollView contentContainerStyle={styles.container}>
+            <View style={styles.container}>
             <Calendar
               onDayPress={this.props.onDayPress}
               style={styles.calendar}
               hideExtraDays
               markedDates={{[this.state.selected]: {selected: true, disableTouchEvent: true, selectedColor: '#00aeef'}}}
             />
+            <Button
+              full
+              danger
+              
+              onPress={() => {                
+                this.props.showMenuItem('showCalendar')
+                }}
+              >
+              <Text style={{color: 'white', fontSize: 20}}>Cancel</Text>
+              </Button>
+            </View>
           </ScrollView>
         </Modal>
       </Container>
@@ -62,6 +74,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // backgroundColor: 'gray'
+    backgroundColor: 'rgba(0, 0, 0, .65)',
+    justifyContent: 'center',
+    margin: 0
+  },
+  bottomModal: {
+    backgroundColor: 'rgba(0, 0, 0, .65)'
+  },
+
+  contentContainer: {
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, .65)'
   }
 });

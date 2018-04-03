@@ -26,10 +26,14 @@ export default class SideBar extends Component {
         return (
             <Container style={styles.root}>
 
-                <Header style={{ backgroundColor: "#4f6d7a" }}>
+                {/* <Header style={{ backgroundColor: "#4f6d7a",  width: '100%' }}>
                     <ImageBackground source={require(headerPic)} style={styles.header}>
                         <Text style={{ color: '#ffffff', fontFamily: "AppleGothic", fontWeight: 'bold' }}>{appName}</Text>
                     </ImageBackground>
+                </Header> */}
+                <Header style={{ backgroundColor: "#4f6d7a", justifyContent: "center", alignItems: 'center' }}>
+                    <Image source={require(headerPic)} style={styles.header}/>
+                        <Text style={{ color: '#ffffff', fontFamily: "AppleGothic", fontWeight: 'bold' }}>{appName}</Text>
                 </Header>
 
                 <Content>
@@ -46,7 +50,7 @@ export default class SideBar extends Component {
                         {/* CALENDAR */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconF name="calendar" color="#FFD700" size={25} style={styles.iconStyle} />
+                                <IconF name="calendar" color="#4f6d7a" size={25} style={styles.iconStyle} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text onPress={() => {
@@ -60,15 +64,15 @@ export default class SideBar extends Component {
                             {/* End of Calender Item */}
                         </ListItem>
 
+
                         {/* VIEW TODAY */}
                         <ListItem icon style={styles.listit}>
                             <Left>
-                                <IconMAT name="view-day" color="#FFD700" size={25} style={styles.iconStyle} />
+                                <IconMAT name="view-day" color="#4f6d7a" size={25} style={styles.iconStyle} />
                             </Left>
                             <Body style={styles.listit}>
                                 <Text onPress={() => {
                                     this.props.onClose();
-                                    this.props.showMenuItem('')
                                 }}
                                     style={styles.text}>View Today</Text>
                             </Body>
@@ -77,9 +81,11 @@ export default class SideBar extends Component {
                             {/* End of View Today Item */}
                         </ListItem>
 
+
                         <Separator style={styles.separate}>
                             <Text style={styles.sepText}>Task Management</Text>
                         </Separator>
+
                         {/* NEW TASK */}
                         <ListItem icon style={styles.listit}>
                             <Left>
@@ -96,6 +102,7 @@ export default class SideBar extends Component {
                             </Right>
                             {/* End of New Task Item */}
                         </ListItem>
+
 
                         {/* ONGOING TASKS */}
                         <ListItem icon style={styles.listit}>
@@ -114,6 +121,7 @@ export default class SideBar extends Component {
                             {/* End ofOngoing Tasks Item*/}
                         </ListItem>
 
+
                         {/* UNSCHEDULED TASKS*/}
                         <ListItem icon style={styles.listit}>
                             <Left>
@@ -127,9 +135,17 @@ export default class SideBar extends Component {
                                     style={styles.text}>Unscheduled tasks</Text>
                             </Body>
                             <Right style={styles.listit}>
+                            {!this.props.unschedCount ? 
+                            null 
+                            :
+                            <View style={styles.badge}>
+                                <Text style={{color: '#fff'}}>{this.props.unschedCount}</Text>
+                            </View>
+                             }
                             </Right>
                             {/* End of Unscheduled Tasks Item */}
                         </ListItem>
+
 
                         <Separator style={styles.separate}>
                             <Text style={styles.sepText}>Settings</Text>
@@ -143,7 +159,7 @@ export default class SideBar extends Component {
                             <Body style={styles.listit}>
                                 <Text onPress={() => {
                                     this.props.onClose();
-                                    this.props.showMenuItem('')
+                                    // this.props.showMenuItem('')
                                 }}
                                     style={styles.text}>Themes & Style</Text>
                             </Body>
@@ -151,6 +167,7 @@ export default class SideBar extends Component {
                             </Right>
                             {/*  End of Style and Layout Item*/}
                         </ListItem>
+
 
                         {/* SETTINGS */}
                         <ListItem icon style={styles.listit}>
@@ -160,7 +177,7 @@ export default class SideBar extends Component {
                             <Body style={styles.listit}>
                                 <Text onPress={() => {
                                     this.props.onClose();
-                                    this.props.showMenuItem('')
+                                    // this.props.showMenuItem('')
                                 }}
                                     style={styles.text}>Settings</Text>
                             </Body>
@@ -168,6 +185,7 @@ export default class SideBar extends Component {
                             </Right>
                             {/* End of Settings Item */}
                         </ListItem>
+
 
                         {/* HELP & FEEDBACK */}
                         <ListItem icon>
@@ -177,7 +195,7 @@ export default class SideBar extends Component {
                             <Body style={styles.listit}>
                                 <Text onPress={() => {
                                     this.props.onClose();
-                                    this.props.showMenuItem('')
+                                    // this.props.showMenuItem('')
                                 }}
                                     style={styles.text}>Help & Feedback</Text>
                             </Body>
@@ -185,6 +203,7 @@ export default class SideBar extends Component {
                             </Right>
                             {/* End of Help & Feedback Item */}
                         </ListItem >
+
 
                         {/* Log Out */}
                         <ListItem icon>
@@ -215,13 +234,19 @@ export default class SideBar extends Component {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
     },
     header: {
         flex: 1,
-        backgroundColor: "#4f6d7a",
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: null,
+        width: null,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        // justifyContent: "center",
+        // alignItems: "center",
 
     },
     iconStyle: {
@@ -248,5 +273,12 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: 'transparent',
         width: '100%',
+    },
+    badge: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ff0000',
+        width: 23.5,
+        borderRadius: 10
     }
 })
