@@ -43,6 +43,7 @@ export default class Unscheduled extends Component {
         });
     }
     deleteTask(id) {
+        console.log(id)
         axios({
             method: 'delete',
             url: `http://${PubIpAdress}:4040/api/unscheduled/${id}`,

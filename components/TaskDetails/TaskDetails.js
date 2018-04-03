@@ -64,7 +64,7 @@ export default class TaskDetails extends Component {
                 userid, starttime, isrecurring, duration,
                 duedate, description, createdat, completed,
                 comments, color, checkitems, token } = nextProps.selectedTask
-                
+
             this.setState({
                 userID: userid,
                 userToken: this.props.token,
@@ -111,7 +111,7 @@ export default class TaskDetails extends Component {
 
         }
     }
-    componentDidMount(){
+    componentDidMount() {
 
     }
     updateTaskOnClick() {
@@ -154,8 +154,8 @@ export default class TaskDetails extends Component {
         })
     }
     selectDate(date) {
-        let  newDate = moment(date, "YYYY-MM-DD").valueOf()
-        let finalDate = newDate/1000
+        let newDate = moment(date, "YYYY-MM-DD").valueOf()
+        let finalDate = newDate / 1000
         this.setState({
             date: finalDate
         })
@@ -326,14 +326,14 @@ export default class TaskDetails extends Component {
                             <Input disabled placeholder='Activity' style={[padding, inputSize]} placeholder='Activity' />
                             <IconSLI name='settings' style={{ paddingRight: 15 }} size={15} />
                         </Item>
-                        <Activity 
-                        user={this.state.user} 
-                        taskid={this.state.taskId} 
-                        comments={this.state.comments}
-                        token={this.state.userToken}
-                         />
+                        <Activity
+                            user={this.state.user}
+                            taskid={this.state.taskid}
+                            comments={this.state.comments}
+                            token={this.state.userToken}
+                        />
                     </Content>
-                    
+
                 </Modal>
             </View>
         );
