@@ -26,13 +26,14 @@ export default class DurationPicker extends Component {
   }
 
   render() {
-    console.log(this.props.duration)
+    // console.log(this.props.duration)
     const { text, pickerView, headerBackground, pickerContainer, pickerViewLeft, pickerViewRight, picker, bottomView } = style
     return (
       <View>
         <Modal
           animationType="slide"
           transparent={false}
+          onRequestClose={() => this.props.setModalVisible()}
           visible={this.props.showDurationPicker}
         >
           <View style={{ backgroundColor: 'black' }}>

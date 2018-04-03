@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAdress = '192.168.3.176'
+const PubIpAddress = '192.168.3.176'
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -23,7 +23,7 @@ export default class Checklist extends Component {
 
     componentDidMount() {
         const { checklistItems, taskId } = this.props
-        console.log(checklistItems, taskId)
+        // console.log(checklistItems, taskId)
         this.setState({ checklistItems: checklistItems, taskid: taskId })
     }
 
@@ -32,11 +32,11 @@ export default class Checklist extends Component {
     }
 
     handleChecklistItem(item) {
-        console.log(item)
+        // console.log(item)
         this.setState({ newChecklistItem: item.item })
     }
     markComplete(data) {
-        console.log(data.id, data.completed)
+        // console.log(data.id, data.completed)
         let completed =
             this.state.checklistItems.map((item, i) => {
                 if (data.id === item.checklistitemid) {
@@ -55,7 +55,7 @@ export default class Checklist extends Component {
         })
     }
     updateContent(text) {
-        console.log(text.id)
+        // console.log(text.id)
         const { id } = text
         // let body = this.state.newChecklistItem
         // axios.put(`/api/checklist/{id},`, body).then(res=>{
@@ -68,11 +68,11 @@ export default class Checklist extends Component {
     addChecklistItem(e) {
         const { checklistItems, newChecklistItem, taskid } = this.state
         let itemid = taskid
-        console.log(newChecklistItem)
-        console.log(itemid)
+        // console.log(newChecklistItem)
+        // console.log(itemid)
         axios({
             method: 'post',
-            url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
+            url: `http://${PubIpAddress}:4040/api/checklist/${itemid}`,
             data: {
                 content: newChecklistItem
             },
@@ -80,7 +80,7 @@ export default class Checklist extends Component {
                 "token": this.props.token,
             },
         }).then(resp => {
-            console.log(resp.data)
+            // console.log(resp.data)
             this.setState({ checklistItems: resp.data });
         });
         this.setState({ newChecklistItem: '' })
@@ -88,31 +88,31 @@ export default class Checklist extends Component {
     deleteRow(secId, rowId, rowMap, data) {
         const { checklistitemid } = data
         let itemid = checklistitemid
-        console.log(itemid)
+        // console.log(itemid)
         // rowMap[`${secId}${rowId}`].props.closeRow();
         // const newData = [...this.state.checklistItems];
         // newData.splice(rowId, 1);
         // this.setState({ checklistItems: newData });
         axios({
             method: 'delete',
-            url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
+            url: `http://${PubIpAddress}:4040/api/checklist/${itemid}`,
             headers: {
                 "token": this.props.token
             }
         }).then(resp => {
-            console.log(resp.data)
+            // console.log(resp.data)
             this.setState({ checklistItems: resp.data });
         });
     }
     render() {
         const { padding, addItemMargin, inputSize, separate } = styles
-        console.log(this.state)
-        console.log(this.props.token)
+        // console.log(this.state)
+        // console.log(this.props.token)
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
         return (
             <View style={{ backgroundColor: '#efefef' }}>
-                <List
+                    <List
                     dataSource={this.ds.cloneWithRows(this.state.checklistItems)}
                     renderRow={data =>
                         <ListItem style={{ paddingLeft: 10, alignContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }} onLongPress={(e, item) => this.editContent(e, item)}>
@@ -136,7 +136,6 @@ export default class Checklist extends Component {
                     }
                     rightOpenValue={-75}
                 />
-
                 <View>
 
                     <Item>

@@ -13,10 +13,11 @@ import LoadingIndicator from './components/ActivityIndicator/ActivityIndicator';
 import { auth0, AUTH0_DOMAIN } from './components/Logics/auth0';
 import moment from 'moment';
 import SideBar from './components/DrawerMenu/SideBar';
-import DayView from './components/DayView/DayView.js'
+import DayView from './components/DayView/DayView.js';
+import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 
 
-const PubIpAdress = '192.168.3.176'
+const PubIpAddress = '192.168.3.176'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -48,9 +49,12 @@ export default class App extends React.Component {
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
     this.getDay = this.getDay.bind(this);
+    this.getNextDay = this.getNextDay.bind(this);
+    this.getPreviousDay = this.getPreviousDay.bind(this);
   }
 
   async componentDidMount() {
+    // console.log('COMPONENT MOUNTED!!!!!');
     SplashScreen.hide();
 
     let checkToken = await AsyncStorage.getItem('token').then(res => {
@@ -64,42 +68,65 @@ export default class App extends React.Component {
       })
     }
 
-    // Getting todays date and converting it to UNIX time
-    let today = moment().format("YYYY-MM-DD")
-    unixToday = moment(today).valueOf()
+    let newToday = Math.round(new Date().getTime()/1000.0)
     this.setState({
-      selectedDay: unixToday
+      selectedDay: newToday
     })
-    console.log("todays date in unix: ", this.state.selectedDay)
+    console.log("before Axios calls: ", this.state.selectedDay)
 
     // Yesterdays Tasks
-    let yesterdaysDate = moment(today).subtract(1, 'days');
-    let yesterdaysDateInUnix = moment(yesterdaysDateInUnix, "YYYY-MM-DD").valueOf();
-
-    axios.get(`/api/day/${yesterdaysDateInUnix}`).then(response => {
+    let yesterdaysConv = moment(this.state.selectedDay).format("YYYY-MM-DD");
+    let yesterdayUnix = moment.unix(yesterdaysConv, "YYYY-MM-DD").valueOf();
+    let newYesterday = moment(this.state.selectedDay).subtract(86400000, 'milliseconds');
+    console.log('yesterdaysDateInUnix: ', newYesterday)
+    axios({
+      method: 'get',
+      url: `http://${PubIpAddress}:4040/api/day/${newYesterday}`,
+      headers:{
+        "token":this.props.userToken
+      }
+    }).then(response => {
       this.setState({
         previousDayTasks: response.data
       })
     }).catch(err => console.log(err))
 
     // Todays Tasks
-    axios.get(`/api/day/${this.state.selectedDay}`).then(response => {
+    let todayConv = moment.unix(this.state.selectedDay).format("YYYY-MM-DD")
+    let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
+    console.log('todayUnix: ', todayUnix)
+
+    axios({
+      method: 'get',
+      url: `http://${PubIpAddress}:4040/api/day/${todayUnix}`,
+      headers:{
+        "token":this.props.userToken
+      }
+    }).then(response =>{
       this.setState({
-        currentTasks: response.data,
+        currentTasks: response.data
       })
     }).catch(err => console.log(err));
 
     // Tomorrows Tasks
-    let tomorrowDate = moment(today).add(1, 'days');
-    let tomorrowsDateInUnix = moment(tomorrowsDateInUnix, "YYYY-MM-DD").valueOf();
-
-    axios.get(`/api/day/${tomorrowsDateInUnix}`).then(response => {
+    let tomorrowCov = moment.unix(this.state.selectedDay).format("YYYY-MM-DD");
+    let tomorrowUnix = moment(tomorrowCov, "YYY-MM-DD").valueOf();
+    let newTomorrow = moment(this.state.selectedDay).add(86400000, 'milliseconds');
+    console.log('tomorrowsDateInUnix: ', newTomorrow)
+    axios({
+      method: "get",
+      url: `http://${PubIpAddress}:4040/api/day/${newTomorrow}`,
+      headers:{
+        "token":this.props.userToken
+      }
+    }).then(response =>{
       this.setState({
         nextDayTasks: response.data
       })
-    }).catch(err => console.log(err));
+    }).catch(err => console.log(err))
+    // Compondent did mount ends
   }
-
+  
   closeDrawer = () => {
     this._drawer._root.close()
   }
@@ -122,47 +149,54 @@ export default class App extends React.Component {
   }
 
   getPreviousDay() {
-    let previousDateTasks = moment(this.state.selectedDay).subtract(86400000, 'milliseconds');
-    axios.get(`/api/day/${previousDateTasks}`).then(response => {
+    let previousDateTasks = moment(this.state.selectedDay).subtract(86400, 'milliseconds');
+    this.setState({
+      selectedDay: previousDateTasks,
+      nextDayTasks: this.state.currentTasks,
+      currentTasks: this.state.previousDayTasks
+    })
+    axios.get(`http://${PubIpAddress}:4040/api/day/${previousDateTasks}`).then(response => {
       this.setState({
-        nextDayTasks: this.state.currentTasks,
-        currentTasks: response.data
+        previousDayTasks: response.data
       })
     }).catch(err => console.log(err));
   }
 
   getNextDay() {
-    let nextDateTasks = moment(this.state.selectedDay).add(86400000, 'milliseconds');
+    let nextDateTasks = moment(this.state.selectedDay).add(86400, 'milliseconds');
     console.log('tomorrowsUnixDate in Unix: ', nextDateTasks)
-    axios.get(`/api/day/${nextDateTasks}`).then(response => {
+    this.setState({
+      selectedDay: nextDateTasks,
+      previousDayTasks: this.state.currentTasks,
+      currentTasks: this.state.nextDayTasks,
+    })
+    axios.get(`http://${PubIpAddress}:4040/api/day/${nextDateTasks}`).then(response => {
       this.setState({
-        previousDayTasks: this.state.currentTasks,
-        currentTasks: response.data
+        nextDateTasks: response.data
       })
     }).catch(err => console.log(err));
   }
 
   onDayPress(day) {
     let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
-    console.log("test time " + unixDay)
+    // console.log("test time " + unixDay)
     this.setState({
       selectedDay: unixDay
     });
-    getNextDay();
     this.showMenuItem('showCalendar');
   }
 
-  nextDayPress() {
-    let date = moment().format("YYYY-MM-DD")
-    let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
-    console.log('todaysDate in Unix: ', todaysDate)
-    axios.get(`/api/day/${todaysDate}`).then(response => {
-      console.log(response)
-      this.setState({
-        daysTasks: response
-      });
-    }).catch(err => console.log(err));
-  }
+  // nextDayPress() {
+  //   let date = moment().format("YYYY-MM-DD")
+  //   let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
+  //   console.log('todaysDate in Unix: ', todaysDate)
+  //   axios.get(`http://${PubIpAddress}/api/day/${todaysDate}`).then(response => {
+  //     // console.log(response)
+  //     this.setState({
+  //       daysTasks: response.data
+  //     });
+  //   }).catch(err => console.log(err));
+  // }
 
   onTaskPress(task, listName) {
     this.setState({ selectedTask: task });
@@ -171,7 +205,7 @@ export default class App extends React.Component {
   }
 
   getDay() {
-    console.log('GET DAY CALLED!!!!');
+    // console.log('GET DAY CALLED!!!!');
   }
 
   onLogout() {
@@ -190,8 +224,7 @@ export default class App extends React.Component {
       .webAuth
       .authorize({ scope: 'openid profile email', useBrowser: true, responseType: 'id_token' })
       .then(credentials => {
-        // console.log(credentials)
-        axios.post(`http://${PubIpAdress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
+        axios.post(`http://${PubIpAddress}:4040/api/auth`, { token: credentials.idToken }).then(res => {
           AsyncStorage.setItem('token', res.data, () => {
             AsyncStorage.getItem('token', (err, result) => {
               this.setState({
@@ -207,16 +240,6 @@ export default class App extends React.Component {
 
 
   render() {
-    // if (!this.state.isLoaded && !this.state.user) {
-    //   return (
-    //     <LoadingIndicator />
-    //   )
-    // }
-    console.log('state.user: ', this.state.user)
-    console.log('state.hasToken: ', this.state.hasToken)
-    console.log('state.userToken: ', this.state.userToken)
-    console.log('selected date' + this.state.selectedDay);
-
     if (this.state.userToken && this.state.hasToken) {
       return (
         <Drawer
@@ -224,15 +247,15 @@ export default class App extends React.Component {
           content={<SideBar navigator={this._navigator} logout={this.onLogout} showMenuItem={this.showMenuItem} onClose={this.closeDrawer} unschedCount={this.state.unscheduledCount} />}
           onClose={() => this.closeDrawer()}>
           <Container>
+            <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             <Content>
-              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} />
               <DayView />
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
             </Content>
             <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount} />
-
           </Container>
         </Drawer>
       )

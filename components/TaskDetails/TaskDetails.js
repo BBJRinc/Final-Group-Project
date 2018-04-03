@@ -53,19 +53,16 @@ export default class TaskDetails extends Component {
         this.saveDuration = this.saveDuration.bind(this)
         this.cancelDuration = this.cancelDuration.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
+        this.setLabelModalVisible = this.setLabelModalVisible.bind(this)
     }
     componentWillReceiveProps(nextProps) {
+       if (nextProps.selectedTask.taskid){
         const {
             taskid, taskname, updatedat,
             userid, starttime, isrecurring, duration,
             duedate, description, createdat, completed,
-            comments, color, checkItems, token } = nextProps.selectedTask
-        //     console.log(this.props.user)
-        //     console.log(nextProps.selectedTask.duedate)
-        //     console.log(duedate, createdat)
-        // value=moment.unix(duedate).format('MM-DD-YYYY')
-        // console.log(value)
-
+            comments, color, checkitems, token } = nextProps.selectedTask
+ 
         this.setState({
             userID: userid,
             userToken: this.props.token,
@@ -75,7 +72,7 @@ export default class TaskDetails extends Component {
             description: description,
             duedate: duedate,
             label: color,
-            checklistItems: checkItems,
+            checklistItems: checkitems,
             color: color,
             date: duedate,
             comments: comments,
@@ -83,9 +80,38 @@ export default class TaskDetails extends Component {
             completed: completed,
             startTime: starttime
         });
+       } else {
+        this.setState({
+            userID: '',
+            taskId: '',
+            userToken: this.props.token,
+            createdDate: '',
+            description: '',
+            duedate: '',
+            label: '',
+            checklistItems: [],
+            activity: [],
+            name: '',
+            color: '#838C91',
+            user: 'Brandon Allred',
+            comment: '',
+            comments: [],
+            hours: '00',
+            minutes: '00',
+            milliseconds: 0,
+            completed: false,
+            durationModalVisable: false,
+            showChecklist: false,
+            LabelModalVisable: false,
+            startTime: null,
+            editTitle: false
+        });
+       }
+       
+        
     }
     editDescription(value) {
-        console.log(value)
+        // console.log(value)
         this.setState({ description: value })
     }
     addComment(text) {
@@ -101,7 +127,7 @@ export default class TaskDetails extends Component {
         })
     }
     selectDate(date) {
-        console.log(date)
+        // console.log(date)
         this.setState({
             date: date
         })
@@ -114,9 +140,14 @@ export default class TaskDetails extends Component {
             durationModalVisable: !this.state.durationModalVisable
         });
     }
+    setLabelModalVisible() {
+        this.setState({
+            LabelModalVisible: !this.state.LabelModalVisible
+        });
+    }
 
     saveDuration(e, state) {
-        console.log(state)
+        // console.log(state)
         const { minutes, hours } = state
         let minuteMilliseconds = minutes * 1 * (1000 * 60 * 100)
         let hourMilliseconds = hours * 1 * (60 * 60 * 1000)
@@ -126,7 +157,7 @@ export default class TaskDetails extends Component {
         this.setModalVisible();
     }
     cancelDuration(e) {
-        console.log(e)
+        // console.log(e)
         this.setState({
             hours: '00',
             minutes: '00',
@@ -138,14 +169,15 @@ export default class TaskDetails extends Component {
         this.setState({ editTitle: !this.state.editting })
     }
     render() {
-        console.log(this.state)
-        console.log(this.props.duration)
+        // console.log(this.state)
+        // console.log(this.props.duration)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
             <View style={{ marginTop: 22 }}>
                 <Modal
                     animationType="slide"
                     transparent={false}
+                    onRequestClose={() => this.props.showMenuItem('showTaskDetails')}
                     visible={this.props.showTaskDetails}>
                     <View style={[header, { backgroundColor: this.state.color }]}>
                         <View style={header_top}>
@@ -237,6 +269,7 @@ export default class TaskDetails extends Component {
                         <Item style={labelStyle}>
                             <IconSLI active name='tag' size={15} />
                             <Labels
+                                LabelModalVisible={this.setLabelModalVisible}
                                 labelColor={this.handleLabelColor}
                                 color={this.state.color}
                                 isVisable={this.state.LabelModalVisable} />

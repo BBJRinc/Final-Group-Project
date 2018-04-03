@@ -1,73 +1,78 @@
 import React, { Component } from 'react'
-import { View, Image, StyleSheet, ImageBackground, TouchableHighlight } from "react-native";
-import { Container, Separator, Content, Icon, Header, ListIcon, Footer, Button, Text, List, Left, Right, Body, ListItem, } from 'native-base';
-import moment from 'moment';
+import { View, StyleSheet, } from "react-native";
+import { Container, Icon, Header, Left, Right, Body, Title, } from 'native-base';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
 import axios from 'axios';
-
+import moment from 'moment';
 
 export default class DayViewHeader extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            currentDate: ''
+            dateToDisplay: ''
         }
     }
 
-    componentDidMount() {
-        let today = moment().format("MMM Do YY")
+    componentWillReceiveProps(nextProps) {
+        let date = moment.unix(nextProps.selectedDay).format("LL")
         this.setState({
-            currentDate: today
+            dateToDisplay: date
         })
     }
 
     render() {
+        // console.log('day header props', this.props)
         const { nextDay, previousDay } = this.props
         return (
-            <Container>
+                <Header style={styles.header}>
 
-                <Header>
-
-                    <Left Icon>
+                    <Left Icon style={styles.flex}>
                         <IconF name="chevron-left"
-                            color="#000000"
-                            size={15}
-                            onPress={() => getPreviousDay()}
+                            color="#ffffff"
+                            size={25}
+                            onPress={() => previousDay()}
                         />
                     </Left>
 
-                    <Body>
-                        <Text>
-                            {this.state.currentDate}
-                        </Text>
+                    <Body style={styles.body}>
+                        <Title style={styles.text}>
+                            {this.state.dateToDisplay}
+                        </Title>
                     </Body>
 
-                    <Right>
+                    <Right style={styles.flex}>
                         <IconF
                             name="chevron-right"
-                            color="#000000"
-                            size={15}
+                            color="#ffffff"
+                            size={25}
                             onPress={() => nextDay()}
                         />
                     </Right>
 
                 </Header>
-
-            </Container>
         )
     }
 }
 
 const styles = StyleSheet.create({
     header: {
-        height: 10,
-        width: '100%',
-        backgroundColor: '#ffffff',
+        height: 30,
+        backgroundColor: 'rgba(0, 0, 0, .85)',
+
     },
-    text:{
-        color: "#000000"
+    body: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    flex:{
+        flex: 1
+    },
+
+    text: {
+        color: "#ffffff",
     }
 
 })
