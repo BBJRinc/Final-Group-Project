@@ -16,7 +16,7 @@ import SideBar from './components/DrawerMenu/SideBar';
 import DayView from './components/DayView/DayView.js'
 
 
-const PubIpAdress = '192.168.3.149'
+const PubIpAdress = '192.168.1.12'
 
 export default class App extends React.Component {
   constructor(props) {
