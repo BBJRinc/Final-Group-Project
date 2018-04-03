@@ -1,6 +1,5 @@
 module.exports = {
     getDay: function(req, res){
-        console.log('Day Controller hit: ', req.params.day)
         let startOfDay = Number(req.params.day);
         let endOfDay = startOfDay + (1*24*60*60*1000);
         let userid = req.userid;

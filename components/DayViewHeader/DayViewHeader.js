@@ -16,7 +16,7 @@ export default class DayViewHeader extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let date = moment.unix(nextProps.selectedDay).format("LL")
+        let date = moment(nextProps.selectedDay).format("LL")
         this.setState({
             dateToDisplay: date
         })

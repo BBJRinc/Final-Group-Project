@@ -53,6 +53,8 @@ export default class App extends React.Component {
     this.getPreviousDay = this.getPreviousDay.bind(this);
   }
 
+
+
   async componentDidMount() {
     // console.log('COMPONENT MOUNTED!!!!!');
     SplashScreen.hide();
@@ -68,65 +70,67 @@ export default class App extends React.Component {
       })
     }
 
-    let newToday = Math.round(new Date().getTime()/1000.0)
-    this.setState({
-      selectedDay: newToday
-    })
-    console.log("before Axios calls: ", this.state.selectedDay)
-
-    // Yesterdays Tasks
-    let yesterdaysConv = moment(this.state.selectedDay).format("YYYY-MM-DD");
-    let yesterdayUnix = moment.unix(yesterdaysConv, "YYYY-MM-DD").valueOf();
-    let newYesterday = moment(this.state.selectedDay).subtract(86400000, 'milliseconds');
-    console.log('yesterdaysDateInUnix: ', newYesterday)
-    axios({
-      method: 'get',
-      url: `http://${PubIpAddress}:4040/api/day/${newYesterday}`,
-      headers:{
-        "token":this.props.userToken
-      }
-    }).then(response => {
-      this.setState({
-        previousDayTasks: response.data
-      })
-    }).catch(err => console.log(err))
+    let newToday = Math.round(new Date().getTime())
+    // One day in milliseconds
+    let oneDay = 86400000;
 
     // Todays Tasks
-    let todayConv = moment.unix(this.state.selectedDay).format("YYYY-MM-DD")
+    let todayConv = moment(newToday).format("YYYY-MM-DD")
     let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
-    console.log('todayUnix: ', todayUnix)
-
+    console.log('todayUnix: ', todayUnix);
+    this.setState({
+      selectedDay: todayUnix
+    })
     axios({
       method: 'get',
       url: `http://${PubIpAddress}:4040/api/day/${todayUnix}`,
-      headers:{
-        "token":this.props.userToken
+      headers: {
+        "token": this.state.userToken
       }
-    }).then(response =>{
+    }).then(response => {
       this.setState({
         currentTasks: response.data
       })
+
+      // Yesterdays Tasks
+      let newYesterday = this.state.selectedDay - oneDay;
+      console.log('yesterdaysDateInUnix: ', newYesterday);
+      axios({
+        method: 'get',
+        url: `http://${PubIpAddress}:4040/api/day/${newYesterday}`,
+        headers: {
+          "token": this.state.userToken
+        }
+      }).then(response => {
+        this.setState({
+          previousDayTasks: response.data
+        })
+
+        // Tomorrows Tasks
+        let newTomorrow = this.state.selectedDay + oneDay;
+        console.log('tomorrowsDateInUnix: ', newTomorrow);
+        axios({
+          method: "get",
+          url: `http://${PubIpAddress}:4040/api/day/${newTomorrow}`,
+          headers: {
+            "token": this.state.userToken
+          }
+        }).then(response => {
+          this.setState({
+            nextDayTasks: response.data
+          })
+        }).catch(err => console.log(err));
+      }).catch(err => console.log(err));
     }).catch(err => console.log(err));
 
-    // Tomorrows Tasks
-    let tomorrowCov = moment.unix(this.state.selectedDay).format("YYYY-MM-DD");
-    let tomorrowUnix = moment(tomorrowCov, "YYY-MM-DD").valueOf();
-    let newTomorrow = moment(this.state.selectedDay).add(86400000, 'milliseconds');
-    console.log('tomorrowsDateInUnix: ', newTomorrow)
-    axios({
-      method: "get",
-      url: `http://${PubIpAddress}:4040/api/day/${newTomorrow}`,
-      headers:{
-        "token":this.props.userToken
-      }
-    }).then(response =>{
-      this.setState({
-        nextDayTasks: response.data
-      })
-    }).catch(err => console.log(err))
-    // Compondent did mount ends
-  }
-  
+    console.log('user token: ', this.state.userToken);
+    console.log('previousDayTasks: ', this.state.previousDayTasks);
+    console.log('currentTasks: ', this.state.currentTasks);
+    console.log('nextDayTasks: ', this.state.nextDayTasks);
+  } // Compondent did mount ends
+
+  /// Methods Begin ///
+
   closeDrawer = () => {
     this._drawer._root.close()
   }
@@ -149,54 +153,64 @@ export default class App extends React.Component {
   }
 
   getPreviousDay() {
-    let previousDateTasks = moment(this.state.selectedDay).subtract(86400, 'milliseconds');
+    let oneDay = 86400000;
+    let previousDateUnix = this.state.selectedDay - oneDay;
+    console.log('previousDateUnix: ', previousDateUnix)
     this.setState({
-      selectedDay: previousDateTasks,
       nextDayTasks: this.state.currentTasks,
-      currentTasks: this.state.previousDayTasks
+      currentTasks: this.state.previousDayTasks,
+      previousDayTasks: null
     })
-    axios.get(`http://${PubIpAddress}:4040/api/day/${previousDateTasks}`).then(response => {
+    axios({
+      method: "get",
+      url: `http://${PubIpAddress}:4040/api/day/${previousDateUnix}`,
+      headers: {
+        "token": this.state.userToken
+      }
+    }).then(response => {
       this.setState({
-        previousDayTasks: response.data
+        previousDayTasks: response.data,
+        selectedDay: previousDateUnix
       })
     }).catch(err => console.log(err));
+    console.log('previousDayTasks: ', this.state.previousDayTasks);
+    console.log('currentTasks: ', this.state.currentTasks);
+    console.log('nextDayTasks: ', this.state.nextDayTasks);
   }
 
   getNextDay() {
-    let nextDateTasks = moment(this.state.selectedDay).add(86400, 'milliseconds');
-    console.log('tomorrowsUnixDate in Unix: ', nextDateTasks)
+    let oneDay = 86400000;
+    let nextDateUnix = this.state.selectedDay + oneDay;
+    console.log('nextDateUnix: ', nextDateUnix)
     this.setState({
-      selectedDay: nextDateTasks,
       previousDayTasks: this.state.currentTasks,
       currentTasks: this.state.nextDayTasks,
+      nextDateTasks: null
     })
-    axios.get(`http://${PubIpAddress}:4040/api/day/${nextDateTasks}`).then(response => {
+    axios({
+      method: "get",
+      url: `http://${PubIpAddress}:4040/api/day/${nextDateUnix}`,
+      headers: {
+        "token": this.state.userToken
+      }
+    }).then(response => {
       this.setState({
-        nextDateTasks: response.data
+        nextDateTasks: response.data,
+        selectedDay: nextDateUnix
       })
     }).catch(err => console.log(err));
+    console.log('previousDayTasks: ', this.state.previousDayTasks);
+    console.log('currentTasks: ', this.state.currentTasks);
+    console.log('nextDayTasks: ', this.state.nextDayTasks);
   }
 
   onDayPress(day) {
     let unixDay = moment(day.dateString, "YYYY-MM-DD").valueOf();
-    // console.log("test time " + unixDay)
     this.setState({
       selectedDay: unixDay
     });
     this.showMenuItem('showCalendar');
   }
-
-  // nextDayPress() {
-  //   let date = moment().format("YYYY-MM-DD")
-  //   let todaysDate = moment(date, "YYYY-MM-DD").valueOf();
-  //   console.log('todaysDate in Unix: ', todaysDate)
-  //   axios.get(`http://${PubIpAddress}/api/day/${todaysDate}`).then(response => {
-  //     // console.log(response)
-  //     this.setState({
-  //       daysTasks: response.data
-  //     });
-  //   }).catch(err => console.log(err));
-  // }
 
   onTaskPress(task, listName) {
     this.setState({ selectedTask: task });
@@ -216,8 +230,6 @@ export default class App extends React.Component {
       this.setState({ userToken: null, hasToken: false });
     });
   }
-
-
 
   loginWindow() {
     auth0
@@ -249,7 +261,7 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             <Content>
-              <DayView />
+              <DayView tasksToRender={this.state.currentTasks}/>
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />

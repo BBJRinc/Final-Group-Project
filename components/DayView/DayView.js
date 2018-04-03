@@ -76,7 +76,7 @@ export default class DayView extends React.Component {
   componentDidMount() {
     // Axios call to pull array of tasks for the given day
     let newList = [];
-    testData.forEach(task => {
+    this.props.tasksToRender.forEach(task => {
       newList[task.id] = task;
       //   let id = task.taskId;
 
@@ -85,6 +85,7 @@ export default class DayView extends React.Component {
       // }
     })
     this.setState({ tasks: newList })
+    // console.log(this.state.tasks)
   }
 
   genChronoList(inTasks = this.state.tasks) {
