@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from "react-native";
-import { Container, Icon, Header, Left, Right, Body, Title, } from 'native-base';
+import { Container, Icon, Header, Left, Right, Body, Title, Text } from 'native-base';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
 import axios from 'axios';
@@ -16,7 +16,7 @@ export default class DayViewHeader extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let date = moment(nextProps.selectedDay).format("LL")
+        let date = moment(nextProps.selectedDay).format("ll")
         this.setState({
             dateToDisplay: date
         })
@@ -31,22 +31,22 @@ export default class DayViewHeader extends Component {
                     <Left Icon style={styles.left}>
                         <IconF name="chevron-left"
                             color="#ffffff"
-                            size={25}
+                            size={28}
                             onPress={() => previousDay()}
                         />
                     </Left>
 
                     <Body style={styles.body}>
-                        <Title style={styles.text}>
+                        <Text style={styles.text}>
                             {this.state.dateToDisplay}
-                        </Title>
+                        </Text>
                     </Body>
 
                     <Right Icon style={styles.right}>
                         <IconF
                             name="chevron-right"
                             color="#ffffff"
-                            size={25}
+                            size={28}
                             onPress={() => nextDay()}
                         />
                     </Right>
@@ -60,10 +60,11 @@ const styles = StyleSheet.create({
     header: {
         height: 30,
         backgroundColor: 'rgba(0, 0, 0, .85)',
+        justifyContent: "center"
 
     },
     body: {
-        width: '100%',
+        flex: 1,
     },
     right: {
         flex: 1,
@@ -75,6 +76,8 @@ const styles = StyleSheet.create({
     },
     text: {
         color: "#ffffff",
+        fontWeight: "bold",
+        fontSize: 20
     }
 
 })
