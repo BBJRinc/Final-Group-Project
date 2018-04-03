@@ -26,7 +26,6 @@ export default class DurationPicker extends Component {
   }
 
   render() {
-    console.log(this.props.duration)
     const { text, pickerView, headerBackground, pickerContainer, pickerViewLeft, pickerViewRight, picker, bottomView } = style
     return (
       <View>

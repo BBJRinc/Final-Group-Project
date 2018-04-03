@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAdress = '192.168.1.12'
+const PubIpAdress = '192.168.3.132'
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -22,21 +22,31 @@ export default class Checklist extends Component {
     }
 
     componentDidMount() {
-        const { checklistItems, taskId } = this.props
-        console.log(checklistItems, taskId)
-        this.setState({ checklistItems: checklistItems, taskid: taskId })
+        const { checklistItems, taskid } = this.props
+        this.setState({ checklistItems: checklistItems, taskid: taskid })
+    }
+    componentWillUnmount(){
+        axios({
+            method: 'put',
+            url: `http://${PubIpAdress}:4040/api/checklist`,
+            headers: {
+                "token": this.props.token
+            },
+            data: {
+                checklistItems: this.state.checklistItems
+            }
+        });
     }
 
     editContent(e) {
         this.setState({ editting: !this.state.editting })
+        this.props.updateChecklist(this.state.checklistItems)
     }
 
     handleChecklistItem(item) {
-        console.log(item)
         this.setState({ newChecklistItem: item.item })
     }
     markComplete(data) {
-        console.log(data.id, data.completed)
         let completed =
             this.state.checklistItems.map((item, i) => {
                 if (data.id === item.checklistitemid) {
@@ -46,30 +56,25 @@ export default class Checklist extends Component {
                     return item
                 }
             })
-        // axios.put('./api/checklist').then(res=>{
-        // console.log(res)
-        // this.setState({checklistItems:res.data})
-        // })
         this.setState({
             checklistItems: completed
         })
     }
-    updateContent(text) {
-        console.log(text.id)
-        const { id } = text
-        // let body = this.state.newChecklistItem
-        // axios.put(`/api/checklist/{id},`, body).then(res=>{
-        //     this.setState({checklistItems:res.data})
-        // });
-        this.setState({ editting: !this.state.editting });
-
+    updateContent(text, id) {
+        let updatedCheckItem = this.state.checklistItems.map((item, i) => {
+            if (id.id === item.checklistitemid) {
+                item.content = text
+                return item
+            } else {
+                return item
+            }
+        })
+        this.setState({checklistItems:updatedCheckItem})
     }
 
     addChecklistItem(e) {
         const { checklistItems, newChecklistItem, taskid } = this.state
         let itemid = taskid
-        console.log(newChecklistItem)
-        console.log(itemid)
         axios({
             method: 'post',
             url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
@@ -80,7 +85,6 @@ export default class Checklist extends Component {
                 "token": this.props.token,
             },
         }).then(resp => {
-            console.log(resp.data)
             this.setState({ checklistItems: resp.data });
         });
         this.setState({ newChecklistItem: '' })
@@ -88,11 +92,10 @@ export default class Checklist extends Component {
     deleteRow(secId, rowId, rowMap, data) {
         const { checklistitemid } = data
         let itemid = checklistitemid
-        console.log(itemid)
-        // rowMap[`${secId}${rowId}`].props.closeRow();
-        // const newData = [...this.state.checklistItems];
-        // newData.splice(rowId, 1);
-        // this.setState({ checklistItems: newData });
+        rowMap[`${secId}${rowId}`].props.closeRow();
+        const newData = [...this.state.checklistItems];
+        newData.splice(rowId, 1);
+        this.setState({ checklistItems: newData });
         axios({
             method: 'delete',
             url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
@@ -100,14 +103,11 @@ export default class Checklist extends Component {
                 "token": this.props.token
             }
         }).then(resp => {
-            console.log(resp.data)
             this.setState({ checklistItems: resp.data });
         });
     }
     render() {
         const { padding, addItemMargin, inputSize, separate } = styles
-        console.log(this.state)
-        console.log(this.props.token)
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
         return (
@@ -123,9 +123,9 @@ export default class Checklist extends Component {
                             {
                                 this.state.editting === false
                                     ?
-                                    <Text onLongPress={(e, item) => this.editContent(e, item)} style={{ height: 30, alignContent: 'center', alignItems: 'center', fontSize: 16 }}>{data.content}</Text>
+                                    <Text onPress={(e, item) => this.editContent(e, item)} style={{ height: 20, alignContent: 'center', alignItems: 'center', fontSize: 17, marginTop: 6, paddingLeft: 5 }}>{data.content}</Text>
                                     :
-                                    <Input style={{ height: 30, alignContent: 'center', justifyContent: 'center' }} onChangeText={(item) => this.handleChecklistItem({ id: item })} onEndEditing={(text) => this.updateContent({ id: text })} value={data.content} />
+                                    <Input style={{ height: 25, alignContent: 'center', justifyContent: 'center', marginBottom: 2 }} onChangeText={(text)=> this.updateContent(text, {id:data.checklistitemid})} onEndEditing={(e) => this.editContent( e )}>{data.content}</Input>
                             }
                         </ListItem>
                     }
