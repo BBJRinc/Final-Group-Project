@@ -22,9 +22,8 @@ export default class Checklist extends Component {
     }
 
     componentDidMount() {
-        const { checklistItems, taskId } = this.props
-        console.log(checklistItems, taskId)
-        this.setState({ checklistItems: checklistItems, taskid: taskId })
+        const { checklistItems, taskid } = this.props
+        this.setState({ checklistItems: checklistItems, taskid: taskid })
     }
     componentWillUnmount(){
         axios({
@@ -41,14 +40,13 @@ export default class Checklist extends Component {
 
     editContent(e) {
         this.setState({ editting: !this.state.editting })
+        this.props.updateChecklist(this.state.checklistItems)
     }
 
     handleChecklistItem(item) {
-        console.log(item)
         this.setState({ newChecklistItem: item.item })
     }
     markComplete(data) {
-        console.log(data.id, data.completed)
         let completed =
             this.state.checklistItems.map((item, i) => {
                 if (data.id === item.checklistitemid) {
@@ -63,9 +61,7 @@ export default class Checklist extends Component {
         })
     }
     updateContent(text, id) {
-        console.log(id, text)
         let updatedCheckItem = this.state.checklistItems.map((item, i) => {
-            console.log(item.checklistitemid, id.id)
             if (id.id === item.checklistitemid) {
                 item.content = text
                 return item
@@ -79,8 +75,6 @@ export default class Checklist extends Component {
     addChecklistItem(e) {
         const { checklistItems, newChecklistItem, taskid } = this.state
         let itemid = taskid
-        console.log(newChecklistItem)
-        console.log(itemid)
         axios({
             method: 'post',
             url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
@@ -91,7 +85,6 @@ export default class Checklist extends Component {
                 "token": this.props.token,
             },
         }).then(resp => {
-            console.log(resp.data)
             this.setState({ checklistItems: resp.data });
         });
         this.setState({ newChecklistItem: '' })
@@ -99,7 +92,6 @@ export default class Checklist extends Component {
     deleteRow(secId, rowId, rowMap, data) {
         const { checklistitemid } = data
         let itemid = checklistitemid
-        console.log(itemid)
         rowMap[`${secId}${rowId}`].props.closeRow();
         const newData = [...this.state.checklistItems];
         newData.splice(rowId, 1);
@@ -111,14 +103,11 @@ export default class Checklist extends Component {
                 "token": this.props.token
             }
         }).then(resp => {
-            console.log(resp.data)
             this.setState({ checklistItems: resp.data });
         });
     }
     render() {
         const { padding, addItemMargin, inputSize, separate } = styles
-        console.log(this.state)
-        console.log(this.props.token)
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
         return (

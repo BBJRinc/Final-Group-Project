@@ -76,6 +76,8 @@ module.exports={
     },
 
     editTask: function(req, res){
+        console.log(req.body)
+        console.log(req.params.taskid)
         const taskid = Number(req.params.taskid);
         let task = [
             taskid,

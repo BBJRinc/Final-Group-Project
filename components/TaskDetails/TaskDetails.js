@@ -15,20 +15,22 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
+const PubIpAdress = '192.168.3.132';
+
 export default class TaskDetails extends Component {
     constructor(props) {
         super(props)
         this.state = {
 
             userID: '',
-            taskId: '',
+            taskid: '',
             userToken: '',
             createdDate: '',
             description: '',
             duedate: '',
             checklistItems: [],
             activity: [],
-            name: '',
+            taskname: '',
             color: '#838C91',
             user: 'Brandon Allred',
             comment: '',
@@ -41,10 +43,10 @@ export default class TaskDetails extends Component {
             showChecklist: false,
             LabelModalVisable: false,
             startTime: null,
-            editTitle: false
+            editTitle: false,
+            date: ''
             // members: [],
             // newChecklistItem: '',
-            // date: '',
             // modalVisable:false,
         }
         this.handleLabelColor = this.handleLabelColor.bind(this)
@@ -52,67 +54,70 @@ export default class TaskDetails extends Component {
         this.saveDuration = this.saveDuration.bind(this)
         this.cancelDuration = this.cancelDuration.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
+        this.updateChecklist = this.updateChecklist.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-       if (nextProps.selectedTask.taskid){
-        const {
+        console.log(nextProps.selectedTask)
+        if (nextProps.selectedTask.taskid) {
+            const {
             taskid, taskname, updatedat,
-            userid, starttime, isrecurring, duration,
-            duedate, description, createdat, completed,
-            comments, color, checkitems, token } = nextProps.selectedTask
- 
-        this.setState({
-            userID: userid,
-            userToken: this.props.token,
-            taskId: taskid,
-            name: taskname,
-            createdDate: createdat,
-            description: description,
-            duedate: duedate,
-            label: color,
-            checklistItems: checkitems,
-            color: color,
-            date: duedate,
-            comments: comments,
-            milliseconds: duration,
-            completed: completed,
-            startTime: starttime
-        });
-       } else {
-        this.setState({
-            userID: '',
-            taskId: '',
-            userToken: this.props.token,
-            createdDate: '',
-            description: '',
-            duedate: '',
-            label: '',
-            checklistItems: [],
-            activity: [],
-            name: '',
-            color: '#838C91',
-            user: 'Brandon Allred',
-            comment: '',
-            comments: [],
-            hours: '00',
-            minutes: '00',
-            milliseconds: 0,
-            completed: false,
-            durationModalVisable: false,
-            showChecklist: false,
-            LabelModalVisable: false,
-            startTime: null,
-            editTitle: false
-        });
-       }
-       
-        
+                userid, starttime, isrecurring, duration,
+                duedate, description, createdat, completed,
+                comments, color, checkitems, token } = nextProps.selectedTask
+                
+            this.setState({
+                userID: userid,
+                userToken: this.props.token,
+                taskid: taskid,
+                taskname: taskname,
+                createdDate: '',
+                description: description,
+                duedate: duedate,
+                label: color,
+                checklistItems: checkitems || [],
+                color: color,
+                date: duedate,
+                comments: comments || [],
+                milliseconds: duration,
+                completed: completed,
+                startTime: starttime
+            });
+        } else {
+            this.setState({
+                userID: '',
+                taskid: '',
+                userToken: this.props.token,
+                createdDate: '',
+                description: '',
+                duedate: '',
+                label: '',
+                checklistItems: [],
+                activity: [],
+                taskname: '',
+                color: '#838C91',
+                user: 'Brandon Allred',
+                comment: '',
+                comments: [],
+                hours: '00',
+                minutes: '00',
+                milliseconds: 0,
+                completed: false,
+                durationModalVisable: false,
+                showChecklist: false,
+                LabelModalVisable: false,
+                startTime: null,
+                editTitle: false
+            });
+
+        }
     }
-    componentWillUnmount(){
-        console.log(e)
+    componentDidMount(){
+
+    }
+    updateTaskOnClick() {
         axios({
             method: 'put',
-            url: `http://${ipaddress}:4040/api/task/${this.props.selectedTask.taskid}`,
+            url: `http://${PubIpAdress}:4040/api/task/${this.props.selectedTask.taskid}`,
             headers: {
                 "token": this.props.token
             },
@@ -122,14 +127,18 @@ export default class TaskDetails extends Component {
                 starttime: this.state.starttime,
                 description: this.state.description,
                 completed: this.state.completed,
-                color: this.state.completed,
+                color: this.state.color,
                 isrecurring: this.state.isrecurring,
-                duration: this.state.duration
+                duration: this.state.milliseconds
             }
-        });
+        }).then(() => {
+            this.props.selectedTaskUpdate();
+        })
     }
+
+
+
     editDescription(value) {
-        console.log(value)
         this.setState({ description: value })
     }
     addComment(text) {
@@ -145,9 +154,10 @@ export default class TaskDetails extends Component {
         })
     }
     selectDate(date) {
-        console.log(date)
+        let  newDate = moment(date, "YYYY-MM-DD").valueOf()
+        let finalDate = newDate/1000
         this.setState({
-            date: date
+            date: finalDate
         })
     }
 
@@ -158,9 +168,10 @@ export default class TaskDetails extends Component {
             durationModalVisable: !this.state.durationModalVisable
         });
     }
-
+    updateChecklist(checklist) {
+        this.setState({ checklistItems: checklist })
+    }
     saveDuration(e, state) {
-        console.log(state)
         const { minutes, hours } = state
         let minuteMilliseconds = minutes * 1 * (1000 * 60 * 100)
         let hourMilliseconds = hours * 1 * (60 * 60 * 1000)
@@ -170,7 +181,6 @@ export default class TaskDetails extends Component {
         this.setModalVisible();
     }
     cancelDuration(e) {
-        console.log(e)
         this.setState({
             hours: '00',
             minutes: '00',
@@ -178,19 +188,21 @@ export default class TaskDetails extends Component {
         });
         this.setModalVisible();
     }
-    editTitle(e) {
+    editTitleText(value) {
+        this.setState({ taskname: value })
+    }
+    editTitle() {
         this.setState({ editTitle: !this.state.editting })
     }
     render() {
         console.log(this.state)
-        console.log(this.props.duration)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
             <View style={{ marginTop: 22 }}>
                 <Modal
                     animationType="slide"
                     transparent={false}
-                    onRequestClose={() => this.props.showMenuItem('showTaskDetails')}
+                    onRequestClose={() => { this.props.showMenuItem('showTaskDetails'); this.updateTaskOnClick() }}
                     visible={this.props.showTaskDetails}>
                     <View style={[header, { backgroundColor: this.state.color }]}>
                         <View style={header_top}>
@@ -198,6 +210,7 @@ export default class TaskDetails extends Component {
                                 <TouchableHighlight style={{ alignItems: 'center' }}
                                     onPress={() => {
                                         this.props.showMenuItem('showTaskDetails');
+                                        this.updateTaskOnClick();
                                     }}>
                                     <IconI name='ios-close' size={35} color={'#fff'} />
                                 </TouchableHighlight>
@@ -211,12 +224,21 @@ export default class TaskDetails extends Component {
                         <View style={header_bottom}>
                             <Left style={{ justifyContent: 'center', alignContent: 'center' }}>
                                 {
+                                    this.state.taskname === ''
+                                        ?
+                                        <Item style={{ alignItems: 'center', borderBottomColor: 'transparent' }}>
+                                            <Input style={{ color: '#fff', alignItems: 'center', height: 30, borderWidth: 0, alignContent: 'center', marginTop: -6, marginBottom: 5 }} value={this.state.taskname} placeholder={'click to add a title'} onChangeText={(value) => this.editTitleText(value)} onEndEditing={(e) => this.editTitle(e)} />
+                                        </Item>
+                                        :
+                                        null
+                                }
+                                {
                                     this.state.editTitle === false
                                         ?
-                                        <Text style={{ color: '#fff', height: 30, alignItems: 'center', alignContent: 'center' }} onLongPress={(e) => this.editTitle(e)}>{this.state.name}</Text>
+                                        <Text style={{ color: '#fff', height: 30, alignItems: 'center', alignContent: 'center' }} onPress={(e) => this.editTitle(e)}>{this.state.taskname}</Text>
                                         :
                                         <Item style={{ alignItems: 'center', borderBottomColor: 'transparent' }}>
-                                            <Input style={{ color: '#fff', alignItems: 'center', height: 30, borderWidth: 0, alignContent: 'center', marginTop: -6 }} value={this.state.name} onChangeText={(value) => this.editDescription(value)} onEndEditing={(e) => this.editTitle(e)} />
+                                            <Input style={{ color: '#fff', alignItems: 'center', height: 30, borderWidth: 0, alignContent: 'center', marginTop: -6 }} value={this.state.taskname} placeholder={'click to add a title'} onChangeText={(value) => this.editTitleText(value)} onEndEditing={(e) => this.editTitle(e)} />
                                         </Item>
                                 }
                             </Left>
@@ -234,9 +256,9 @@ export default class TaskDetails extends Component {
                             body={
                                 this.state.completed === false
                                     ?
-                                         <Text>  Swipe to complete</Text>
+                                    <Text>  Swipe to complete</Text>
                                     :
-                                         <Text style={{ backgroundColor: 'lightgreen', height: 30, width: 400 }}>Complete</Text>
+                                    <Text style={{ backgroundColor: 'lightgreen', height: 30, width: 400 }}>Complete</Text>
 
                             }
                             right={
@@ -272,9 +294,9 @@ export default class TaskDetails extends Component {
                                     this.setModalVisible(!this.state.LabelModalVisable);
                                 }}>
                                 <Text style={{ color: '#585858', fontSize: 17 }}>
-                                  <IconE name='time-slot' size={15} color={'#303030'} />
+                                    <IconE name='time-slot' size={15} color={'#303030'} />
                                     {this.state.milliseconds === null ? 'Duration' : this.state.milliseconds / (60 * 60 * 1000)}
-                                     </Text>
+                                </Text>
                             </TouchableHighlight>
                         </Item>
                         <Item style={labelStyle}>
@@ -283,17 +305,22 @@ export default class TaskDetails extends Component {
                                 labelColor={this.handleLabelColor}
                                 color={this.state.color}
                                 isVisable={this.state.LabelModalVisable} />
-                            {this.state.color !== '' ? <View style={[inlineLabelStyle, { backgroundColor: this.state.color }]} /> : null}
+                            {this.state.color !== null ? <View style={[inlineLabelStyle, { backgroundColor: this.state.color }]} /> : null}
                         </Item>
 
                         {/* This is the checklist comp------------------------------------------- */}
 
+                        <Item style={separate}>
+                            <IconI active name='md-checkbox-outline' size={15} style={padding} />
+                            <Input disabled placeholder='Checklist...' style={[inputSize]} name='checklist' onChangeText={(text) => this.handleChecklistName({ id: i, name: text })} />
+                        </Item>
                         <Checklist
                             showChecklist={this.state.showChecklist}
                             color={this.state.color}
                             checklistItems={this.state.checklistItems}
-                            taskId={this.state.taskId}
-                            token={this.state.userToken} />
+                            taskid={this.state.taskid}
+                            token={this.state.userToken}
+                            updateChecklist={this.updateChecklist} />
                         <Item disabled style={separate}>
                             <IconF name='activity' style={[iconSize, padding]} />
                             <Input disabled placeholder='Activity' style={[padding, inputSize]} placeholder='Activity' />

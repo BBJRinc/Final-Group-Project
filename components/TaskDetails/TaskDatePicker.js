@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import DatePicker from 'react-native-datepicker'
-import Icon from 'react-native-vector-icons'
+import React, { Component } from 'react';
+import DatePicker from 'react-native-datepicker';
+import moment from 'moment';
+import Icon from 'react-native-vector-icons';
 
 export default class TaskDatePicker extends Component {
   constructor(props){
@@ -8,13 +9,14 @@ export default class TaskDatePicker extends Component {
     this.state = {}
   }
   render(){
+    const finalDate = this.props.date/1000
     return (
       <DatePicker
         style={{width: 125}}
         date={this.state.date}
         showIcon={true}
         mode="datetime"
-        placeholder={this.props.date === "" ? "Due date..." : this.props.date}
+        placeholder={this.props.date === "" ? "Due date..." : moment.unix(finalDate).format('MM-DD-YYYY')}
         format="YYYY-MM-DD"
         minDate="2017-05-01"
         maxDate="2021-06-01"
