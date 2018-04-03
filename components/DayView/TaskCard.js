@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Animated, PanResponder } from 'react-native'
-import { Text, Container } from 'native-base';
+import { Text, Container, Content, List } from 'native-base';
+import NativeMethodsMixin from 'NativeMethodsMixin';
 
 import gStyle from './../gStyle.js';
 
@@ -8,13 +9,18 @@ let theme = 'blue';
 let testTheme = global.theme
 
 const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
+const GHOST_OPACITY = 0.4;
+
+const LONG_PRESS_TIME = 10;
+
+const DBG = true;
 
 /*------------------------------------------------------------------------------
 -----Takes props of:------------------------------------------------------------
 -------title: Text on the card--------------------------------------------------
 -------color: The base color of the card----------------------------------------
 -------itemStart: Distance from te top of the page------------------------------
--------itemHeight: The height of the manipulatable div--------------------------
+-------cardHeight: The height of the manipulatable div--------------------------
 ------------------------------------------------------------------------------*/
 
 class TaskCard extends React.Component {
@@ -23,40 +29,53 @@ class TaskCard extends React.Component {
 
     
     this.state = {
+      unlocked: false,
+      gestureShield: false,
       pan: new Animated.ValueXY(),
       ghostStyle: {
-        width: 0,
-        height: 0,
+        opacity: 0,
       },
     }
   }
 
 
   componentWillMount() {
+    // this.animatedValueX = this.props.cardLeft;
+    // this.animatedValueY = this.props.cardTop;
     this.animatedValueX = 0;
     this.animatedValueY = 0;
     this.state.pan.x.addListener((value) => this.animatedValueX = value.value);
     this.state.pan.y.addListener((value) => this.animatedValueY = value.value);
-    
+    this.pressTimer = null;
+    this.tap = true;
+
 /*------------------------------------------------------------------------------
 -----Change bottom--------------------------------------------------------------
 ------------------------------------------------------------------------------*/
     this.panResponderBot = PanResponder.create({
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
+
+      onStartShouldSetPanResponderCapture: () => true,
   
       onPanResponderGrant: (e, gestureState) => {
-        
+        this.startResizeGesture();
       },
   
       onPanResponderMove: (e, gestureState) => {
-        let newHeight = Math.max(30, Math.floor(e.nativeEvent.pageY - this.props.itemStart))
-        // this.props.changeDimensions(null, newHeight);
+        // if(DBG) console.log('this.ghostBottom:', this.ghostBottom);
+        // if(DBG) console.log('e.nativeEvent:', e.nativeEvent);
+        
+        let newHeight = Math.max(this.props.segmentHeight, e.nativeEvent.locationY - this.ghostTop)
+        this.setState({ghostStyle: {...this.state.ghostStyle, height: newHeight}})
       },
   
+      onPanResponderTerminate: (e, gestureState) => {
+        this.endResizeGesture();
+      },
+
       onPanResponderRelease: (e, gestureState) => {
-        // this.state.pan.flattenOffset();
-        let newHeight = Math.max(30, Math.floor(e.nativeEvent.pageY - this.props.itemStart))
+        this.endResizeGesture();
+        this.state.pan.flattenOffset();
+        let newHeight = Math.max(this.props.segmentHeight, e.nativeEvent.locationY - this.ghostTop)
         this.props.setNewTimes(this.props.id, null, newHeight);
       }
     });
@@ -64,125 +83,235 @@ class TaskCard extends React.Component {
 -----Change top-----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
     this.panResponderTop = PanResponder.create({
+
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => true,
       onMoveShouldSetResponderCapture: () => true,
       onMoveShouldSetPanResponderCapture: () => true,
   
       onPanResponderGrant: (e, gestureState) => {
-        // this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value})
-        // this.state.pan.setValue({x:0, y:0});
-        this.initialHeight = this.props.itemHeight;
-        this.initialStart = this.props.itemStart;
       },
   
       onPanResponderMove: (e, gestureState) => {
-        let newStart = Math.max(0, Math.floor(e.nativeEvent.pageY))
-        let newHeight = Math.max(30, Math.floor(this.initialHeight + (this.initialStart - newStart)))
-        // this.props.changeDimensions(this.props.id, newStart, newHeight);
       },
   
       onPanResponderRelease: (e, gestureState) => {
-        // this.state.pan.flattenOffset();
-        let newStart = Math.max(0, Math.floor(e.nativeEvent.pageY))
-        let newHeight = Math.max(30, Math.floor(this.initialHeight + (this.initialStart - newStart)))
-        this.props.setNewTimes(this.props.id, newStart, newHeight);
-        this.initialHeight = null;
       }
     });
 /*------------------------------------------------------------------------------
------Move entire component------------------------------------------------------
+-----Move ghost-----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
     this.panResponderMid = PanResponder.create({
 
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-      // onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => true,
+      onShouldBlockNativeResponder: () => false,
   
       onPanResponderGrant: (e, gestureState) => {
-        this.state.pan.setOffset({x: this.animatedValueX, y: this.animatedValueY});
-        this.state.pan.setValue({x: 0, y: 0});
+        this.tap = true;
+        this.pressTimer = setTimeout(() => {
+          this.tap = false;
+          this.showGhost();
+          this.setState({unlocked: true})
+          this.props.scrollable(false);
+          this.state.pan.setValue({x: this.props.cardLeft, y: this.props.cardTop})
+          this.state.pan.setOffset({x: this.animatedValueX, y: this.animatedValueY})
+          if(DBG) console.log('moveAction set to true');
+          
+        }, LONG_PRESS_TIME)
+      },
+
+      onPanResponderMove: (e, gestureState) => {
+        if(this.state.unlocked) {
+          // this.blockNative();
+          this.setState({debug: e.nativeEvent.locationY})
+          Animated.event([null,
+            {
+              dx: this.state.pan.x,
+              dy: this.state.pan.y,
+            }]
+          )(e, gestureState)
+        } else {
+          this.tap = false;
+          clearTimeout(this.pressTimer);
+          
+          return false;
+        }
+      },
+
+      onPanResponderTerminate: (e, gestureState) => {
+        this.endMoveGesture();
       },
   
-      onPanResponderMove: Animated.event([null, {
-        dx: this.state.pan.x,
-        dy: this.state.pan.y,
-      }]),
-  
       onPanResponderRelease: (e, gestureState) => {
-        this.state.pan.flattenOffset();
-        let newStart = Math.max(0, Math.floor(e.nativeEvent.pageY))
-        this.props.setNewTimes(this.props.id, newStart);
-        // this.animatedValueX = 0;
-        // this.animatedValueY = 0;
+        this.endMoveGesture();
 
-        this.state.pan.setValue({x: 0, y: 0})
-        // this.setState({ghostStyle: {...this.state.ghostStyle, top: 0, left: 0}})
-        // console.log('this.state:', this.state);
-        // Animated.spring(this.state.pan, {toValue: {x:0, y:0}}).start();
+        if(this.tap) {
+          this.tapAction();
+        } else {
+          this.state.pan.setValue({x: 0, y: 0})
+          this.state.pan.flattenOffset();
+          this.props.setNewTimes(this.props.id, this.ghostTop);
+        }
       }
     });
   }
+
+  endMoveGesture() {
+    this.hideGhost();
+    this.props.scrollable(true);
+    this.setState({unlocked: false});
+    clearTimeout(this.pressTimer);
+  }
+
+  endResizeGesture() {
+    this.hideGhost();
+    this.setState({gestureShield: false});
+    // if(DBG) console.log('this.state:', this.state);
+      
+    // this.setState({ghostStyle: {opacity: 1}});
+  }
+
+  startResizeGesture() {
+    this.showGhost();
+    this.setState({gestureShield: true});
+    // this.state.pan.setValue({y: this.props.cardTop})
+    // this.state.pan.setOffset({y: 0});
+  }
+
+  showGhost() {
+    if(DBG) console.log('!!!!!!!!!!!showGhost called');
+    
+    this.setState({ghostStyle: {...this.state.ghostStyle, opacity: GHOST_OPACITY}});
+  }
+
+  hideGhost() {
+    if(DBG) console.log('hideGhost Called');
+    
+    this.setState({stuff: 'hello?'})
+    if(DBG) console.log('this.state:', this.state);
+    
+  }
+
+  tapAction() {
+    if(DBG) console.log('There was a tap!');
+    
+  }
+
+  // blockNative() {
+  //   this.setState({blockNative: true});
+  // }
+
+  // unblockNative() {
+  //   this.setState({blockNative: false});
+  // }
+
+  // disableGhostPointer() {
+  //   this.setState({disableGhostPointer: 'none'})
+  // }
+
+  // disableGhostPointer() {
+  //   this.setState({disableGhostPointer: 'auto'})
+  // }
 
   componentWillUnmount() {
     this.state.pan.x.removeAllListeners();  
     this.state.pan.y.removeAllListeners();
   }
 
-  ghostAnimate(ghostY, ghostHeight, ghostX) {
-
+  componentWillReceiveProps(newProps) {
+    // if(DBG) console.log('newProps:', newProps);
+    
+    if(newProps.cardTop != this.state.ghostStyle.top) {
+      this.state.pan.setValue({
+        y: newProps.cardTop,
+      })
+    }
+    if(newProps.cardHeight != this.state.ghostStyle.height){
+      this.setState({ghostStyle: {...this.state.ghostStyle, height: newProps.cardHeight}})
+    }
   }
 
-  // hexToRGBA(hex) {
-    
-  //   let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-  //   if(!result) {
-  //     console.log('Invalid hex value:', hex);
-  //     return `rgba(255,255,255,${GHOST_TRANSPARENCY})`;
-  //   }
-    
-  //   let r = parseInt(result[1], 16),
-  //       g = parseInt(result[2], 16),
-  //       b = parseInt(result[3], 16);
-
-  //   return `rgba(${r},${g},${b},${GHOST_TRANSPARENCY})`
-  // }
 
   onLayout(event) {
-    console.log(event.nativeEvent.layout);
+    console.log('Layout:', event.nativeEvent.layout);
     let ghostDimensions = {
       ...this.state.ghostStyle,
       width: event.nativeEvent.layout.width,
-      height: event.nativeEvent.layout.width,
+      height: event.nativeEvent.layout.height,
+      // opacity: 0,
     }
+    this.setState({ghostStyle: {...this.state.ghostStyle, ...ghostDimensions}})
+  }
 
-    this.setState({ghostStyle: {...ghostDimensions}})
+  ghostLayout(e) {
+    this.ghostTop = e.nativeEvent.layout.y
+    // if(DBG) console.log('this.ghostTop:', this.ghostTop);
+    this.ghostBottom = this.ghostTop + e.nativeEvent.layout.height
+    // if(DBG) console.log('e.nativeEvent.layout.height:', e.nativeEvent.layout.height);
+    
+    // if(DBG) console.log('this.ghostBottom:', this.ghostBottom);
+    
+    // if(DBG) console.log('e.nativeEvent:', e.nativeEvent);
+    
   }
 
   render() {
-    // console.log('this.props.itemStart:', this.props.itemStart);
+    let propStyles = {
+      backgroundColor: this.props.color,
+      top: this.props.cardTop,
+      height:  this.props.cardHeight,
+      left: this.props.cardLeft,
+      right: this.props.cardRight,
+      // width: 200,
+    };
+    // propStyles.top = 20;
+    let color = {
+      backgroundColor: this.props.color,
+    }
+    // console.log('propStyles:', propStyles);
+    // if(DBG) console.log('this.state.unlocked:', this.state.unlocked);
+    // if(DBG) console.log('this.props:', this.props);
     
-    // console.log('this.props.itemHeight:', this.props.itemHeight);
-    let color = {backgroundColor: this.props.color};
     
     return(
-      <Container onLayout={(event) => {this.onLayout(event)}}>
-        <Container style={[styles.card, color]}  {...this.panResponderMid.panHandlers} >
+      <List style={styles.cardHolder}>
+        <Text style={{position: 'absolute', top: 5, right: 20}}>{this.state.gestureShield ? 'Shields up' : 'Shields down'}</Text>
+
+        <Container pointerEvents='none' style={[styles.card, propStyles]} onLayout={(event) => {this.onLayout(event)}} >
           <Text>{this.props.title}</Text>
         </Container>
-        <Container style={styles.topGrab} {...this.panResponderTop.panHandlers} />
-        <Container style={styles.botGrab} {...this.panResponderBot.panHandlers} />
-        <Animated.View style={[this.state.ghostStyle, this.state.pan.getLayout(), styles.ghost]}
-          pointerEvents='none'
-          >
-          <Container style={[styles.card, color]}>
+
+
+        <List style={styles.cardHolder}>
+          {/* // pointerEvents='none'> */}
+          <Animated.View style={[styles.card,
+              propStyles,
+              // styles.ghost,
+              this.state.ghostStyle,
+              this.state.pan.getLayout(),
+            ]}
+            onLayout={(e) => this.ghostLayout(e)}
+            // pointerEvents={this.state.disableGhostPointer}
+            // ref={(ref) => this.ghostRef = ref}
+            ref="ghostRef"
+            >
+
             <Text>{this.props.title}</Text>
-          </Container>
-        </Animated.View>
-      </Container>
+            <Text>{this.state.unlocked ? 'Move me!' : 'Stuck'}</Text>
+
+            
+            <Container style={styles.cardGrab} {...this.panResponderMid.panHandlers} />
+            <Container style={styles.topGrab} {...this.panResponderTop.panHandlers} />
+            <Container style={styles.botGrab} {...this.panResponderBot.panHandlers} />
+          </Animated.View>
+        </List>
+          {this.state.gestureShield? <List style={[styles.cardHolder]} /> : null}
+
+      </List>
     )
   }
 }
-
+// this.state.pan.getLayout(), 
 export default TaskCard;
 
 const BORDER_RADIUS = 5;
@@ -191,21 +320,35 @@ const PADDING_LEFT = 10;
 const GRABBER_HEIGHT = 10;
 
 let styles = StyleSheet.create({
+  cardHolder: { 
+    // flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    // height: 500,
+    // bottom: 10000,
+    backgroundColor: 'transparent',
+    // opacity: .5,
+  },
   card: {
+    position: 'absolute',
+    // display: 'flex',
+    // flex: 1,
     borderRadius: BORDER_RADIUS,
-    paddingLeft: PADDING_LEFT,
-    paddingTop: PADDING_VERT,
-    paddingBottom: PADDING_VERT,
+    // paddingLeft: PADDING_LEFT,
+    // paddingTop: PADDING_VERT,
+    // paddingBottom: PADDING_VERT,
     borderStyle: 'solid',
     borderWidth: 2,
     borderColor: gStyle[theme].dark,
+  },
+  cardGrab: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'transparent'
   },
   textBox: {
     color: 'black',
   },
   ghost: {
     position: 'absolute',
-    opacity: 0.4,
     // backgroundColor: 'black',
   },
   topGrab: {

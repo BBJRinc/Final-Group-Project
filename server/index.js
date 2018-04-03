@@ -38,7 +38,7 @@ app.post('/api/auth', (req, res, next) => {
     jwt.verify(req.body.token, AUTH0_CLIENT_SECRET, (err, decoded) => {
         let db = app.get('db');
         if (err) {
-            console.log('Authorization failed', err);
+            // console.log('Authorization failed', err);
             next(err);
         }
         let { given_name, family_name, email, sub } = decoded;
@@ -49,14 +49,14 @@ app.post('/api/auth', (req, res, next) => {
                 db.createUser([given_name, family_name, email, sub]).then(resp => {
                     id = resp[0].userid;
                     let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' })
-                    console.log('token after create user: ', token)
+                    // console.log('token after create user: ', token)
                     res.status(200).send(token);
                 });
             }
             else {
                 id = user.userid;
                 let token = jwt.sign({ id }, JWT_SECRET, { expiresIn: '7d' })
-                console.log('token if user exists: ', token)
+                // console.log('token if user exists: ', token)
                 res.status(200).send(token);
             }
         })

@@ -25,13 +25,13 @@ export default class HeaderIconTextExample extends Component {
         }
     }
     createNewChecklist(e) {
-        console.log(e)
+        // console.log(e)
         this.setState({
             checklistItems: this.state.checklistItems.concat([{ name: '', item: [''] }])
         })
     }
     handleChecklistName(text) {
-        console.log(text)
+        // console.log(text)
         const { id, name } = text
         const newName = this.state.checklistItems.map((checklist, cidx) => {
             if (id !== cidx) return checklist
@@ -41,7 +41,7 @@ export default class HeaderIconTextExample extends Component {
     }
     handleChecklistItem(text) {
         const { id, item } = text
-        console.log(id, text.text)
+        // console.log(id, text.text)
         const newItem = this.state.checklistItems.map((checklist, cidx) => {
             if (id !== cidx) return checklist
             return { ...checklist, item: text }
@@ -49,7 +49,7 @@ export default class HeaderIconTextExample extends Component {
         this.setState({ checklistItems: newItem })
     }
     addChecklistrow(e) {
-        console.log(e)
+        // console.log(e)
         const { id } = e
         const newItem = this.state.checklistItems.map((checklist, cidx) => {
             if (id === cidx) return checklist
@@ -58,12 +58,12 @@ export default class HeaderIconTextExample extends Component {
         this.setState({ checklistItems: newItem })
     }
     render() {
-        console.log(this.state)
+        // console.log(this.state)
         const { padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, listItems, createChecklist } = styles
         let newChecklistItem = this.state.checklistItems.forEach((item,i)=>{
              return <Item style={{ paddingTop: 10 }} key={i}><Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />{item.id}</Item>  
         })
-        console.log(newChecklistItem)
+        // console.log(newChecklistItem)
         // let checklists = this.state.checklistItems.map((item, i) => {
         //     return <Text key={i} style={listItems}>{item}</Text>
         // })
@@ -129,7 +129,7 @@ export default class HeaderIconTextExample extends Component {
                                     <Item>
                                         <Input placeholder='Add item...' style={padding} style={inputSize} onChangeText={(item) => this.handleChecklistItem({ id: i, item })} onEndEditing={(e) => this.addChecklistrow({ id: i, e })} />
                                     </Item>
-                                    {console.log(newChecklistItem)}
+                                    {/* {console.log(newChecklistItem)} */}
                                     {newChecklistItem}
                                     {/* {
                                     item.id>=0
