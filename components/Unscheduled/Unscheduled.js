@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-const PubIpAdress = '192.168.3.132';
+const PubIpAdress = '192.168.3.149';
 
 export default class Unscheduled extends Component {
     constructor(props) {
@@ -24,7 +24,7 @@ export default class Unscheduled extends Component {
                 "token": this.props.token
             }
         }).then(resp => {
-            console.log(resp.data)
+            // console.log(resp.data)
             this.setState({ listViewData: resp.data });
             this.props.setCount(resp.data.length);
         });
@@ -37,13 +37,13 @@ export default class Unscheduled extends Component {
                 "token": this.props.token
             }
         }).then(resp => {
-            console.log(resp.data)
+            // console.log(resp.data)
             this.setState({ listViewData: resp.data });
             this.props.setCount(resp.data.length);
         });
     }
     deleteTask(id) {
-        console.log(id)
+        // console.log(id)
         axios({
             method: 'delete',
             url: `http://${PubIpAdress}:4040/api/unscheduled/${id}`,
@@ -51,7 +51,7 @@ export default class Unscheduled extends Component {
                 "token": this.props.token
             }
         }).then(resp => {
-            console.log(resp.data);
+            // console.log(resp.data);
             this.setState({ listViewData: resp.data });
         });
     }
