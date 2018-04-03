@@ -4,7 +4,7 @@ import { View, Input, Header, Right, Left, Content, Title, Button, Item, Body } 
 import IconI from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
-const PubIpAdress = '192.168.3.149';
+const PubIpAddress = '192.168.3.176';
 
 export default class AddTask extends Component {
 
@@ -21,7 +21,7 @@ export default class AddTask extends Component {
     saveTaskName() {
         axios({
             method: 'post',
-            url: `http://${PubIpAdress}:4040/api/task`,
+            url: `http://${PubIpAddress}:4040/api/task`,
             headers: {
                 "token": this.props.token
             },
@@ -72,13 +72,13 @@ style = {
         alignContent: 'center',
         alignItems: 'center',
         backgroundColor: (225, 225, 225, .8),
-        marginTop: "50%",
+        marginTop: 225
     },
     inputStyle: {
         borderWidth: 1,
-        borderBottomColor: 'gray',
-        borderTopColor: 'gray',
+        borderColor: 'gray',
         backgroundColor: 'black',
-        color: 'white'
+        color: 'white',
+        height: 40
     }
 }

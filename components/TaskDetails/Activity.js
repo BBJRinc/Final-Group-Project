@@ -6,7 +6,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import Comments from './Comments';
 
-const PubIpAdress = '192.168.3.149';
+const PubIpAddress = '192.168.3.176';
 
 export default class Activity extends Component {
     constructor(props) {
@@ -18,14 +18,14 @@ export default class Activity extends Component {
     }
 
     componentDidMount(){
-        console.log("The comments received as props: " + this.props.comments)
+        // console.log("The comments received as props: " + this.props.comments)
         this.setState({comments: this.props.comments});
     }
 
     submitComment(){
         axios({
             method: 'post',
-            url: `http://${PubIpAdress}:4040/api/comment/${this.props.taskid}`,
+            url: `http://${PubIpAddress}:4040/api/comment/${this.props.taskid}`,
             headers: {
                 "token": this.props.token
             },

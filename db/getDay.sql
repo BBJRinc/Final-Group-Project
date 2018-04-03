@@ -7,4 +7,3 @@ from comments
 where comments.taskid = task.taskid), '{}'::json) as comments
 from task
 where task.starttime >= $1 and task.starttime < $2 and task.userid = $3
-group by t.taskid
