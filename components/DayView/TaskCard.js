@@ -14,6 +14,7 @@ const GHOST_OPACITY = 0.4;
 const LONG_PRESS_TIME = 10;
 
 const DBG = true;
+// const DBG = false;
 
 /*------------------------------------------------------------------------------
 -----Takes props of:------------------------------------------------------------
@@ -29,6 +30,7 @@ class TaskCard extends React.Component {
 
     
     this.state = {
+      zIndexVal: {zIndex: 0},
       unlocked: false,
       gestureShield: false,
       pan: new Animated.ValueXY(),
@@ -85,17 +87,45 @@ class TaskCard extends React.Component {
     this.panResponderTop = PanResponder.create({
 
       onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => true,
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
   
       onPanResponderGrant: (e, gestureState) => {
+        this.startResizeGesture();
+        this.state.pan.setValue({y: this.props.cardTop})
+        this.state.pan.setOffset({y: 0})
+        if(DBG) console.log('this.ghostTop:', this.ghostTop);
+      },
+      
+      onPanResponderMove: (e, gestureState) => {
+        // if(DBG) console.log('e.nativeEvent.locationY:', e.nativeEvent.locationY);
+        
+        let newTop = Math.max(0, e.nativeEvent.locationY)
+        let newHeight = Math.max(this.props.segmentHeight, (this.props.cardTop - e.nativeEvent.locationY) + this.props.cardHeight)
+        if(DBG) console.log('newTop:', newTop);
+        
+        // if(DBG) console.log('newHeight:', newHeight);
+        
+        this.setState({ghostStyle: {...this.state.ghostStyle, height: newHeight}})
+
+        this.state.pan.setValue({y: newTop})
+        // if(DBG) console.log('this.state.ghostStyle.top:', this.state.ghostStyle.top);
+          // Animated.event([null,
+          //   {
+          //     dy: this.state.pan.y,
+          //   }]
+          // )(e, gestureState)
+        
       },
   
-      onPanResponderMove: (e, gestureState) => {
+      onPanResponderTerminate: (e, gestureState) => {
+        this.endResizeGesture();
       },
   
       onPanResponderRelease: (e, gestureState) => {
+        this.endResizeGesture();
+        this.state.pan.flattenOffset();
+        let newTop = Math.max(0, e.nativeEvent.locationY)
+        let newHeight = Math.max(this.props.segmentHeight, (this.props.cardTop - e.nativeEvent.locationY) + this.props.cardHeight)
+        this.props.setNewTimes(this.props.id, newTop, newHeight);
       }
     });
 /*------------------------------------------------------------------------------
@@ -108,10 +138,13 @@ class TaskCard extends React.Component {
   
       onPanResponderGrant: (e, gestureState) => {
         this.tap = true;
+        if(DBG) console.time('long press');
         this.pressTimer = setTimeout(() => {
+          if(DBG) console.timeEnd('long press');
           this.tap = false;
           this.showGhost();
           this.setState({unlocked: true})
+          this.setZIndex()
           this.props.scrollable(false);
           this.state.pan.setValue({x: this.props.cardLeft, y: this.props.cardTop})
           this.state.pan.setOffset({x: this.animatedValueX, y: this.animatedValueY})
@@ -123,7 +156,6 @@ class TaskCard extends React.Component {
       onPanResponderMove: (e, gestureState) => {
         if(this.state.unlocked) {
           // this.blockNative();
-          this.setState({debug: e.nativeEvent.locationY})
           Animated.event([null,
             {
               dx: this.state.pan.x,
@@ -157,15 +189,17 @@ class TaskCard extends React.Component {
   }
 
   endMoveGesture() {
-    this.hideGhost();
+    // this.hideGhost();
     this.props.scrollable(true);
     this.setState({unlocked: false});
     clearTimeout(this.pressTimer);
+    this.clearZIndex()
   }
 
   endResizeGesture() {
     this.hideGhost();
     this.setState({gestureShield: false});
+    this.clearZIndex()
     // if(DBG) console.log('this.state:', this.state);
       
     // this.setState({ghostStyle: {opacity: 1}});
@@ -174,8 +208,17 @@ class TaskCard extends React.Component {
   startResizeGesture() {
     this.showGhost();
     this.setState({gestureShield: true});
+    this.setZIndex()
     // this.state.pan.setValue({y: this.props.cardTop})
     // this.state.pan.setOffset({y: 0});
+  }
+
+  setZIndex() {
+    // this.setState({zIndexVal: {zIndex: 100}})
+  }
+
+  clearZIndex() {
+    // this.setState({zIndexVal: {zIndex: 0}})
   }
 
   showGhost() {
@@ -187,7 +230,7 @@ class TaskCard extends React.Component {
   hideGhost() {
     if(DBG) console.log('hideGhost Called');
     
-    this.setState({stuff: 'hello?'})
+    this.setState({ghostStyle: {...this.state.ghost, opacity: 0}})
     if(DBG) console.log('this.state:', this.state);
     
   }
@@ -220,6 +263,7 @@ class TaskCard extends React.Component {
 
   componentWillReceiveProps(newProps) {
     // if(DBG) console.log('newProps:', newProps);
+    if(DBG) console.log('Props recieved');
     
     if(newProps.cardTop != this.state.ghostStyle.top) {
       this.state.pan.setValue({
@@ -244,14 +288,17 @@ class TaskCard extends React.Component {
   }
 
   ghostLayout(e) {
+    if(DBG) console.log('e.nativeEvent:', e.nativeEvent);
+    
     this.ghostTop = e.nativeEvent.layout.y
     // if(DBG) console.log('this.ghostTop:', this.ghostTop);
     this.ghostBottom = this.ghostTop + e.nativeEvent.layout.height
-    // if(DBG) console.log('e.nativeEvent.layout.height:', e.nativeEvent.layout.height);
+    // if(DBG) console.log('this.ghostTop:', this.ghostTop);
+    if(DBG) console.log('this.ghostTop:', this.ghostTop);
     
-    // if(DBG) console.log('this.ghostBottom:', this.ghostBottom);
+    if(DBG) console.log('this.ghostTop+e.nativeEvent.layout.height:', this.ghostTop+e.nativeEvent.layout.height);
     
-    // if(DBG) console.log('e.nativeEvent:', e.nativeEvent);
+    
     
   }
 
@@ -274,15 +321,26 @@ class TaskCard extends React.Component {
     
     
     return(
-      <List style={styles.cardHolder}>
-        <Text style={{position: 'absolute', top: 5, right: 20}}>{this.state.gestureShield ? 'Shields up' : 'Shields down'}</Text>
-
+      <List style={[styles.cardHolder,
+          // this.state.zIndexVal
+        ]}
+        onPress={() => console.log(this.props.title)}>
+        {DBG? 
+          <Container style={{position: 'absolute', top: 5, right: 20}}>
+            <Text>{this.state.gestureShield ? 'Shields up' : 'Shields down'}</Text>
+            <Text>{this.props.scrollable ? 'Scrollable' : 'Scroll Locked'}</Text>
+            <Text>{this.state.zIndexVal.zIndex}</Text>
+          </Container>
+          
+          : null
+        }
         <Container pointerEvents='none' style={[styles.card, propStyles]} onLayout={(event) => {this.onLayout(event)}} >
           <Text>{this.props.title}</Text>
         </Container>
 
 
-        <List style={styles.cardHolder}>
+        <List style={styles.cardHolder}
+        onPress={() => console.log(this.props.title)}>
           {/* // pointerEvents='none'> */}
           <Animated.View style={[styles.card,
               propStyles,
@@ -290,6 +348,7 @@ class TaskCard extends React.Component {
               this.state.ghostStyle,
               this.state.pan.getLayout(),
             ]}
+            onPress={() => console.log(this.props.title)}
             onLayout={(e) => this.ghostLayout(e)}
             // pointerEvents={this.state.disableGhostPointer}
             // ref={(ref) => this.ghostRef = ref}
@@ -305,7 +364,7 @@ class TaskCard extends React.Component {
             <Container style={styles.botGrab} {...this.panResponderBot.panHandlers} />
           </Animated.View>
         </List>
-          {this.state.gestureShield? <List style={[styles.cardHolder]} /> : null}
+        {this.state.gestureShield? <List style={[styles.gestureShield]} /> : null}
 
       </List>
     )
@@ -321,21 +380,16 @@ const GRABBER_HEIGHT = 10;
 
 let styles = StyleSheet.create({
   cardHolder: { 
-    // flex: 1,
     ...StyleSheet.absoluteFillObject,
-    // height: 500,
-    // bottom: 10000,
+    // backgroundColor: 'transparent',
+  },
+  gestureShield: {
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'transparent',
-    // opacity: .5,
   },
   card: {
     position: 'absolute',
-    // display: 'flex',
-    // flex: 1,
     borderRadius: BORDER_RADIUS,
-    // paddingLeft: PADDING_LEFT,
-    // paddingTop: PADDING_VERT,
-    // paddingBottom: PADDING_VERT,
     borderStyle: 'solid',
     borderWidth: 2,
     borderColor: gStyle[theme].dark,
@@ -349,11 +403,10 @@ let styles = StyleSheet.create({
   },
   ghost: {
     position: 'absolute',
-    // backgroundColor: 'black',
+    // zIndex: 100,
   },
   topGrab: {
     backgroundColor: GRABBER_BACKGROUND,
-    // backgroundColor: 'yellow',
     position: 'absolute',
     left: 0,
     right: 0,
@@ -362,7 +415,6 @@ let styles = StyleSheet.create({
   },
   botGrab: {
     backgroundColor: GRABBER_BACKGROUND,
-    // backgroundColor: 'lime',
     position: 'absolute',
     left: 0,
     right: 0,

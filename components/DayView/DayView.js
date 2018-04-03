@@ -17,6 +17,7 @@ import TaskCard from './TaskCard.js';
 ------------------------------------------------------------------------------*/
 
 const DBG = true;
+// const DBG = false;
 
   // DayView segment structure
 const HOURS_TO_RENDER = 24;
@@ -338,15 +339,7 @@ export default class DayView extends React.Component {
   }
 
   setScrollable(e) {
-    if(DBG) console.log('scrollable called with:', e);
-    
     this.setState({scrollable: e})
-    console.log('this.state.scrollable:', this.state.scrollable);
-    if(DBG) console.log('this.scrollView:', this.scrollView);
-    if(DBG) console.log('this.refs.scrollView:', this.refs.scrollView);
-    
-    
-    // this.refs.scrollView.setScrollEnabled(false);
   }
 
   render() {
@@ -417,20 +410,20 @@ const styles = StyleSheet.create({
 
 
 let testData = [
-  // {
-  //   id: 1,
-  //   title: 'Card one',
-  //   color: '#EEEEEE',
-  //   blockStart: 1, 
-  //   blockDuration: 3,
-  // },
-  // {
-  //   id: 11,
-  //   title: 'Card two',
-  //   color: '#AAAAAA',
-  //   blockStart: 1,
-  //   blockDuration: 1,
-  // },
+  {
+    id: 1,
+    title: 'Card one',
+    color: '#EEEEEE',
+    blockStart: 1, 
+    blockDuration: 3,
+  },
+  {
+    id: 11,
+    title: 'Card two',
+    color: '#AAAAAA',
+    blockStart: 1,
+    blockDuration: 1,
+  },
   {
     id: 12,
     title: 'Card three',
