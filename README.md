@@ -1,3 +1,5 @@
+![alt text](https://user-images.githubusercontent.com/32680642/38333515-110b6dca-3816-11e8-8add-2756c420ae87.png)
+
 # Calentask
 
 This app allows you to combine the best features of a to do list app and a calendar app for scheduling those tasks.  A user can take notes, make checklists and schedule their tasks using the built-in calendar.
