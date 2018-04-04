@@ -19,6 +19,8 @@ import TaskCard from './TaskCard.js';
 // const DBG = true;
 const DBG = false;
 
+const DBG_DATA = false;
+
   // DayView segment structure
 const HOURS_TO_RENDER = 24;
 const BLOCK_SIZE = 15;
@@ -84,14 +86,15 @@ export default class DayView extends React.Component {
   componentDidMount() {
     // Axios call to pull array of tasks for the given day
     let newList = [];
-    this.props.tasksToRender.forEach(task => {
-      newList[task.id] = task;
-      //   let id = task.taskId;
-
-      // if(!task.isReccuring) {
-      //   task.startTime = task.startTime.trimDay();
-      // }
-    })
+    if(!DBG_DATA) {
+      this.props.tasksToRender.forEach(task => {
+        newList[task.id] = task;
+      })
+    } else {
+      testData.forEach(task => {
+        newList[task.id] = task;
+      })
+    }
     this.setState({ tasks: newList })
     // console.log(this.state.tasks)
   }
