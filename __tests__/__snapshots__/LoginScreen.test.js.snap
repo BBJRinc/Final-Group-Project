@@ -1,0 +1,255 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "height": "100%",
+      "width": "100%",
+    }
+  }
+>
+  <Image
+    source={
+      Object {
+        "testUri": "../../../components/LoginScreen/homeScreen.jpg",
+      }
+    }
+    style={
+      Array [
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        Object {
+          "height": "100%",
+          "width": "100%",
+        },
+        undefined,
+      ]
+    }
+  />
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Array [
+        Object {
+          "color": "#000",
+          "fontFamily": "System",
+          "fontSize": 16,
+        },
+        Object {
+          "backgroundColor": "transparent",
+          "color": "#ffffff",
+          "flex": 1,
+          "fontFamily": "AppleGothic",
+          "fontSize": 35,
+          "letterSpacing": 17,
+          "textAlign": "center",
+          "top": 225,
+        },
+      ]
+    }
+    uppercase={false}
+    virtual={undefined}
+  >
+    CALENTASK
+  </Text>
+  <View
+    accessibilityComponentType={undefined}
+    accessibilityLabel={undefined}
+    accessibilityTraits={undefined}
+    accessible={true}
+    collapsable={undefined}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
+    isTVSelectable={true}
+    nativeID={undefined}
+    onLayout={undefined}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "alignContent": "center",
+        "alignItems": "center",
+        "alignSelf": "flex-start",
+        "backgroundColor": "rgba(0, 0, 0, 0.65)",
+        "borderBottomWidth": null,
+        "borderColor": "#007aff",
+        "borderLeftWidth": null,
+        "borderRadius": 57,
+        "borderRightWidth": null,
+        "borderTopWidth": null,
+        "elevation": 2,
+        "flexDirection": "row",
+        "height": 50,
+        "justifyContent": "center",
+        "marginLeft": "25%",
+        "marginTop": 250,
+        "opacity": 1,
+        "paddingBottom": 6,
+        "paddingTop": 6,
+        "width": 200,
+      }
+    }
+    testID={undefined}
+    tvParallaxProperties={undefined}
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      style={
+        Array [
+          Object {
+            "backgroundColor": "transparent",
+            "color": "#000",
+            "fontFamily": "System",
+            "fontSize": 22,
+            "lineHeight": 32,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "paddingLeft": 16,
+            "paddingRight": 16,
+          },
+          Object {
+            "alignItems": "center",
+            "color": "#ffffff",
+            "fontFamily": "AppleGothic",
+            "fontSize": 20,
+            "justifyContent": "center",
+            "letterSpacing": 4,
+          },
+        ]
+      }
+      uppercase={false}
+      virtual={undefined}
+    >
+      LOGIN
+    </Text>
+  </View>
+  <RCTScrollView>
+    <View />
+  </RCTScrollView>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#00000000",
+        "bottom": 20,
+        "flexDirection": "row",
+        "height": 50,
+        "justifyContent": "center",
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      style={
+        Array [
+          Object {
+            "color": "#000",
+            "fontFamily": "System",
+            "fontSize": 16,
+          },
+          Object {
+            "alignItems": "center",
+            "bottom": 5,
+            "color": "rgba(155,155,155,1)",
+            "fontSize": 15,
+          },
+        ]
+      }
+      uppercase={false}
+      virtual={undefined}
+    >
+      Don't have an account?
+    </Text>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={undefined}
+      accessible={true}
+      collapsable={undefined}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "alignSelf": "flex-start",
+          "backgroundColor": "transparent",
+          "borderBottomWidth": null,
+          "borderColor": "#007aff",
+          "borderLeftWidth": null,
+          "borderRadius": 5,
+          "borderRightWidth": null,
+          "borderTopWidth": null,
+          "elevation": 0,
+          "flexDirection": "row",
+          "height": 45,
+          "justifyContent": "space-between",
+          "opacity": 1,
+          "paddingBottom": 6,
+          "paddingTop": 6,
+          "shadowColor": null,
+          "shadowOffset": null,
+          "shadowOpacity": null,
+          "shadowRadius": null,
+        }
+      }
+      testID={undefined}
+      tvParallaxProperties={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+              "color": "#000",
+              "fontFamily": "System",
+              "fontSize": 22,
+              "lineHeight": 32,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "paddingLeft": 16,
+              "paddingRight": 16,
+            },
+            Object {
+              "color": "rgba(74,144,226,1)",
+              "fontSize": 15,
+            },
+          ]
+        }
+        uppercase={false}
+        virtual={undefined}
+      >
+        Sign Up
+      </Text>
+    </View>
+  </View>
+</View>
+`;
