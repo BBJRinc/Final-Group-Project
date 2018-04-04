@@ -3,6 +3,7 @@ import { Modal, TouchableHighlight } from 'react-native';
 import { Container, Header, CheckBox, Left, Body, Right, Button, Title, Text, Input, Item, Content, Form, Footer, View, SwipeRow } from 'native-base';
 import TaskDatePicker from './TaskDatePicker.js';
 import DurationPicker from './DurationPicker';
+import StartTime from './StartTime';
 import Activity from './Activity';
 import Checklist from './Checklist';
 import axios from 'axios';
@@ -44,7 +45,8 @@ export default class TaskDetails extends Component {
             LabelModalVisable: false,
             startTime: null,
             editTitle: false,
-            date: null
+            date: null,
+            showStartTimePicker:false
             // members: [],
             // newChecklistItem: '',
             // modalVisable:false,
@@ -134,8 +136,6 @@ export default class TaskDetails extends Component {
         })
     }
 
-
-
     editDescription(value) {
         this.setState({ description: value })
     }
@@ -191,6 +191,9 @@ export default class TaskDetails extends Component {
     }
     editTitle() {
         this.setState({ editTitle: !this.state.editting })
+    }
+    setStartTimePicker(){
+        this.setState({showStartTimePicker:!this.state.showStartTimePicker})
     }
     render() {
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
@@ -268,6 +271,9 @@ export default class TaskDetails extends Component {
                         <Item regular style={inputBox_1} >
                             <Input placeholder='Tap to add a description' onChangeText={(description) => this.setState({ description })} value={this.state.description} />
                         </Item>
+                        <Item regular style={{height:35}} > 
+                        <StartTime showStartTimePicker={this.state.showStartTimePicker} setStartTimePicker={this.setStartTimePicker} />
+                        </Item>
                         <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
                             <IconF active name='clock' size={15} />
                             {/* <Input placeholder='Due date...' placeholderTextColor={'black'}/> */}
@@ -323,6 +329,8 @@ export default class TaskDetails extends Component {
                             <Input disabled placeholder='Activity' style={[padding, inputSize]} placeholder='Activity' />
                             <IconSLI name='settings' style={{ paddingRight: 15 }} size={15} />
                         </Item>
+                        
+
                         <Activity
                             user={this.state.user}
                             taskid={this.state.taskid}
@@ -330,7 +338,6 @@ export default class TaskDetails extends Component {
                             token={this.state.userToken}
                         />
                     </Content>
-
                 </Modal>
             </View>
         );

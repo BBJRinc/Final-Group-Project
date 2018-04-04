@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons';
+// import Icon from 'react-native-vector-icons';
 
 export default class TaskDatePicker extends Component {
   constructor(props){

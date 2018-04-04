@@ -56,6 +56,7 @@ export default class App extends React.Component {
     SplashScreen.hide();
 
     let checkToken = await AsyncStorage.getItem('token').then(res => {
+      console.log(res)
       return res;
     }).catch(err => console.log(err));
 

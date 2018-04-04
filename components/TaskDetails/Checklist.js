@@ -121,6 +121,7 @@ export default class Checklist extends Component {
                     renderRow={data =>
                         <ListItem style={{ paddingLeft: 10, alignContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }} onLongPress={(e, item) => this.editContent(e, item)}>
                             <CheckBox
+                                iconProps='red'
                                 checked={data.completed}
                                 onPress={(e) => this.markComplete({ completed: data.completed, id: data.checklistitemid })}
                                 style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 20, width: 20, borderRadius: 2, paddingTop: 2 }} value={data.content} />
