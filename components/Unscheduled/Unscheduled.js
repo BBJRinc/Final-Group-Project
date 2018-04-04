@@ -19,7 +19,7 @@ export default class Unscheduled extends Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: `http://${PubIpAdress}:4040/api/unscheduled`,
+            url: `http://${PubIpAddress}:4040/api/unscheduled`,
             headers: {
                 "token": this.props.token
             }
@@ -32,7 +32,7 @@ export default class Unscheduled extends Component {
     updateList() {
         axios({
             method: 'get',
-            url: `http://${PubIpAdress}:4040/api/unscheduled`,
+            url: `http://${PubIpAddress}:4040/api/unscheduled`,
             headers: {
                 "token": this.props.token
             }
@@ -46,7 +46,7 @@ export default class Unscheduled extends Component {
         // console.log(id)
         axios({
             method: 'delete',
-            url: `http://${PubIpAdress}:4040/api/unscheduled/${id}`,
+            url: `http://${PubIpAddress}:4040/api/unscheduled/${id}`,
             headers: {
                 "token": this.props.token
             }

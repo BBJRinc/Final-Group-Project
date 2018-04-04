@@ -26,10 +26,14 @@ export default class SideBar extends Component {
         return (
             <Container style={styles.root}>
 
-                <Header style={{ backgroundColor: "#4f6d7a" }}>
+                {/* <Header style={{ backgroundColor: "#4f6d7a",  width: '100%' }}>
                     <ImageBackground source={require(headerPic)} style={styles.header}>
                         <Text style={{ color: '#ffffff', fontFamily: "AppleGothic", fontWeight: 'bold' }}>{appName}</Text>
                     </ImageBackground>
+                </Header> */}
+                <Header style={{ backgroundColor: "#4f6d7a", justifyContent: "center", alignItems: 'center' }}>
+                    <Image source={require(headerPic)} style={styles.header}/>
+                        <Text style={{ color: '#ffffff', fontFamily: "AppleGothic", fontWeight: 'bold' }}>{appName}</Text>
                 </Header>
 
                 <Content>
@@ -230,13 +234,19 @@ export default class SideBar extends Component {
 const styles = StyleSheet.create({
     root: {
         flex: 1,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
     },
     header: {
         flex: 1,
-        backgroundColor: "#4f6d7a",
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: null,
+        width: null,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        // justifyContent: "center",
+        // alignItems: "center",
 
     },
     iconStyle: {

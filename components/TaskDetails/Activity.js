@@ -18,14 +18,14 @@ export default class Activity extends Component {
     }
 
     componentDidMount(){
-        console.log("The comments received as props: " + this.props.comments)
+        // console.log("The comments received as props: " + this.props.comments)
         this.setState({comments: this.props.comments});
     }
 
     submitComment(){
         axios({
             method: 'post',
-            url: `http://${PubIpAdress}:4040/api/comment/${this.props.taskid}`,
+            url: `http://${PubIpAddress}:4040/api/comment/${this.props.taskid}`,
             headers: {
                 "token": this.props.token
             },

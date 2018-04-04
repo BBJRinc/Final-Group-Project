@@ -16,7 +16,11 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
+<<<<<<< HEAD
 const PubIpAdress = '192.168.3.132';
+=======
+const PubIpAddress = '192.168.3.176';
+>>>>>>> master
 
 export default class TaskDetails extends Component {
     constructor(props) {
@@ -33,7 +37,7 @@ export default class TaskDetails extends Component {
             activity: [],
             taskname: '',
             color: '#838C91',
-            user: 'Brandon Allred',
+            user: '',
             comment: '',
             comments: [],
             hours: '00',
@@ -59,7 +63,7 @@ export default class TaskDetails extends Component {
         this.updateChecklist = this.updateChecklist.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-        console.log("The Selected Task Is: " + nextProps.selectedTask)
+        // console.log("The Selected Task Is: " + nextProps.selectedTask)
         if (nextProps.selectedTask.taskid) {
             const {
             taskid, taskname, updatedat,
@@ -117,7 +121,7 @@ export default class TaskDetails extends Component {
     updateTaskOnClick() {
         axios({
             method: 'put',
-            url: `http://${PubIpAdress}:4040/api/task/${this.props.selectedTask.taskid}`,
+            url: `http://${PubIpAddress}:4040/api/task/${this.props.selectedTask.taskid}`,
             headers: {
                 "token": this.props.token
             },
@@ -305,6 +309,7 @@ export default class TaskDetails extends Component {
                         <Item style={labelStyle}>
                             <IconSLI active name='tag' size={15} />
                             <Labels
+                                LabelModalVisible={this.setLabelModalVisible}
                                 labelColor={this.handleLabelColor}
                                 color={this.state.color}
                                 isVisable={this.state.LabelModalVisable} />

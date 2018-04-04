@@ -31,7 +31,7 @@ export default class Ongoing extends Component{
     componentDidMount(){
         axios({
             method: 'get',
-            url: `http://${PubIpAdress}:4040/api/inprogress`,
+            url: `http://${PubIpAddress}:4040/api/inprogress`,
             headers: {
                 "token": this.props.token
             }
@@ -41,7 +41,7 @@ export default class Ongoing extends Component{
     }
 
     deleteTask(id){
-        axios.delete(`http://${PubIpAdress}:4040/api/inprogress/${id}`).then(resp => {
+        axios.delete(`http://${PubIpAddress}:4040/api/inprogress/${id}`).then(resp => {
             this.setState({listViewData: resp.data});
         });
     }
