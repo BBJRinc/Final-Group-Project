@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, PanResponder, Animated } from 'react-native'
-import { Container, Content, Row, Badge, Text, View } from 'native-base';
+import { Container, Content, Row, Badge, Text, List } from 'native-base';
 
 import gStyle from './../gStyle.js';
 import TaskCard from './TaskCard.js';
@@ -16,7 +16,12 @@ import TaskCard from './TaskCard.js';
 --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 
-// DayView segment structure
+// const DBG = true;
+const DBG = false;
+
+const DBG_DATA = false;
+
+  // DayView segment structure
 const HOURS_TO_RENDER = 24;
 const BLOCK_SIZE = 15;
 
@@ -26,7 +31,7 @@ const SEGMENTS_TO_RENDER = HOURS_TO_RENDER * SEGMENTS_PER_HOUR;
 
 // User settings
 const TWENTYFOUR_HOUR = false;
-let theme = 'blue';
+let theme = 'brown';
 
 // Time constants
 const DAYS = 24 * 60 * 60 * 1000;
@@ -35,14 +40,14 @@ const DAYS = 24 * 60 * 60 * 1000;
 const MAX_TASK_WIDTH = 5;
 
 // Style variables
-const SEGMENT_HEIGHT = 30;
-const ICON_HEIGHT = SEGMENT_HEIGHT * 2;
+const SEGMENT_HEIGHT = 50;
+const ICON_HEIGHT = SEGMENT_HEIGHT*2;
 const RIGHT_MARGIN = 20;
 const BADGE_MARGIN_LEFT = 3;
 const BADGE_MARGIN_RIGHT = 20;
 const BADGE_WIDTH = 58;
 const BADGE_SPACE = BADGE_MARGIN_LEFT + BADGE_MARGIN_RIGHT + BADGE_WIDTH;
-const CARD_NONOVERLAP = 5;
+const CARD_NONOVERLAP = 30; 
 
 
 
@@ -50,6 +55,7 @@ export default class DayView extends React.Component {
   constructor() {
     super();
     this.state = {
+      scrollable: true,
       // pan: new Animated.ValueXY(),
       day: 0,
       tasks: [],
@@ -62,13 +68,17 @@ export default class DayView extends React.Component {
       // }
       day: 0,
       chronoTasks: [],
+      
     }
-
+    
+    this.setScrollable = this.setScrollable.bind(this);
+    this.scrollView = null;
     // this.state.tasks.forEach((task) => {
-    //   let time = this.trimDay(task.startTime)
-    //   task.blockStart = this.toBlock(time);
-    // })
-  }
+      //   let time = this.trimDay(task.startTime)
+      //   task.blockStart = this.toBlock(time);
+      // })
+      
+    }
 
   /*------------------------------------------------------------------------------
   -----Fetches and formats day data-----------------------------------------------
@@ -76,14 +86,15 @@ export default class DayView extends React.Component {
   componentDidMount() {
     // Axios call to pull array of tasks for the given day
     let newList = [];
-    this.props.tasksToRender.forEach(task => {
-      newList[task.id] = task;
-      //   let id = task.taskId;
-
-      // if(!task.isReccuring) {
-      //   task.startTime = task.startTime.trimDay();
-      // }
-    })
+    if(!DBG_DATA) {
+      this.props.tasksToRender.forEach(task => {
+        newList[task.id] = task;
+      })
+    } else {
+      testData.forEach(task => {
+        newList[task.id] = task;
+      })
+    }
     this.setState({ tasks: newList })
     // console.log(this.state.tasks)
   }
@@ -107,8 +118,12 @@ export default class DayView extends React.Component {
   }
 
   trimDay(time) {
-    // Find time after midnight;
-    return time % DAYS
+      // Find time after midnight;
+    // let offset = new Date().getTimezoneOffset()*1000
+    // console.log('offset:', offset);
+    
+    // return ((time - offset) % DAYS)
+    return (time % DAYS)
   }
 
   addDay(time) {
@@ -117,32 +132,47 @@ export default class DayView extends React.Component {
   }
 
   toBlock(time) {
-    // Convert to segment index
-    return time / (BLOCK_SIZE * 60 * 1000) // (converts minutes to ms)
+      // Convert to segment index
+      return (time / (BLOCK_SIZE*60*1000)) // (converts minutes to ms)
   }
+  
+  setNewTimes(id, newStart, newHeight) {
 
-  changeDimensions(id, newStart, newHeight) {
-
-    newStart = newStart || this.state.tasks[id].blockStart * SEGMENT_HEIGHT;
-    newHeight = newHeight || this.state.tasks[id].blockDuration * SEGMENT_HEIGHT;
-
-    newStart = Math.max(0, newStart);
-    newHeith = Math.max(1, newHeight);
-
-    let newCardStats = {
-      ...this.state.tasks[id],
-      blockStart: Math.floor((newStart / SEGMENT_HEIGHT)),
-      blockDuration: Math.floor(((newHeight + SEGMENT_HEIGHT - 1) / SEGMENT_HEIGHT))
+    // newStart = newStart || this.state.tasks[id].blockStart*SEGMENT_HEIGHT;
+    // newHeight = newHeight || this.state.tasks[id].blockDuration*SEGMENT_HEIGHT;
+    // if(DBG) console.log('1 newStart:', newStart);
+    // if(DBG) console.log('isNaN(newStart):', isNaN(newStart));
+    
+    if(isNaN(newStart) || !newStart) {
+      // if(DBG) console.log('newStart test:', newStart);
+      
+      newStart = this.state.tasks[id].blockStart*SEGMENT_HEIGHT;
     }
-
+    if(isNaN(newHeight)) {
+      newHeight = this.state.tasks[id].blockDuration*SEGMENT_HEIGHT;
+    }
+    // if(DBG) console.log('2 newStart:', newStart);
+    
+    
+    
+    newStart = Math.max(0, newStart);
+    newHeight = Math.max(1, newHeight);
+    // console.log('3 newStart:', newStart);
+    
+    let newCardStats = {...this.state.tasks[id],
+      blockStart: Math.floor((newStart / SEGMENT_HEIGHT)),
+      blockDuration: Math.floor(((newHeight+SEGMENT_HEIGHT-1) / SEGMENT_HEIGHT))}
+    // console.log('newCardStats:', newCardStats);
+    
     // console.log('newCardStats:', newCardStats);
 
     let newList = [...this.state.tasks];
     newList[id] = { ...newList[id], ...newCardStats }
     // console.log('newList:', newList);
-
-    this.setState({ ...this.state, tasks: [...newList] });
-
+    
+    this.setState({tasks: [...newList]});
+    // console.log('this.state.tasks:', this.state.tasks);
+    
   }
 
   /*------------------------------------------------------------------------------
@@ -198,30 +228,28 @@ export default class DayView extends React.Component {
     let xSlots = [];
     let rightIndent = [0];
     let taskCount = 0;
-
-    // Cycles through the entire day to find cards to fit in each timeslot
-    for (let i = 0; i < SEGMENTS_TO_RENDER; i++) {
-      // Cycles through all tasks. Find tasks to insert
-      this.state.tasks.forEach((task) => {
-        // Checks to see if a task belongs in the current timeslot
-        // console.log('task:', task);
-        if (task) {
-          if (task.blockStart === i) {
-            // Set the initial style object that determines
-            //   positioning and width
-            let specificStyle = {
-              top: task.blockStart * SEGMENT_HEIGHT,
-              height: task.blockDuration * SEGMENT_HEIGHT,
-              left: BADGE_SPACE,
-              marginRight: RIGHT_MARGIN,
-            }
+    
+      // Cycles through the entire day to find cards to fit in each timeslot
+    for(let i=0; i<SEGMENTS_TO_RENDER; i++){
+        // Cycles through all tasks. Find tasks to insert
+      this.state.tasks.forEach((task) =>{
+          // Checks to see if a task belongs in the current timeslot
+          // console.log('task:', task);
+        if(task) {
+          if(task.blockStart === i) {
+              // Set the initial style object that determines
+              //   positioning and width
+            let cardTop = task.blockStart*SEGMENT_HEIGHT;
+            let cardHeight = task.blockDuration*SEGMENT_HEIGHT;
+            let indentLeft = 0;
+            let indentRight = 0;
 
             let rightAdjusted = false;
             // Finds the furthest-left open slot to fit the left border to
             for (let i = 0; i < MAX_TASK_WIDTH; i++) {
               if (!(xSlots[i] > 0)) {
                 xSlots[i] = task.blockDuration;
-                specificStyle.left = specificStyle.left + CARD_NONOVERLAP * i;
+                indentLeft = CARD_NONOVERLAP*i;
                 i++;
 
                 // Attempts to see if a previous card is being completely
@@ -231,7 +259,7 @@ export default class DayView extends React.Component {
                     for (let x = 0; x < rightIndent.length + 1; x++) {
                       if (!(rightIndent[x] > 0)) {
                         rightAdjusted = true;
-                        specificStyle.marginRight = specificStyle.marginRight + CARD_NONOVERLAP * x;
+                        indentRight = CARD_NONOVERLAP*x;
                       }
                     }
                   }
@@ -243,19 +271,21 @@ export default class DayView extends React.Component {
                 }
               }
             }
-            // console.log('specificStyle.height:', specificStyle.height);
-
-            // Pushes the current card with styling onto the timeline
+            
+              // Pushes the current card with styling onto the timeline
             cardArr.push(
-              <Container key={task.id} style={[styles.taskCard, specificStyle]}>
-                <TaskCard
-                  id={task.id}
-                  color={task.color}
-                  title={task.title}
-                  changeDimensions={(x, y, z) => this.changeDimensions(x, y, z)}
-                  itemStart={specificStyle.top}
-                  itemHeight={specificStyle.height} />
-              </Container>
+              <TaskCard
+                key={task.id}
+                id={task.id}
+                scrollable={this.setScrollable}
+                segmentHeight={SEGMENT_HEIGHT}
+                color={task.color}
+                title={task.title}
+                setNewTimes={(x, y, z) => this.setNewTimes(x, y, z)}
+                cardTop={cardTop}
+                cardHeight={cardHeight}
+                cardLeft={BADGE_SPACE + indentLeft}
+                cardRight={RIGHT_MARGIN + indentRight} />
             )
 
             // Registers that a task was added to the calendar
@@ -282,11 +312,46 @@ export default class DayView extends React.Component {
     return cardArr;
   }
 
+  // componentDidMount() {
+  //   let time = new Date();
+  //   time = this.trimDay(time);
+  //   time = this.toBlock(time)*SEGMENT_HEIGHT;
+  //   this.scroll.props.scrollToPosition(0, 0);
+  // }
+
+  scrollToTime() {
+    let time = new Date().getTime();
+    
+    time = this.trimDay(time);
+    console.log('new Date(time):', new Date(time));
+    
+    console.log('time:', time);
+    
+    time = this.toBlock(time);
+    console.log('time:', time);
+    
+    
+    // this.scrollView._root.scrollToPosition(time, time);
+  }
+
+  setScrollable(e) {
+    this.setState({scrollable: e})
+  }
+
   render() {
     return (
-      <Content style={styles.viewContainer}>
+      <Content style={styles.viewContainer}
+        scrollEnabled={this.state.scrollable}
+        // ref={ref => {this.scrollView = ref}}
+        ref='scrollView'
+        onLayout={() => this.scrollToTime()}>
+        {/* <Text>{this.state.scrollable ? 'Scrollable' : 'nonscrolling'}</Text> */}
+        {/* <List scrollEnabled={false}> */}
         {this.renderTimeline()}
+
+        {/* </List> */}
         {this.renderTaskCards()}
+        
       </Content>
     )
   }
@@ -303,7 +368,9 @@ const styles = StyleSheet.create({
     right: 0,
   },
   viewContainer: {
+    display: 'flex',
     flex: 1,
+    // position: 'relative',
     backgroundColor: gStyle[theme].dark,
   },
   daySection: {
