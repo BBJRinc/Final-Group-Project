@@ -41,7 +41,7 @@ module.exports={
     },
 
     addComment: function(req, res){
-        console.log('add comment endpoint hit')
+        // console.log('add comment endpoint hit')
         const taskid = Number(req.params.taskid);
         let comment = [
             taskid,

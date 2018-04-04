@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAdress = '192.168.3.149'
+const PubIpAddress = '192.168.3.176';
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -28,7 +28,7 @@ export default class Checklist extends Component {
     componentWillUnmount(){
         axios({
             method: 'put',
-            url: `http://${PubIpAdress}:4040/api/checklist`,
+            url: `http://${PubIpAddress}:4040/api/checklist`,
             headers: {
                 "token": this.props.token
             },
@@ -77,7 +77,7 @@ export default class Checklist extends Component {
         let itemid = taskid
         axios({
             method: 'post',
-            url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
+            url: `http://${PubIpAddress}:4040/api/checklist/${itemid}`,
             data: {
                 content: newChecklistItem
             },
@@ -98,7 +98,7 @@ export default class Checklist extends Component {
         this.setState({ checklistItems: newData });
         axios({
             method: 'delete',
-            url: `http://${PubIpAdress}:4040/api/checklist/${itemid}`,
+            url: `http://${PubIpAddress}:4040/api/checklist/${itemid}`,
             headers: {
                 "token": this.props.token
             }

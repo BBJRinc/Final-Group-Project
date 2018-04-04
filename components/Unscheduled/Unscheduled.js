@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-const PubIpAdress = '192.168.3.149';
+const PubIpAddress = '192.168.3.176';
 
 export default class Unscheduled extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ export default class Unscheduled extends Component {
     componentDidMount() {
         axios({
             method: 'get',
-            url: `http://${PubIpAdress}:4040/api/unscheduled`,
+            url: `http://${PubIpAddress}:4040/api/unscheduled`,
             headers: {
                 "token": this.props.token
             }
@@ -32,7 +32,7 @@ export default class Unscheduled extends Component {
     updateList() {
         axios({
             method: 'get',
-            url: `http://${PubIpAdress}:4040/api/unscheduled`,
+            url: `http://${PubIpAddress}:4040/api/unscheduled`,
             headers: {
                 "token": this.props.token
             }
@@ -46,7 +46,7 @@ export default class Unscheduled extends Component {
         // console.log(id)
         axios({
             method: 'delete',
-            url: `http://${PubIpAdress}:4040/api/unscheduled/${id}`,
+            url: `http://${PubIpAddress}:4040/api/unscheduled/${id}`,
             headers: {
                 "token": this.props.token
             }
