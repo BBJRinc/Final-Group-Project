@@ -72,13 +72,13 @@ style = {
         alignContent: 'center',
         alignItems: 'center',
         backgroundColor: (225, 225, 225, .8),
-        marginTop: "50%",
+        marginTop: 225
     },
     inputStyle: {
         borderWidth: 1,
-        borderBottomColor: 'gray',
-        borderTopColor: 'gray',
+        borderColor: 'gray',
         backgroundColor: 'black',
-        color: 'white'
+        color: 'white',
+        height: 40
     }
 }

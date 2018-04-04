@@ -8,3 +8,4 @@ from comments
 where comments.taskid = task.taskid), '{}'::json) as comments
 from task
 where task.userid = $1 and task.starttime is null
+order by task.createdat desc

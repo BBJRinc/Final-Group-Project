@@ -33,7 +33,8 @@
     "react-test-renderer": "16.3.0-alpha.2"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transformIgnorePatterns": ["node_modules/(?!react|@native-base|native-base|@react-native-datepicker)"]
   },
   "proxy": "http://localhost:4040"
 }

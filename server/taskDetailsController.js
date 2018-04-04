@@ -79,6 +79,7 @@ module.exports={
 
     editTask: function(req, res){
         const taskid = Number(req.params.taskid);
+        console.log(req.body.color)
         let task = [
             taskid,
             req.body.taskname,
