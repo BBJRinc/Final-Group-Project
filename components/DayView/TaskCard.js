@@ -17,7 +17,7 @@ const GRABBER_HEIGHT = 10;
 
 const LONG_PRESS_TIME = 100;
 
-const DBG = true;
+const DBG = false;
 // const DBG = false;
 const DBG_GHOST = false;
 // const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';

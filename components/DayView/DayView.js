@@ -16,10 +16,8 @@ import TaskCard from './TaskCard.js';
 --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 
-const DBG = true;
+const DBG = false;
 // const DBG = false;
-
-const DBG_DATA = false;
 
   // DayView segment structure
 const HOURS_TO_RENDER = 24;
@@ -69,10 +67,6 @@ export default class DayView extends React.Component {
 
   componentDidMount() {
       // Fill state with local info
-    if(DBG_DATA) {
-      let chronoTasks = this.genChronoList(testData);
-      return
-    }
     this.genChronoList()
   }
 
@@ -338,12 +332,12 @@ export default class DayView extends React.Component {
     let time = new Date().getTime();
     
     time = this.trimDay(time);
-    console.log('new Date(time):', new Date(time));
+    if (DBG) console.log('new Date(time):', new Date(time));
     
-    console.log('time:', time);
+    if (DBG) console.log('time:', time);
     
     time = this.toBlock(time);
-    console.log('time:', time);
+    if (DBG) console.log('time:', time);
     
     
   }
