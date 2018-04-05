@@ -39,8 +39,8 @@ export default class Activity extends Component {
 
     render() {
         const { activityContent, userInitialStyle, commentStyle, separate, padding, inputSize } = styles
-        const sortedComments = this.state.comments.sort().reverse()
-        const comments = !this.state.comments.length ? null : sortedComments.map(comment => {
+        const sortedComments = !this.state.comments.length ? null : this.state.comments.sort().reverse()
+        const comments = !sortedComments ? null : sortedComments.map(comment => {
             return(
                 <Comments key={comment.commentid} comment={comment} user={this.props.user} />
             )
