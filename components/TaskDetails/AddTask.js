@@ -4,7 +4,7 @@ import { View, Input, Header, Right, Left, Content, Title, Button, Item, Body } 
 import IconI from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 
-const PubIpAddress = '192.168.2.121';
+const PubIpAddress = '192.168.3.149';
 
 export default class AddTask extends Component {
 
