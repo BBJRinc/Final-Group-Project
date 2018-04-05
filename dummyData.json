@@ -1,0 +1,129 @@
+[
+  {
+      "taskid": 6,
+      "taskname": "Study for Interview",
+      "duedate": null,
+      "starttime": 0,
+      "description": "Review all the questions on interview prep page",
+      "completed": false,
+      "createdat": null,
+      "color": "red",
+      "isrecurring": null,
+      "userid": 3,
+      "duration": 54000000,
+      "checkitems": {},
+      "comments": {}
+  },
+  {
+      "taskid": 54,
+      "taskname": "Jordans new task",
+      "duedate": null,
+      "starttime": null,
+      "description": "",
+      "completed": false,
+      "createdat": "2018-04-04T03:02:07.787Z",
+      "color": "#51E898",
+      "isrecurring": null,
+      "userid": 3,
+      "duration": 108000000,
+      "checkitems": {},
+      "comments": [
+          {
+              "commentid": 10,
+              "content": "this is a comment, Ross",
+              "createdat": "2018-04-03T21:33:27.052604",
+              "updatedat": null,
+              "taskid": 54,
+              "userid": 3
+          }
+      ]
+  },
+  {
+      "taskid": 2,
+      "taskname": "Register car",
+      "duedate": null,
+      "starttime": 108000000,
+      "description": "Dont forget to take registration papers",
+      "completed": false,
+      "createdat": null,
+      "color": "#F5DD29",
+      "isrecurring": null,
+      "userid": 3,
+      "duration": 108000000,
+      "checkitems": {},
+      "comments": {}
+  },
+  {
+      "taskid": 1,
+      "taskname": "Build Task List",
+      "duedate": null,
+      "starttime": 108000000,
+      "description": "Need to to the layout, then endpoints to get the tasks, then map over and display the results",
+      "completed": false,
+      "createdat": null,
+      "color": "#838C91",
+      "isrecurring": null,
+      "userid": 3,
+      "duration": 108000000,
+      "checkitems": [
+          {
+              "checklistitemid": 81,
+              "content": null,
+              "createdat": "2018-04-04T22:27:29.890527",
+              "updatedat": null,
+              "taskid": 1,
+              "completed": false
+          },
+          {
+              "checklistitemid": 82,
+              "content": null,
+              "createdat": "2018-04-04T22:27:30.214618",
+              "updatedat": null,
+              "taskid": 1,
+              "completed": false
+          },
+          {
+              "checklistitemid": 83,
+              "content": null,
+              "createdat": "2018-04-04T22:54:40.132428",
+              "updatedat": null,
+              "taskid": 1,
+              "completed": false
+          }
+      ],
+      "comments": [
+          {
+              "commentid": 14,
+              "content": "Task list is almost done.  It just needs some styling",
+              "createdat": "2018-04-04T15:05:54.849873",
+              "updatedat": null,
+              "taskid": 1,
+              "userid": 3
+          },
+          {
+              "commentid": 15,
+              "content": "I think I'll make the header black with white text to better match the rest of the app.",
+              "createdat": "2018-04-04T15:07:43.626759",
+              "updatedat": null,
+              "taskid": 1,
+              "userid": 3
+          },
+          {
+              "commentid": 16,
+              "content": "Almost finished",
+              "createdat": "2018-04-04T16:00:59.465911",
+              "updatedat": null,
+              "taskid": 1,
+              "userid": 3
+          },
+          {
+              "commentid": 17,
+              "content": "I finished the unscheduled list, now I need to do the in progress list",
+              "createdat": "2018-04-04T16:19:20.707144",
+              "updatedat": null,
+              "taskid": 1,
+              "userid": 3
+          }
+      ]
+  }
+]

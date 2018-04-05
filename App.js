@@ -17,7 +17,9 @@ import DayView from './components/DayView/DayView.js';
 import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 import AddTask from './components/TaskDetails/AddTask';
 
-const PubIpAddress = '192.168.3.176'
+import dummyData from './dummyData.json';
+
+const PubIpAddress = '192.168.2.121'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -276,7 +278,7 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             <Content>
-              <DayView tasksToRender={this.state.currentTasks} />
+              <DayView day={this.state.selectedDay} tasksToRender={dummyData} />
               <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
@@ -314,3 +316,4 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
+
