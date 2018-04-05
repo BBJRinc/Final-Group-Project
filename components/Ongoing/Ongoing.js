@@ -49,7 +49,6 @@ export default class Ongoing extends Component{
     render(){
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return(
-            <Container>
                 <Modal  
                     animationType="slide"
                     transparent={false}
@@ -86,7 +85,6 @@ export default class Ongoing extends Component{
                         />
                     </Content>
                 </Modal>
-            </Container>
         )
     }
 }

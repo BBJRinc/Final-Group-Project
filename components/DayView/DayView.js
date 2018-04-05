@@ -83,42 +83,36 @@ export default class DayView extends React.Component {
   }
 
   genChronoList(props = this.props.tasksToRender) {
-    let chronoList = [];
+    let chronoList = {};
     if(DBG) console.log('props:', props);
-    if(DBG) console.log('this.props.tasksToRender:', this.props.tasksToRender);
         
     props.forEach((task, index) => {
-      let block = 0
-      console.log('task.starttime:', task.starttime );
-      
+      let startBlock = 0
       if(task.starttime > DAYS) {
-        if(DBG) console.log('Over a day: task.starttime:', task.starttime);
-        
-        block = this.trimDay(task.starttime);
-        block = this.toBlock(block);
+        startBlock = this.trimDay(task.starttime);
+        startBlock = this.toBlock(startBlock);
       } else {
-        if(DBG) console.log('Under a day: task.starttime:', task.starttime);
-        block = this.toBlock(task.starttime);
+        startBlock = this.toBlock(task.starttime);
       }
       
-      if(DBG) console.log('block:', block);
-      
-      
-      if (block > SEGMENTS_TO_RENDER) {
-        console.log(`Something went wrong! Day overflowed with block #${block} for task: ${task}`);
+      if (startBlock > SEGMENTS_TO_RENDER) {
+        console.log(`Something went wrong! Day overflowed with startBlock #${startBlock} for task: ${task}`);
       }
-      let duration = this.toBlock(task.duration);
+      let blockDuration = this.toBlock(task.duration);
 
-      chronoList[block] = [
+      chronoList[task.taskid] = {
         index,
-        duration,
-      ]
+        startBlock,
+        blockDuration,
+      }
     })
 
     if(DBG) console.log('chronoList:', chronoList);
     
 
     this.setState({chronoTasks: chronoList})
+    if(DBG) console.log('this.state.chronoTasks:', this.state.chronoTasks);
+    
     return chronoList
   }
 
@@ -128,37 +122,76 @@ export default class DayView extends React.Component {
   }
 
   addDay(time) {
+    if(DBG) console.log('this.props.day:', this.props.day);
+    
     // Combine time after midnight with current day for complete unix time
-    return time + DAYS * this.state.day;
+    return time + this.props.day;
   }
 
   toBlock(time) {
       // Convert to segment index
       return (time / (BLOCK_SIZE*60*1000)) // (converts minutes to ms)
   }
+
+  blockToTime(block) {
+    return block * BLOCK_SIZE * 60 * 1000;
+  }
   
   setNewTimes(id, newStart, newHeight) {
-
-    if(isNaN(newStart) || !newStart) {
-      newStart = this.props.tasksToRender[id].blockStart*SEGMENT_HEIGHT;
+    let index = this.state.chronoTasks[id].index
+    let taskData = this.props.tasksToRender[index];
+    let noUpdate = false;
+      // Checks if the values fed in exist and if not pulls from state
+    if(!(newStart >= 0)) {
+      newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
+      noUpdate = true;
     }
-    if(isNaN(newHeight)) {
-      newHeight = this.props.tasksToRender[id].blockDuration*SEGMENT_HEIGHT;
+    if(!(newHeight >= 0)) {
+      if(DBG) console.log('newHeight:', newHeight);
+      
+      newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
+      noUpdate = true;
+    }
+
+    if(noUpdate) {
+      if(DBG) console.log('No update to task times');
+      
+      return;
     }
     
+      // Ensures tasks stay within the bounds of the day view
     newStart = Math.max(0, newStart);
-    newHeight = Math.max(1, newHeight);
+    newHeight = Math.max(SEGMENT_HEIGHT, newHeight);
+    let latestPossibleTime = SEGMENT_HEIGHT*SEGMENTS_TO_RENDER-newHeight
+    newStart = Math.min(latestPossibleTime, newStart)
     
-    let newCardStats = {...this.props.tasksToRender[id],
-      blockStart: Math.floor((newStart / SEGMENT_HEIGHT)),
-      blockDuration: Math.floor(((newHeight+SEGMENT_HEIGHT-1) / SEGMENT_HEIGHT))}
+      // Converts from pixel height to block height
+    let startBlock = Math.floor((newStart / SEGMENT_HEIGHT));
+    let blockDuration = Math.floor(((newHeight+SEGMENT_HEIGHT-1) / SEGMENT_HEIGHT))
     
+    let newTask = {
+      ...this.state.chronoTasks[id],
+      newStart,
+      newHeight,
+    }
+    let newList = {...this.state.chronoTasks};
+    newList[id] = newTask;
 
-    let newList = [...this.props.tasksToRender];
-    newList[id] = { ...newList[id], ...newCardStats }
+    this.setState({chronoTasks: newList})
+    if(DBG) console.log('this.state.chronoTasks:', this.state.chronoTasks);
     
-    // this.setState({tasks: [...newList]});
+      // Converts from block height to time
+    let newStartTime = this.blockToTime(startBlock);
+    if(!taskData.isrecurring) {
+      if(DBG) console.log('This is a nonrecurring task');
+      newStartTime = this.addDay(newStartTime)
+    }
+    let newDuration = this.blockToTime(blockDuration)
+
+    if(DBG) console.log('newStartTime:', newStartTime);
+    if(DBG) console.log('newDuration:', newDuration);
     
+    this.props.changeTimes(id, newStartTime, newDuration);
   }
 
   /*------------------------------------------------------------------------------
@@ -210,98 +243,95 @@ export default class DayView extends React.Component {
   -----Renders cards by absolute positioning--------------------------------------
   ------------------------------------------------------------------------------*/
   renderTaskCards() {
-    // let cardArr = [];
-    // let xSlots = [];
-    // let rightIndent = [0];
-    // let taskCount = 0;
+    let cardArr = [];
+    let xSlots = [];
+    let rightIndent = [0];
+    let taskCount = 0;
     
-    //   // Cycles through the entire day to find cards to fit in each timeslot
-    // for(let i=0; i<SEGMENTS_TO_RENDER; i++){
-    //     // Cycles through all tasks. Find tasks to insert
-    //   this.state.chronoTasks.forEach((task, index) =>{
-    //       // Checks to see if a task belongs in the current timeslot
-    //       // console.log('task:', task);
-    //     if(task) {
-    //       if(task.blockStart === i) {
-    //           // Set the initial style object that determines
-    //           //   positioning and width
-    //         let cardTop = task.blockStart*SEGMENT_HEIGHT;
-    //         let cardHeight = task.blockDuration*SEGMENT_HEIGHT;
-    //         let indentLeft = 0;
-    //         let indentRight = 0;
+      // Cycles through the entire day to find cards to fit in each timeslot
+    for(let i=0; i<SEGMENTS_TO_RENDER; i++) {
+        // Cycles through all tasks. Find tasks to insert
+      for(let key in this.state.chronoTasks) {
+        let task = this.state.chronoTasks[key];
+        let taskData = this.props.tasksToRender[task.index];
+        
+          // Checks to see if a task belongs in the current timeslot
+          // console.log('task:', task);
+        if(task.startBlock === i) {
+          
+            // Set the initial style object that determines
+            //   positioning and width
+          let cardTop = task.startBlock*SEGMENT_HEIGHT;
+          let cardHeight = task.blockDuration*SEGMENT_HEIGHT;
+          let indentLeft = 0;
+          let indentRight = 0;
 
-    //         let rightAdjusted = false;
-    //         // Finds the furthest-left open slot to fit the left border to
-    //         for (let i = 0; i < MAX_TASK_WIDTH; i++) {
-    //           if (!(xSlots[i] > 0)) {
-    //             xSlots[i] = task.blockDuration;
-    //             indentLeft = CARD_NONOVERLAP*i;
-    //             i++;
+          let rightAdjusted = false;
+          // Finds the furthest-left open slot to fit the left border to
+          for (let i = 0; i < MAX_TASK_WIDTH; i++) {
+            if (!(xSlots[i] > 0)) {
+              xSlots[i] = task.blockDuration;
+              indentLeft = CARD_NONOVERLAP*i;
+              i++;
 
-    //             // Attempts to see if a previous card is being completely
-    //             //   hidden, and if so brings in right border
-    //             for (i; i < MAX_TASK_WIDTH; i++) {
-    //               if (xSlots[i] > 0) {
-    //                 for (let x = 0; x < rightIndent.length + 1; x++) {
-    //                   if (!(rightIndent[x] > 0)) {
-    //                     rightAdjusted = true;
-    //                     indentRight = CARD_NONOVERLAP*x;
-    //                   }
-    //                 }
-    //               }
-    //             }
-    //             // Keeps track of whether the right border is filled by a
-    //             //   task card using the default border
-    //             if (!rightAdjusted && task.blockDuration > rightIndent[0]) {
-    //               rightIndent[0] = task.blockDuration;
-    //             }
-    //           }
-    //         }
-            
-    //           // Pushes the current card with styling onto the timeline
-    //         cardArr.push(
-    //           <TaskCard
-    //             key={task.id}
-    //             id={task.id}
-    //             scrollable={this.setScrollable}
-    //             segmentHeight={SEGMENT_HEIGHT}
-    //             color={task.color}
-    //             title={task.title}
-    //             setNewTimes={(x, y, z) => this.setNewTimes(x, y, z)}
-    //             cardTop={cardTop}
-    //             cardHeight={cardHeight}
-    //             cardLeft={BADGE_SPACE + indentLeft}
-    //             cardRight={RIGHT_MARGIN + indentRight} />
-    //         )
+              // Attempts to see if a previous card is being completely
+              //   hidden, and if so brings in right border
+              for (i; i < MAX_TASK_WIDTH; i++) {
+                if (xSlots[i] > 0) {
+                  for (let x = 0; x < rightIndent.length + 1; x++) {
+                    if (!(rightIndent[x] > 0)) {
+                      rightAdjusted = true;
+                      indentRight = CARD_NONOVERLAP*x;
+                    }
+                  }
+                }
+              }
+              // Keeps track of whether the right border is filled by a
+              //   task card using the default border
+              if (!rightAdjusted && task.blockDuration > rightIndent[0]) {
+                rightIndent[0] = task.blockDuration;
+              }
+            }
+          }
+          
+            // Pushes the current card with styling onto the timeline
+          cardArr.push(
+            <TaskCard
+              key={key}
+              id={key}
+              fullTask={this.props.tasksToRender[task.index]}
+              scrollable={this.setScrollable}
+              setNewTimes={(x, y, z) => this.setNewTimes(x, y, z)}
+              onTaskPress={this.props.onTaskPress}
+              segmentHeight={SEGMENT_HEIGHT}
+              color={taskData.color}
+              title={taskData.taskname}
+              cardTop={cardTop}
+              cardHeight={cardHeight}
+              cardLeft={BADGE_SPACE + indentLeft}
+              cardRight={RIGHT_MARGIN + indentRight} />
+          )
 
-    //         // Registers that a task was added to the calendar
-    //         taskCount++;
-    //       }
-    //     }
-    //   })
-
-    //   // Tracks the length of cards to update left and right border spaces
-    //   for (let i = 0; i < xSlots.length; i++) {
-    //     if (xSlots[i] > 0) {
-    //       xSlots[i] = xSlots[i] - 1;
-    //     }
-    //     if (rightIndent[i] > 0) {
-    //       rightIndent[i] = rightIndent[i] - 1;
-    //     }
-    //   }
-    //   // Ends the render list early if all tasks have been added
-    //   if (taskCount === this.props.tasksToRender.length) {
-    //     i = SEGMENTS_TO_RENDER;
-    //   }
-    // }
-
-    // return cardArr;
-    let cardArr = []
-    this.state.chronoTasks.forEach((task, index) => {
-      if(!isNaN(task[0])) {
-
+          // Registers that a task was added to the calendar
+          taskCount++;
+        }
       }
-    })
+
+      // Tracks the length of cards to update left and right border spaces
+      for (let i = 0; i < xSlots.length; i++) {
+        if (xSlots[i] > 0) {
+          xSlots[i] = xSlots[i] - 1;
+        }
+        if (rightIndent[i] > 0) {
+          rightIndent[i] = rightIndent[i] - 1;
+        }
+      }
+      // Ends the render list early if all tasks have been added
+      if (taskCount === this.props.tasksToRender.length) {
+        i = SEGMENTS_TO_RENDER;
+      }
+    }
+    return cardArr;
   }
 
   scrollToTime() {
@@ -329,7 +359,6 @@ export default class DayView extends React.Component {
         // ref={ref => {this.scrollView = ref}}
         ref='scrollView'
         onLayout={() => this.scrollToTime()}>
-        <Text>{this.props.day}</Text>
         {/* <Text>{this.state.scrollable ? 'Scrollable' : 'nonscrolling'}</Text> */}
         {/* <List scrollEnabled={false}> */}
         {this.renderTimeline()}

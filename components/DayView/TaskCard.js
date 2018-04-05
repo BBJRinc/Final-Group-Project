@@ -9,17 +9,19 @@ let theme = 'brown';
 let testTheme = global.theme
 
 // 
-const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
 const GHOST_OPACITY = 0.4;
 const BORDER_RADIUS = 5;
 const PADDING_VERT = 5;
 const PADDING_LEFT = 10;
 const GRABBER_HEIGHT = 10;
 
-const LONG_PRESS_TIME = 10;
+const LONG_PRESS_TIME = 100;
 
-// const DBG = true;
-const DBG = false;
+const DBG = true;
+// const DBG = false;
+const DBG_GHOST = false;
+// const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
+const GRABBER_BACKGROUND = 'rgba(0, 0, 0, 0)';
 
 /*------------------------------------------------------------------------------
 -----Takes props of:------------------------------------------------------------
@@ -40,7 +42,7 @@ class TaskCard extends React.Component {
       gestureShield: false,
       pan: new Animated.ValueXY(),
       ghostStyle: {
-        opacity: 0,
+        opacity: GHOST_OPACITY,
       },
     }
   }
@@ -112,12 +114,6 @@ class TaskCard extends React.Component {
         this.setState({ghostStyle: {...this.state.ghostStyle, height: newHeight}})
 
         this.state.pan.setValue({y: newTop})
-        // if(DBG) console.log('this.state.ghostStyle.top:', this.state.ghostStyle.top);
-          // Animated.event([null,
-          //   {
-          //     dy: this.state.pan.y,
-          //   }]
-          // )(e, gestureState)
         
       },
   
@@ -147,7 +143,7 @@ class TaskCard extends React.Component {
         this.pressTimer = setTimeout(() => {
           if(DBG) console.timeEnd('long press');
           this.tap = false;
-          this.showGhost();
+          // this.showGhost();
           this.setState({unlocked: true})
           this.setZIndex()
           this.props.scrollable(false);
@@ -170,21 +166,21 @@ class TaskCard extends React.Component {
         } else {
           this.tap = false;
           clearTimeout(this.pressTimer);
-          
-          return false;
+          // return false;
         }
       },
 
       onPanResponderTerminate: (e, gestureState) => {
         this.endMoveGesture();
+        clearTimeout(this.pressTimer);
       },
   
       onPanResponderRelease: (e, gestureState) => {
-        this.endMoveGesture();
-
+        clearTimeout(this.pressTimer);
         if(this.tap) {
           this.tapAction();
         } else {
+          this.endMoveGesture();
           this.state.pan.setValue({x: 0, y: 0})
           this.state.pan.flattenOffset();
           this.props.setNewTimes(this.props.id, this.ghostTop);
@@ -194,15 +190,16 @@ class TaskCard extends React.Component {
   }
 
   endMoveGesture() {
-    // this.hideGhost();
+    // if(!DBG_GHOST) this.hideGhost();
     this.props.scrollable(true);
     this.setState({unlocked: false});
-    clearTimeout(this.pressTimer);
+    if(DBG) console.timeEnd('long press');
+    // if(DBG) console.log('this.pressTimer:', this.pressTimer);
     this.clearZIndex()
   }
 
   endResizeGesture() {
-    // this.hideGhost();
+    // if(!DBG_GHOST) this.hideGhost();
     this.setState({gestureShield: false});
     this.clearZIndex()
     // if(DBG) console.log('this.state:', this.state);
@@ -211,7 +208,7 @@ class TaskCard extends React.Component {
   }
 
   startResizeGesture() {
-    this.showGhost();
+    // this.showGhost();
     this.setState({gestureShield: true});
     this.setZIndex()
     // this.state.pan.setValue({y: this.props.cardTop})
@@ -242,7 +239,8 @@ class TaskCard extends React.Component {
 
   tapAction() {
     if(DBG) console.log('There was a tap!');
-    
+    if(DBG) console.timeEnd('long press');
+    this.props.onTaskPress(this.props.fullTask);
   }
 
   // blockNative() {
@@ -328,12 +326,10 @@ class TaskCard extends React.Component {
         {/*-----------------------------------------------------------------------------
         ------Debugging infobox---------------------------------------------------------
         ------------------------------------------------------------------------------*/}
-        {DBG? 
+        {false? 
           <Container style={{position: 'absolute',
             top: 5,
             right: 20,
-            // backgroundColor: 'black',
-            // color: 'white',
             display: 'flex',
             flex: 0}}>
             <Text style={styles.debugText}>{this.props.title}</Text>
@@ -365,7 +361,7 @@ class TaskCard extends React.Component {
             >
 
             <Text>{this.props.title}</Text>
-            <Text>{this.state.unlocked ? 'Move me!' : 'Stuck'}</Text>
+            {DBG_GHOST? <Text>{this.state.unlocked ? 'Move me!' : 'Stuck'}</Text> : null}
 
             
             <Container style={styles.cardGrab} {...this.panResponderMid.panHandlers} />

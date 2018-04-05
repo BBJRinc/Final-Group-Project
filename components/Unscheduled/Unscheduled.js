@@ -59,7 +59,6 @@ export default class Unscheduled extends Component {
     render() {
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return (
-            <Container>
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -97,7 +96,6 @@ export default class Unscheduled extends Component {
                         />
                     </Content>
                 </Modal>
-            </Container>
         )
     }
 }
