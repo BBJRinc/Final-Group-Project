@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports={
     addCheckItem: function(req, res){
         const taskid = Number(req.params.taskid)
@@ -113,6 +115,25 @@ module.exports={
             req.body.duration,
             taskid
         ];
-        req.app.get('db').setStartTime(task).then()
+        req.app.get('db').setStartTime(task).then(() => {
+            let newToday = Math.round(new Date().getTime())
+            let offSet = moment().utcOffset()
+            offSet = (offSet * 1000) * 60;
+            newToday += offSet;
+            // One day in milliseconds
+            let oneDay = 86400000;
+            // Todays Tasks
+            let todayConv = moment(newToday).format("YYYY-MM-DD");
+            let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf();
+            let endOfDay = todayUnix + oneDay;
+            let day = [
+                todayUnix,
+                endOfDay,
+                req.userid
+            ]
+            req.app.get('db').getDay(day).then(resp => {
+                res.status(200).send(resp);
+            });
+        })
     }
 }
