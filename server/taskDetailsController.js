@@ -115,6 +115,9 @@ module.exports={
             req.body.duration,
             taskid
         ];
+        console.log('taskid:', taskid);
+        console.log('task:', task);
+        
         req.app.get('db').setStartTime(task).then(() => {
             let newToday = Math.round(new Date().getTime())
             let offSet = moment().utcOffset()
@@ -132,8 +135,9 @@ module.exports={
                 req.userid
             ]
             req.app.get('db').getDay(day).then(resp => {
+                console.log('Response from db:', resp);
                 res.status(200).send(resp);
             });
-        })
+        }).catch((err) => console.log(err))
     }
 }

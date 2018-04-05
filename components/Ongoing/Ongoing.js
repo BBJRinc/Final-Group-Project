@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-const PubIpAddress = '192.168.3.176';
+const PubIpAddress = '192.168.2.121';
 
 const datas = [
     {name: 'Simon Mignolet', age: 31},
@@ -49,7 +49,6 @@ export default class Ongoing extends Component{
     render(){
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         return(
-            <Container>
                 <Modal  
                     animationType="slide"
                     transparent={false}
@@ -86,7 +85,6 @@ export default class Ongoing extends Component{
                         />
                     </Content>
                 </Modal>
-            </Container>
         )
     }
 }
