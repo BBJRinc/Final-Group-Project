@@ -15,7 +15,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
-const PubIpAddress = '192.168.3.176';
+const PubIpAddress = '192.168.2.121';
 
 export default class TaskDetails extends Component {
     constructor(props) {
@@ -195,7 +195,6 @@ export default class TaskDetails extends Component {
     render() {
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
-            <View style={{ marginTop: 22 }}>
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -331,10 +330,8 @@ export default class TaskDetails extends Component {
                             token={this.state.userToken}
                         />
                     </Content>
-
                 </Modal>
-            </View>
-        );
+        )
     }
 }
 const styles = ({

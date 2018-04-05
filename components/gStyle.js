@@ -1,9 +1,9 @@
 export default {
 
   default: {
-    background: '#FFFFFF',
-    light: '#EEEEEE',
-    dark: '#AAAAAA',
+    background: '#EEEEEE',
+    light: '#AAAAAA',
+    dark: '#666666',
     fontDark: '#111111',
     fontLight: '#EEEEEE',
   },
