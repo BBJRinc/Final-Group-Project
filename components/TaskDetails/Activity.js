@@ -6,7 +6,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 import Comments from './Comments';
 
-const PubIpAdress = '192.168.3.132';
+const PubIpAddress = '192.168.3.132';
 
 export default class Activity extends Component {
     constructor(props) {

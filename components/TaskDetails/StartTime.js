@@ -7,6 +7,7 @@ import {
     Picker, StatusBar, Modal, TouchableHighlight, Item
 } from 'react-native'
 import IconI from 'react-native-vector-icons/Ionicons';
+import moment from 'moment'
 
 export default class StartTime extends Component {
     constructor(props) {
@@ -17,7 +18,8 @@ export default class StartTime extends Component {
     }
 
     setDate(newDate) {
-        this.setState({ chosenDate: newDate })
+        this.setState({ chosenDate: newDate });
+        this.props.setTaskStartTime(newDate)
     }
 
     render() {
@@ -32,19 +34,17 @@ export default class StartTime extends Component {
                     <DatePickerIOS
                         date={this.state.chosenDate}
                         onDateChange={this.setDate}
-                        placeHolder={this.state.chosenDate}
+                        placeHolder='Select start time'
+                        mode='time'
+                        minuteInterval={15}
                     />
                     <TouchableHighlight style={{ alignItems: 'center' }}
                         onPress={() => {
                             this.props.setStartTimePicker();
-                        }}>
-                        {/* <IconI name='ios-close' size={35} color={'#fff'} /> */}
-                        <View style={{height:20}}>
-                                <Text>StartTime asdfasdfasdfasdfasdfasdf</Text>
-                        </View>
+                            }}>
+                            <Text style={{height:30}}>hello</Text>
                     </TouchableHighlight>
                 </Modal>
-
             </View>
         )
     }
