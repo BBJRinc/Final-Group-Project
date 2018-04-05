@@ -33,26 +33,27 @@ export default class Activity extends Component {
                 content: this.state.comment
             }
         }).then(resp => {
-            this.setState({comments: resp.data});
+            this.setState({comments: resp.data, comment: ''});
         });
     }
 
     render() {
         const { activityContent, userInitialStyle, commentStyle, separate, padding, inputSize } = styles
-        const comments = !this.state.comments.length ? null : this.state.comments.map(comment => {
+        const sortedComments = this.state.comments.sort().reverse()
+        const comments = !this.state.comments.length ? null : sortedComments.map(comment => {
             return(
                 <Comments key={comment.commentid} comment={comment} user={this.props.user} />
             )
         })
         return (
-            <View>
-                <View style={{marginBottom: 80}}>
+            <View style={styles.container}>
+                <View style={styles.commentsContainer}>
                     {comments}                    
                 </View>
                 <View style={styles.activityContent} >
                     <Item>
                         <View style={styles.userInitialStyle}><Text>{this.props.user.split(' ').map((item, i) => { if (i <= 1) return item[0] }).join('')}</Text></View>
-                        <Input placeholder='Add a comment...' style={styles.commentStyle} onChangeText={(text) => this.setState({comment: text})} />
+                        <Input value={this.state.comment} placeholder='Add a comment...' style={styles.commentStyle} onChangeText={(text) => this.setState({comment: text})} />
                         <Button
                         transparent
                         style={{marginRight: 5, marginLeft: 5}}
@@ -73,6 +74,13 @@ const styles = ({
         marginTop: 10,
         paddingLeft: 10,
         backgroundColor: '#fff'
+    },
+    container: {
+        flex: 1
+    },
+    commentsContainer: {
+        flex: 1,
+        marginBottom: 60
     },
     activityContent: {
         position: 'absolute',

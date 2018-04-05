@@ -1,0 +1,264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+      "height": 1334,
+    }
+  }
+  virtual={undefined}
+>
+  <Modal
+    animationType="slide"
+    hardwareAccelerated={false}
+    onRequestClose={[Function]}
+    onShow={[Function]}
+    transparent={false}
+    visible={true}
+  >
+    <View>
+      <View
+        style={
+          Array [
+            Object {
+              "backgroundColor": "#F8F8F8",
+              "borderBottomColor": "#a7a6ab",
+              "borderBottomWidth": 0.5,
+              "elevation": 3,
+              "flexDirection": "row",
+              "height": 64,
+              "justifyContent": "center",
+              "left": 0,
+              "paddingLeft": 10,
+              "paddingRight": 10,
+              "paddingTop": 15,
+              "right": 0,
+              "top": 0,
+            },
+            Object {
+              "backgroundColor": "#000",
+              "width": "100%",
+            },
+          ]
+        }
+        virtual={undefined}
+      >
+        <View
+          style={
+            Array [
+              Object {
+                "alignItems": "flex-start",
+                "alignSelf": "center",
+                "flex": 1,
+              },
+              Object {
+                "flex": 1,
+              },
+            ]
+          }
+          virtual={undefined}
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            style={
+              Array [
+                Object {
+                  "color": "#000",
+                  "fontFamily": "System",
+                  "fontSize": 17,
+                  "fontWeight": "600",
+                  "textAlign": "center",
+                },
+                Object {
+                  "color": "#fff",
+                  "fontSize": 18,
+                },
+              ]
+            }
+            virtual={undefined}
+          >
+            Unscheduled Tasks
+          </Text>
+        </View>
+        <View
+          style={
+            Object {
+              "alignItems": "flex-end",
+              "alignSelf": "center",
+              "flex": 1,
+              "flexDirection": "row",
+              "justifyContent": "flex-end",
+            }
+          }
+          virtual={undefined}
+        >
+          <View
+            accessibilityComponentType={undefined}
+            accessibilityLabel={undefined}
+            accessibilityTraits={undefined}
+            accessible={true}
+            collapsable={undefined}
+            hasTVPreferredFocus={undefined}
+            hitSlop={undefined}
+            isTVSelectable={true}
+            nativeID={undefined}
+            onLayout={undefined}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              Object {
+                "alignItems": "center",
+                "alignSelf": null,
+                "backgroundColor": "transparent",
+                "borderBottomWidth": null,
+                "borderColor": null,
+                "borderLeftWidth": null,
+                "borderRadius": 50,
+                "borderRightWidth": null,
+                "borderTopWidth": null,
+                "elevation": 0,
+                "flexDirection": "row",
+                "height": 45,
+                "justifyContent": "space-between",
+                "marginRight": -8,
+                "opacity": 1,
+                "paddingBottom": 6,
+                "paddingLeft": 15,
+                "paddingRight": 15,
+                "paddingTop": 6,
+                "shadowColor": null,
+                "shadowOffset": null,
+                "shadowOpacity": null,
+                "shadowRadius": null,
+              }
+            }
+            testID={undefined}
+            tvParallaxProperties={undefined}
+          >
+            <Text
+              accessible={true}
+              allowFontScaling={false}
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Array [
+                    Object {
+                      "color": "#000",
+                      "fontSize": 30,
+                    },
+                    Object {
+                      "color": "#007aff",
+                      "fontSize": 27,
+                      "marginLeft": 2,
+                      "marginRight": 2,
+                      "marginTop": 2,
+                      "paddingTop": 2,
+                    },
+                    Object {
+                      "color": "#fff",
+                      "fontSize": 18,
+                    },
+                  ],
+                  Object {
+                    "fontFamily": "Ionicons",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                  },
+                ]
+              }
+              virtual={undefined}
+            >
+              
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+    <RCTScrollView
+      automaticallyAdjustContentInsets={false}
+      contentContainerStyle={undefined}
+      contentInset={
+        Object {
+          "bottom": 0,
+        }
+      }
+      enableAutoAutomaticScroll={true}
+      enableResetScrollToCoords={true}
+      extraHeight={75}
+      extraScrollHeight={0}
+      getScrollResponder={[Function]}
+      handleOnScroll={[Function]}
+      keyboardDismissMode="interactive"
+      keyboardOpeningTime={250}
+      keyboardShouldPersistTaps="handled"
+      keyboardSpace={0}
+      onScroll={[Function]}
+      resetKeyboardSpace={[Function]}
+      resetScrollToCoords={
+        Object {
+          "x": 0,
+          "y": 0,
+        }
+      }
+      scrollEventThrottle={1}
+      scrollForExtraHeightOnAndroid={[Function]}
+      scrollToEnd={[Function]}
+      scrollToFocusedInput={[Function]}
+      scrollToPosition={[Function]}
+      showsVerticalScrollIndicator={true}
+      style={
+        Object {
+          "backgroundColor": "transparent",
+          "flex": 1,
+        }
+      }
+      viewIsInsideTabBar={false}
+      virtual={undefined}
+    >
+      <View>
+        <RCTScrollView
+          closeOnRowBeginSwipe={false}
+          closeOnRowPress={true}
+          closeOnScroll={true}
+          dataSource={
+            ListViewDataSource {
+              "items": 0,
+            }
+          }
+          directionalDistanceChangeThreshold={2}
+          disableLeftSwipe={false}
+          disableRightSwipe={false}
+          enableEmptySections={true}
+          leftOpenValue={75}
+          onScroll={[Function]}
+          previewFirstRow={false}
+          recalculateHiddenLayout={false}
+          renderLeftHiddenRow={[Function]}
+          renderRightHiddenRow={[Function]}
+          renderRow={[Function]}
+          renderScrollComponent={[Function]}
+          rightOpenValue={-75}
+          style={Object {}}
+          swipeToOpenPercent={50}
+          virtual={undefined}
+        >
+          <View />
+        </RCTScrollView>
+      </View>
+    </RCTScrollView>
+  </Modal>
+</View>
+`;
