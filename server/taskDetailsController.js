@@ -129,6 +129,7 @@ module.exports={
             let todayConv = moment(newToday).format("YYYY-MM-DD");
             let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf();
             let endOfDay = todayUnix + oneDay;
+            console.log("start of day " + todayUnix + "End of Day " + endOfDay )
             let day = [
                 todayUnix,
                 endOfDay,

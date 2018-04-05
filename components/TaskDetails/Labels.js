@@ -27,6 +27,7 @@ export default class Labels extends Component {
                     transparent={false}
                     onRequestClose={() => this.setState({modalVisible: false})}
                     visible={this.state.modalVisible}
+                    onRequestClose={() => this.setModalVisible(false)}
                 >
                     <Header style={{ backgroundColor: this.props.color }}>
                         <Left>

@@ -36,7 +36,7 @@
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns": ["node_modules/(?!react|@native-base|native-base|@react-native-datepicker)"]
+    "transformIgnorePatterns":["node_modules/(?!react|@native-base|native-base)"]
   },
   "proxy": "http://localhost:4040"
 }

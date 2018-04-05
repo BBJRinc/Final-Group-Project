@@ -330,7 +330,7 @@ class TaskCard extends React.Component {
     
     return(
       <List style={[styles.cardHolder,
-          // this.state.zIndexVal
+           {/* this.state.zIndexVal */}
         ]}
         onPress={() => console.log(this.props.title)}>
 
