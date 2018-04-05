@@ -49,7 +49,6 @@ export default class App extends React.Component {
     this.closeDrawer = this.closeDrawer.bind(this);
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
-    this.getDay = this.getDay.bind(this);
     this.selectedTaskUpdate = this.selectedTaskUpdate.bind(this);
     this.setSelectedTask = this.setSelectedTask.bind(this);
     this.getNextDay = this.getNextDay.bind(this);
