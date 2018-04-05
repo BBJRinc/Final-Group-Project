@@ -224,8 +224,18 @@ export default class App extends React.Component {
     this.showMenuItem(listName);
   }
 
-  getDay() {
-    // console.log('GET DAY CALLED!!!!');
+  changeTimes(start, duration, taskid){
+    axios({
+      method: 'put',
+      url: `http://${PubIpAddress}:4040/api/starttime/${taskid}`,
+      headers: {
+        "token": this.state.userToken
+      },
+      data: {
+        starttime: start,
+        duration: duration
+      }
+    })
   }
 
   onLogout() {

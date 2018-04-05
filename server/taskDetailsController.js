@@ -104,5 +104,15 @@ module.exports={
         req.app.get('db').addTask(task).then(resp => {
             res.status(200).send(resp);
         }).catch(err => console.log(err));
+    },
+
+    setStartTime: function(req, res){
+        let taskid = Number(req.params.taskid);
+        let task = [
+            req.body.starttime,
+            req.body.duration,
+            taskid
+        ];
+        req.app.get('db').setStartTime(task).then()
     }
 }
