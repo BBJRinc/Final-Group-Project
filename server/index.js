@@ -78,6 +78,7 @@ app.put('/api/comment/:commentid', tdCtrl.editComment);
 app.delete('/api/comment/:commentid', tdCtrl.deleteComment);
 app.put('/api/task/:taskid', tdCtrl.editTask);
 app.post('/api/task', tdCtrl.addTask);
+app.put('/api/starttime/:taskid', tdCtrl.setStartTime);
 
 //user endpoints
 app.get('/api/user', userCtrl.getUser);

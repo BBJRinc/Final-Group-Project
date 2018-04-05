@@ -19,7 +19,6 @@ export default class CalendarsScreen extends Component {
   render() {
     // console.log(this.state)
     return (
-      <Container>
         <Modal 
           animationType="slide"
           transparent={true}
@@ -46,7 +45,6 @@ export default class CalendarsScreen extends Component {
             </View>
           </ScrollView>
         </Modal>
-      </Container>
       
     );
   }

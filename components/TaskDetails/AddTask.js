@@ -37,7 +37,6 @@ export default class AddTask extends Component {
     render() {
         const { contentView, inputStyle } = style
         return (
-            <View style={{ justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
                 <Modal
                     style={contentView}
                     animationType="slide"
@@ -62,7 +61,6 @@ export default class AddTask extends Component {
                         </Item>
                     </Content>
                 </Modal>
-            </View>
         )
     }
 }

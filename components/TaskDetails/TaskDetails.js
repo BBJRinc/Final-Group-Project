@@ -210,7 +210,6 @@ export default class TaskDetails extends Component {
         console.log(this.state)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
-            <View style={{ marginTop: 22 }}>
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -373,8 +372,7 @@ export default class TaskDetails extends Component {
                         />
                     </Content>
                 </Modal>
-            </View>
-        );
+        )
     }
 }
 const styles = ({

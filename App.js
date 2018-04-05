@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, Alert, StatusBar, Image, AsyncStorage } from 'react-native';
 import { Container, Content, Drawer } from 'native-base';
 import axios from 'axios';
+import dummyData from './dummyData.json'
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
 import TaskDetails from './components/TaskDetails/TaskDetails';
@@ -50,11 +51,12 @@ export default class App extends React.Component {
     this.closeDrawer = this.closeDrawer.bind(this);
     this.setUnscheduledCount = this.setUnscheduledCount.bind(this);
     this.onLogout = this.onLogout.bind(this);
-    this.getDay = this.getDay.bind(this);
     this.selectedTaskUpdate = this.selectedTaskUpdate.bind(this);
     this.setSelectedTask = this.setSelectedTask.bind(this);
     this.getNextDay = this.getNextDay.bind(this);
     this.getPreviousDay = this.getPreviousDay.bind(this);
+    this.changeTimes = this.changeTimes.bind(this);
+
   }
 
 
@@ -221,14 +223,33 @@ export default class App extends React.Component {
   }
 
   onTaskPress(task, listName) {
+    console.log('onTaskPress called!', task)
     this.setState({ selectedTask: task });
     this.showMenuItem('showTaskDetails');
     this.showMenuItem(listName);
   }
 
-  getDay() {
-    // console.log('GET DAY CALLED!!!!');
-  }
+  changeTimes(taskid, start, duration){
+    console.log('~~~~~~~~~~~~~changeTimes taskid:', taskid);
+    console.log('start:', start);
+    console.log('duration:', duration);
+    
+    
+    axios({
+      method: 'put',
+      url: `http://${PubIpAddress}:4040/api/starttime/${taskid}`,
+      headers: {
+        "token": this.state.userToken
+      },
+      data: {
+        starttime: start,
+        duration: duration
+      }
+    }).then(resp => {
+      console.log('changeTimes response:', resp)
+      this.setState({currentTasks: resp.data});
+    });
+  };
 
   onLogout() {
     AsyncStorage.removeItem('token', (err) => {
@@ -277,14 +298,14 @@ export default class App extends React.Component {
           onClose={() => this.closeDrawer()}>
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
-            <Content>
-              <DayView tasksToRender={this.state.currentTasks} />
+            {/* <Content> */}
+              <DayView tasksToRender={dummyData} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} />
               <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay}/>
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
-            </Content>
+            {/* </Content> */}
             <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount} />
           </Container>
         </Drawer>
@@ -316,3 +337,4 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
+
