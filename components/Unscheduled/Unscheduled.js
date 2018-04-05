@@ -68,7 +68,7 @@ export default class Unscheduled extends Component {
                     onRequestClose={() => this.props.showMenuItem('showTasks')}
                 >
                     <Header style={styles.header}>
-                        <Left style={{ width: 300 }}>
+                        <Left style={{ flex: 1 }}>
                             <Title style={styles.black}>Unscheduled Tasks</Title>
                         </Left>
                         <Right>
@@ -104,10 +104,11 @@ export default class Unscheduled extends Component {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#000'
+        backgroundColor: '#000',
+        width: '100%'
     },
     black: {
-        color: 'black',
+        color: '#fff',
         fontSize: 18
     }
 });

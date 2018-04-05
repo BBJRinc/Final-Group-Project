@@ -54,6 +54,8 @@ export default class App extends React.Component {
     this.setSelectedTask = this.setSelectedTask.bind(this);
     this.getNextDay = this.getNextDay.bind(this);
     this.getPreviousDay = this.getPreviousDay.bind(this);
+    this.changeTimes = this.changeTimes.bind(this);
+
   }
 
 
@@ -224,9 +226,21 @@ export default class App extends React.Component {
     this.showMenuItem(listName);
   }
 
-  getDay() {
-    // console.log('GET DAY CALLED!!!!');
-  }
+  changeTimes(start, duration, taskid){
+    axios({
+      method: 'put',
+      url: `http://${PubIpAddress}:4040/api/starttime/${taskid}`,
+      headers: {
+        "token": this.state.userToken
+      },
+      data: {
+        starttime: start,
+        duration: duration
+      }
+    }).then(resp => {
+      this.setState({currentTasks: resp.data});
+    });
+  };
 
   onLogout() {
     AsyncStorage.removeItem('token', (err) => {
@@ -276,7 +290,7 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             <Content>
-              <DayView tasksToRender={this.state.currentTasks} />
+              <DayView tasksToRender={this.state.currentTasks} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} />
               <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} />
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />

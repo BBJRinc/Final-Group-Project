@@ -57,7 +57,7 @@ export default class Ongoing extends Component{
                     onRequestClose={() => this.props.showMenuItem('showOngoing')}
                     >
                     <Header style={styles.header}>
-                        <Left style={{width: 300}}>
+                        <Left style={{flex: 1}}>
                             <Title style={styles.black}>Ongoing Tasks</Title>                                                
                         </Left>
                         <Right>
@@ -93,10 +93,10 @@ export default class Ongoing extends Component{
 
 const styles = StyleSheet.create({
     header: {
-      backgroundColor: '#f2f2f2'
+      backgroundColor: '#000'
     },
     black: {
-        color: 'black',
+        color: '#fff',
         fontSize: 18
     }
   });
