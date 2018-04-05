@@ -19,7 +19,7 @@ import AddTask from './components/TaskDetails/AddTask';
 
 import dummyData from './dummyData.json';
 
-const PubIpAddress = '192.168.2.121'
+const PubIpAddress = '192.168.3.149'
 
 export default class App extends React.Component {
   constructor(props) {

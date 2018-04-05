@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAddress = '192.168.2.121';
+const PubIpAddress = '192.168.3.149';
 
 export default class Checklist extends Component {
     constructor(props) {
