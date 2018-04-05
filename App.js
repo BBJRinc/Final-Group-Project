@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, Alert, StatusBar, Image, AsyncStorage } from 'react-native';
 import { Container, Content, Drawer } from 'native-base';
 import axios from 'axios';
+import dummyData from './dummyData.json'
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
 import TaskDetails from './components/TaskDetails/TaskDetails';
@@ -17,9 +18,8 @@ import DayView from './components/DayView/DayView.js';
 import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 import AddTask from './components/TaskDetails/AddTask';
 
-import dummyData from './dummyData.json';
 
-const PubIpAddress = '192.168.3.149'
+const PubIpAddress = '192.168.3.132'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -65,6 +65,7 @@ export default class App extends React.Component {
     SplashScreen.hide();
 
     let checkToken = await AsyncStorage.getItem('token').then(res => {
+      console.log(res)
       return res;
     }).catch(err => console.log(err));
 
@@ -300,7 +301,7 @@ export default class App extends React.Component {
             {/* <Content> */}
               <DayView tasksToRender={dummyData} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} />
               <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
-              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} />
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay}/>
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />

@@ -7,7 +7,7 @@ import {
 import axios from 'axios'
 import IconI from 'react-native-vector-icons/Ionicons';
 
-const PubIpAddress = '192.168.3.149';
+const PubIpAddress = '192.168.3.132'
 
 export default class Checklist extends Component {
     constructor(props) {
@@ -75,6 +75,9 @@ export default class Checklist extends Component {
     addChecklistItem(e) {
         const { checklistItems, newChecklistItem, taskid } = this.state
         let itemid = taskid
+        if(newChecklistItem===''){
+            return null
+        } else {
         axios({
             method: 'post',
             url: `http://${PubIpAddress}:4040/api/checklist/${itemid}`,
@@ -88,6 +91,7 @@ export default class Checklist extends Component {
             this.setState({ checklistItems: resp.data });
         });
         this.setState({ newChecklistItem: '' })
+    }
     }
     deleteRow(secId, rowId, rowMap, data) {
         const { checklistitemid } = data
@@ -117,6 +121,7 @@ export default class Checklist extends Component {
                     renderRow={data =>
                         <ListItem style={{ paddingLeft: 10, alignContent: 'center', alignItems: 'center', backgroundColor: '#efefef' }} onLongPress={(e, item) => this.editContent(e, item)}>
                             <CheckBox
+                                iconProps='red'
                                 checked={data.completed}
                                 onPress={(e) => this.markComplete({ completed: data.completed, id: data.checklistitemid })}
                                 style={{ borderColor: 'gray', borderRadius: 0, marginRight: 20, height: 20, width: 20, borderRadius: 2, paddingTop: 2 }} value={data.content} />
