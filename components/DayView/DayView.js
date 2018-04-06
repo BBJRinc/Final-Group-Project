@@ -348,6 +348,7 @@ export default class DayView extends React.Component {
         ref={ref => {this.scrollView = ref}}
         ref='scrollView'
         onLayout={() => this.scrollToTime()}>
+        {false ? <Text>{this.props.day}</Text> : null }
         {this.renderTimeline()}
 
         {/* </List> */}

@@ -7,7 +7,7 @@ import StartTime from './StartTime';
 import Activity from './Activity';
 import Checklist from './Checklist';
 import axios from 'axios';
-import moment from 'moment';
+import moment, { min } from 'moment';
 
 import StartTimePicker from './StartTimePicker.js';
 
@@ -157,9 +157,12 @@ export default class TaskDetails extends Component {
         })
     }
     selectDate(date) {
-        console.log(date)
+        // console.log(date)
         let newDate = moment(date, 'MMMM Do YYYY, h:mm:ss a').valueOf();
-        let finalDate = newDate / 1000
+        newDate = Math.floor(newDate/1000)*1000;
+        // console.log('newDate:', newDate);
+        
+        // let finalDate = newDate / 1000
         this.setState({
             date: date
         })
@@ -179,6 +182,8 @@ export default class TaskDetails extends Component {
         const { minutes, hours } = state
         let minuteMilliseconds = minutes * 1 * (1000 * 60 * 100)
         let hourMilliseconds = hours * 1 * (60 * 60 * 1000)
+        let total = minuteMilliseconds + hourMilliseconds;
+        total = Math.max(total, 15*60*1000)
         this.setState({
             milliseconds: minuteMilliseconds + hourMilliseconds
         });
@@ -202,14 +207,15 @@ export default class TaskDetails extends Component {
         this.setState({ showStartTimePicker: !this.state.showStartTimePicker })
     }
     setTaskStartTime(date){
-        console.log(date.chosenDate)
-        var ts = moment(date, "M/D/YYYY H:mm").unix();
-        var m = moment.unix(ts);
-        console.log(ts*1000)
+        // console.log('setTaskStartTime:', date)
+        var ts = moment(date, "H:mm").unix();
+        // console.log('ts:', ts);
+        // var m = moment.unix(ts);
+        console.log('setTaskStartTime:', ts*1000)
         this.setState({startTime:ts*1000})
     }
     render() {
-        console.log(this.state)
+        // console.log(this.state)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
                 <Modal

@@ -66,7 +66,7 @@ export default class Ongoing extends Component{
                     animationType="slide"
                     transparent={false}
                     visible={this.props.visible}
-                    onShow={this.updateList()}
+                    onShow={() => this.updateList}
                     onRequestClose={() => this.props.showMenuItem('showOngoing')}
                     >
                     <Header style={styles.header}>
