@@ -16,7 +16,7 @@ import TaskCard from './TaskCard.js';
 --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 
-const DBG = false;
+const DBG = true;
 // const DBG = false;
 
   // DayView segment structure
@@ -116,10 +116,9 @@ export default class DayView extends React.Component {
   }
 
   addDay(time) {
-    if(DBG) console.log('this.props.day:', this.props.day);
+    let offset = new Date().getTimezoneOffset();
     
-    // Combine time after midnight with current day for complete unix time
-    return time + this.props.day;
+    return time + this.props.day + offset*60*1000;
   }
 
   toBlock(time) {
@@ -134,24 +133,15 @@ export default class DayView extends React.Component {
   setNewTimes(id, newStart, newHeight) {
     let index = this.state.chronoTasks[id].index
     let taskData = this.props.tasksToRender[index];
-    let noUpdate = false;
-      // Checks if the values fed in exist and if not pulls from state
-    if(!(newStart >= 0)) {
-      newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
-      noUpdate = true;
-    }
-    if(!(newHeight >= 0)) {
-      if(DBG) console.log('newHeight:', newHeight);
-      
-      newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
-      noUpdate = true;
-    }
 
-    if(noUpdate) {
-      if(DBG) console.log('No update to task times');
-      
-      return;
+      // Checks if the values fed in exist and if not pulls from state
+    if(typeof(newStart) != 'number') {
+      newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
     }
+    if(typeof(newHeight) != 'number') {
+      newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
+    }
+    
     
       // Ensures tasks stay within the bounds of the day view
     newStart = Math.max(0, newStart);
@@ -193,8 +183,8 @@ export default class DayView extends React.Component {
   ------------------------------------------------------------------------------*/
   renderTimeline() {
     let timeArr = [];
-    let time = 1; // Represents the hour
-    let tag = 'am'
+    let time = 12; // Represents the hour
+    let tag = 'pm'
     // If in 24H mode the tag is removed
     if (TWENTYFOUR_HOUR) {
       tag = '';
@@ -214,12 +204,16 @@ export default class DayView extends React.Component {
           </Row>
         )
         // Increment the hour display
-        time++;
         // Check for rollover to PM
-        if (time > 12 && !TWENTYFOUR_HOUR) {
-          time = time - 12;
-          tag = 'pm';
+        if (!TWENTYFOUR_HOUR && time === 12) {
+          time = 0;
+          if(tag === 'am') {
+            tag = 'pm';
+          } else {
+            tag = 'am';
+          }
         }
+        time++;
       } else { // Fills between-hour segments
         timeArr.push(
           /*-------------------------------------------------------------------
