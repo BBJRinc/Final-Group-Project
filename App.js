@@ -19,7 +19,7 @@ import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 import AddTask from './components/TaskDetails/AddTask';
 
 const PubIpAddress = '192.168.2.121';
-
+const DAY = 24*60*60*1000;
 
 export default class App extends React.Component {
   constructor(props) {
@@ -56,41 +56,68 @@ export default class App extends React.Component {
     this.getNextDay = this.getNextDay.bind(this);
     this.getPreviousDay = this.getPreviousDay.bind(this);
     this.changeTimes = this.changeTimes.bind(this);
-
-
-
-    global.fetchTasks = () => {
-      global.axios.get('/day/0').then((resp) => {
-        let allTasks = resp.data;
-        console.log('allTasks:', allTasks);
-        
-      })
-    }
-    
-    global.fetchTasks = global.fetchTasks.bind(this);
-    
-    AsyncStorage.getItem('token').then(jwt => {
-      console.log('token response:', jwt)
-      if (jwt !== null) {
-        this.state.hasToken = true;
-        this.state.userToken = jwt;
-        global.axios = axios.create({
-          baseURL: `http://${PubIpAddress}:4040/api`,
-          headers: {
-            "token": jwt
-          }
-        })
-      }
-    }).catch(err => console.log(err));
+    this.forceFetch = this.forceFetch.bind(this);
     
   }
   
-  
+  forceFetch() {
+    axios({
+      method: 'get',
+      url: `http://${PubIpAddress}:4040/api/day/${this.state.selectedDay}`,
+      headers: {
+        "token": this.state.userToken
+      }
+    }).then(response => {
+      console.log('!!!!!!!!server response for day request:', response.data);
+      this.setState({
+        currentTasks: response.data
+      })
+      console.log('this.state.currentTasks:', this.state.currentTasks);
+      
+      // Yesterdays Tasks
+      let newYesterday = this.state.selectedDay - oneDay;
+      axios({
+        method: 'get',
+        url: `http://${PubIpAddress}:4040/api/day/${newYesterday}`,
+        headers: {
+          "token": this.state.userToken
+        }
+      }).then(response => {
+        this.setState({
+          previousDayTasks: response.data
+        })
+
+        // Tomorrows Tasks
+        let newTomorrow = this.state.selectedDay + oneDay;
+        axios({
+          method: "get",
+          url: `http://${PubIpAddress}:4040/api/day/${newTomorrow}`,
+          headers: {
+            "token": this.state.userToken
+          }
+        }).then(response => {
+          this.setState({
+            nextDayTasks: response.data
+          })
+        }).catch(err => console.log(err));
+      }).catch(err => console.log(err));
+    }).catch(err => console.log(err));
+  }
   
   async componentDidMount() {
-
-
     SplashScreen.hide();
+    
+    let checkToken = await AsyncStorage.getItem('token').then(res => {
+      console.log(res)
+      return res;
+    }).catch(err => console.log(err));
+    
+    if (checkToken !== null) {
+      this.setState({
+        hasToken: true,
+        userToken: checkToken
+      })
+    }
     
     
     // console.log('New Date: ', new Date())
@@ -118,7 +145,7 @@ export default class App extends React.Component {
       selectedDay: locDay,
       utcDay,
     })
-    global.axios.get(`/day/${this.state.selectedDay}`).then(r => console.log('!!!RESPONSE', r.data))
+    // global.axios.get(`/day/${this.state.selectedDay}`).then(r => console.log('!!!RESPONSE', r.data))
     axios({
       method: 'get',
       url: `http://${PubIpAddress}:4040/api/day/${this.state.selectedDay}`,
@@ -248,8 +275,8 @@ export default class App extends React.Component {
     console.log('~~~~~~~~~~~~~changeTimes taskid:', taskid);
     console.log('start:', start);
     console.log('duration:', duration);
-
-
+    
+    let day = Math.floor( start / DAY ) * DAY;
     axios({
       method: 'put',
       url: `http://${PubIpAddress}:4040/api/starttime/${taskid}`,
@@ -258,7 +285,8 @@ export default class App extends React.Component {
       },
       data: {
         starttime: start,
-        duration: duration
+        duration: duration,
+        day
       }
     }).then(resp => {
       console.log('changeTimes response:', resp.data)
@@ -318,7 +346,7 @@ export default class App extends React.Component {
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             <DayView tasksToRender={this.state.currentTasks} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} utcDay={this.state.utcDay} />
             <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
-            <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay} />
+            <TaskDetails forceFetch={this.forceFetch} selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay} />
             <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
             <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
             <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />

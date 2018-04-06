@@ -1,7 +1,7 @@
 module.exports = {
     getDay: function(req, res){
         console.log('Get day hit for:', req.params.day)
-        let startOfDay = req.params.day;
+        let startOfDay = Number(req.params.day);
         let endOfDay = startOfDay + (1*24*60*60*1000);
         let userid = req.userid;
         console.log('req.userid:', req.userid);

@@ -17,7 +17,7 @@ const GRABBER_HEIGHT = 10;
 
 const LONG_PRESS_TIME = 100;
 
-const DBG = true;
+const DBG = false;
 // const DBG = false;
 const DBG_GHOST = false;
 // const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
@@ -358,9 +358,9 @@ class TaskCard extends React.Component {
         <Container pointerEvents='none'
             style={[styles.card, propStyles]}
             onLayout={(event) => {this.onLayout(event)}} >
-          <Container style={this.state.longPressStyle}>
-            <Text>{this.props.title}</Text>
-          </Container>
+          <Container style={[this.state.longPressStyle, {...StyleSheet.absoluteFillObject}]} />
+          <Text>{this.props.title}</Text>
+          {/* <Text>{this.state.longPressStyle.backgroundColor}</Text> */}
         </Container>
 
         {/*------------------------------------------------------------------------------
@@ -385,7 +385,7 @@ class TaskCard extends React.Component {
 
             <Text>{this.props.title}</Text>
             {DBG_GHOST? <Text>{this.state.unlocked ? 'Move me!' : 'Stuck'}</Text> : null}
-            <Text>{propStyles.top}</Text>
+            {/* <Text>{propStyles.top}</Text> */}
             
             <Container style={styles.cardGrab} {...this.panResponderMid.panHandlers} />
             <Container style={styles.topGrab} {...this.panResponderTop.panHandlers} />

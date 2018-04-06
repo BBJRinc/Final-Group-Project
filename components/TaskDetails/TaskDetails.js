@@ -138,6 +138,7 @@ export default class TaskDetails extends Component {
             }
 
         }).then(() => {
+            this.props.forceFetch();
             this.props.selectedTaskUpdate();
         })
     }
