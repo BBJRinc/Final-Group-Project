@@ -5,8 +5,16 @@ exports[`renders correctly 1`] = `
   animationType="slide"
   hardwareAccelerated={false}
   onRequestClose={[Function]}
-  onShow={[Function]}
-  transparent={false}
+  style={
+    Object {
+      "alignContent": "center",
+      "alignItems": "center",
+      "backgroundColor": 0.8,
+      "justifyContent": "center",
+      "marginTop": 225,
+    }
+  }
+  transparent={true}
   visible={true}
 >
   <View>
@@ -30,7 +38,6 @@ exports[`renders correctly 1`] = `
           },
           Object {
             "backgroundColor": "#000",
-            "width": "100%",
           },
         ]
       }
@@ -38,16 +45,21 @@ exports[`renders correctly 1`] = `
     >
       <View
         style={
-          Array [
-            Object {
-              "alignItems": "flex-start",
-              "alignSelf": "center",
-              "flex": 1,
-            },
-            Object {
-              "flex": 1,
-            },
-          ]
+          Object {
+            "alignItems": "flex-start",
+            "alignSelf": "center",
+            "flex": 1,
+          }
+        }
+        virtual={undefined}
+      />
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "alignSelf": "center",
+            "flex": 1,
+          }
         }
         virtual={undefined}
       >
@@ -67,13 +79,12 @@ exports[`renders correctly 1`] = `
               },
               Object {
                 "color": "#fff",
-                "fontSize": 18,
               },
             ]
           }
           virtual={undefined}
         >
-          Unscheduled Tasks
+          Add Task
         </Text>
       </View>
       <View
@@ -142,27 +153,10 @@ exports[`renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "color": undefined,
-                  "fontSize": 12,
+                  "color": "#fff",
+                  "fontSize": 20,
                 },
-                Array [
-                  Object {
-                    "color": "#000",
-                    "fontSize": 30,
-                  },
-                  Object {
-                    "color": "#007aff",
-                    "fontSize": 27,
-                    "marginLeft": 2,
-                    "marginRight": 2,
-                    "marginTop": 2,
-                    "paddingTop": 2,
-                  },
-                  Object {
-                    "color": "#fff",
-                    "fontSize": 18,
-                  },
-                ],
+                undefined,
                 Object {
                   "fontFamily": "Ionicons",
                   "fontStyle": "normal",
@@ -170,7 +164,6 @@ exports[`renders correctly 1`] = `
                 },
               ]
             }
-            virtual={undefined}
           >
             
           </Text>
@@ -211,43 +204,91 @@ exports[`renders correctly 1`] = `
     scrollToPosition={[Function]}
     showsVerticalScrollIndicator={true}
     style={
-      Object {
-        "backgroundColor": "transparent",
-        "flex": 1,
-      }
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+          "flex": 1,
+        },
+        Object {
+          "backgroundColor": "#00000099",
+        },
+      ]
     }
     viewIsInsideTabBar={false}
     virtual={undefined}
   >
     <View>
-      <RCTScrollView
-        closeOnRowBeginSwipe={false}
-        closeOnRowPress={true}
-        closeOnScroll={true}
-        dataSource={
-          ListViewDataSource {
-            "items": 0,
+      <View
+        accessibilityComponentType={undefined}
+        accessibilityLabel={undefined}
+        accessibilityTraits={undefined}
+        accessible={true}
+        collapsable={undefined}
+        hasTVPreferredFocus={undefined}
+        hitSlop={undefined}
+        isTVSelectable={true}
+        nativeID={undefined}
+        onLayout={undefined}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "alignContent": "center",
+            "alignItems": "center",
+            "backgroundColor": 0.8,
+            "borderBottomColor": "#fff",
+            "borderBottomWidth": 1,
+            "borderColor": "#D9D5DC",
+            "borderLeftWidth": 0,
+            "borderRightWidth": 0,
+            "borderTopWidth": 0,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "marginLeft": 2,
+            "marginTop": 225,
+            "opacity": 1,
           }
         }
-        directionalDistanceChangeThreshold={2}
-        disableLeftSwipe={false}
-        disableRightSwipe={false}
-        enableEmptySections={true}
-        leftOpenValue={75}
-        onScroll={[Function]}
-        previewFirstRow={false}
-        recalculateHiddenLayout={false}
-        renderLeftHiddenRow={[Function]}
-        renderRightHiddenRow={[Function]}
-        renderRow={[Function]}
-        renderScrollComponent={[Function]}
-        rightOpenValue={-75}
-        style={Object {}}
-        swipeToOpenPercent={50}
-        virtual={undefined}
+        testID={undefined}
+        tvParallaxProperties={undefined}
       >
-        <View />
-      </RCTScrollView>
+        <TextInput
+          allowFontScaling={true}
+          editable={true}
+          onChangeText={[Function]}
+          onEndEditing={[Function]}
+          placeholder="click to add a new task"
+          placeholderTextColor="#575757"
+          style={
+            Array [
+              Object {
+                "color": "#000",
+                "flex": 1,
+                "fontSize": 17,
+                "height": 50,
+                "lineHeight": 24,
+                "paddingLeft": 5,
+                "paddingRight": 5,
+                "top": 1.5,
+              },
+              Object {
+                "backgroundColor": "black",
+                "borderColor": "gray",
+                "borderWidth": 1,
+                "color": "white",
+                "height": 40,
+              },
+            ]
+          }
+          underlineColorAndroid="rgba(0,0,0,0)"
+          virtual={undefined}
+        />
+      </View>
     </View>
   </RCTScrollView>
 </Modal>

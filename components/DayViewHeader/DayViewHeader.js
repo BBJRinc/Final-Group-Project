@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from "react-native";
-import { Container, Icon, Header, Left, Right, Body, Title, Text } from 'native-base';
+import { Container, Icon, Header, Left, Right, Body, Title, Text, StatusBar } from 'native-base';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
 import axios from 'axios';
@@ -27,7 +27,6 @@ export default class DayViewHeader extends Component {
         const { nextDay, previousDay } = this.props
         return (
                 <Header style={styles.header}>
-
                     <Left Icon style={styles.left}>
                         <IconF name="chevron-left"
                             color="#ffffff"
@@ -35,7 +34,6 @@ export default class DayViewHeader extends Component {
                             onPress={() => previousDay()}
                         />
                     </Left>
-
                     <Body style={styles.body}>
                         <Text style={styles.text}>
                             {this.state.dateToDisplay}

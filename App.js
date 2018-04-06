@@ -299,7 +299,7 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             {/* <Content> */}
-              <DayView tasksToRender={dummyData} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} />
+              <DayView tasksToRender={this.state.currentTasks} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} />
               <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
               <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay}/>
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />

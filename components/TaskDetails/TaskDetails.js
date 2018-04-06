@@ -68,7 +68,6 @@ export default class TaskDetails extends Component {
                 userid, starttime, isrecurring, duration,
                 duedate, description, createdat, completed,
                 comments, color, checkitems, token, selectedDay } = nextProps.selectedTask
-
             this.setState({
                 userID: userid || '',
                 userToken: this.props.token,
@@ -84,7 +83,7 @@ export default class TaskDetails extends Component {
                 comments: comments || [],
                 milliseconds: duration || 0,
                 completed: completed || false,
-                startTime: starttime || null,
+                startTime: starttime*1 || null,
                 selectedDay:this.props.selectedDay
             });
         } else {
@@ -288,12 +287,12 @@ export default class TaskDetails extends Component {
                             showStartTimePicker={this.state.showStartTimePicker} 
                             setStartTimePicker={this.setStartTimePicker}
                             setTaskStartTime={this.setTaskStartTime} />
-                        <Item regular style={{ height: 35 }} >
+                        <Item regular style={[inputSize, margin]} >
                             <TouchableHighlight
                             onPress={()=>{
                                 this.setStartTimePicker();
                             }}>
-                                <Text>{this.state.startTime===null ? 'Start time...' : this.state.startTime}</Text>
+                                <Text>{this.state.startTime===null ? 'Start time...' : moment(this.state.startTime).format('MM-DD-YYYY hh:mm')}</Text>
                             </TouchableHighlight>
                         </Item>
                         <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
