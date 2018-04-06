@@ -283,11 +283,13 @@ export default class TaskDetails extends Component {
                         </Item>
 
                         {/* Start time component-------------------------------------- */}
+                        {/* <Item regular style={[inputSize, margin]}> */}
                             <StartTimePicker 
                             showStartTimePicker={this.state.showStartTimePicker} 
                             setStartTimePicker={this.setStartTimePicker}
                             setTaskStartTime={this.setTaskStartTime} 
                             startTime={this.state.startTime} />
+                            {/* </Item> */}
                         <Item regular style={[inputSize, margin]} >
                             <TouchableHighlight
                             onPress={()=>{
