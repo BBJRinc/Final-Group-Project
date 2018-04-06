@@ -16,7 +16,7 @@ import TaskCard from './TaskCard.js';
 --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 
-const DBG = true;
+const DBG = false;
 // const DBG = false;
 
   // DayView segment structure
@@ -134,26 +134,15 @@ export default class DayView extends React.Component {
   setNewTimes(id, newStart, newHeight) {
     let index = this.state.chronoTasks[id].index
     let taskData = this.props.tasksToRender[index];
-    // let updated = false;
-      // Checks if the values fed in exist and if not pulls from state
-    if(isNaN(newStart)) {
-      if(DBG) console.log('newStart:', newStart);
-      
-      newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
-      // noUpdate = true;
-    }
-    if(isNaN(newHeight)) {
-      if(DBG) console.log('newHeight:', newHeight);
-      
-      newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
-      // noUpdate = true;
-    }
 
-    // if(noUpdate) {
-    //   if(DBG) console.log('No update to task times');
-      
-    //   return;
-    // }
+      // Checks if the values fed in exist and if not pulls from state
+    if(typeof(newStart) != 'number') {
+      newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
+    }
+    if(typeof(newHeight) != 'number') {
+      newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
+    }
+    
     
       // Ensures tasks stay within the bounds of the day view
     newStart = Math.max(0, newStart);
