@@ -133,33 +133,13 @@ export default class DayView extends React.Component {
   setNewTimes(id, newStart, newHeight) {
     let index = this.state.chronoTasks[id].index
     let taskData = this.props.tasksToRender[index];
-<<<<<<< HEAD
-    // let noUpdate = false;
-=======
-
->>>>>>> master
       // Checks if the values fed in exist and if not pulls from state
     if(typeof(newStart) != 'number') {
       newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
-<<<<<<< HEAD
-      // noUpdate = true;
-=======
->>>>>>> master
     }
     if(typeof(newHeight) != 'number') {
       newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
-<<<<<<< HEAD
-      // noUpdate = true;
     }
-
-    // if(noUpdate) {
-    //   if(DBG) console.log('No update to task times');
-      
-    //   return;
-    // }
-=======
-    }
->>>>>>> master
     
     
       // Ensures tasks stay within the bounds of the day view

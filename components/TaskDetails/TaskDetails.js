@@ -304,8 +304,7 @@ export default class TaskDetails extends Component {
                             <TaskDatePicker
                                 selectDate={this.selectDate}
                                 duedate={this.state.duedate}
-                                selectedDay={this.state.selectedDay} 
-                                placeholder={'hello'}/>
+                                selectedDay={this.state.selectedDay} />
                                 {/* <TouchableHighlight style={{ alignItems: 'center' }}
                                 onPress={() => {
                                     this.setStartTimePicker(!this.state.showStartTimePicker);

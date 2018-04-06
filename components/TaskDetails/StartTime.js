@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {
-    DatePickerIOS,
+    DatePickerIOS, Platform,
     View,
     StyleSheet,
     Text,
@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
         flex: 1,
         ...Platform.select({
           ios: {
-            backgroundColor: 'Black',
+            // backgroundColor: 'Black',
           },
           android: {
-            backgroundColor: 'Black',
+            // backgroundColor: 'Black',
             color:'black'
           }
         })
