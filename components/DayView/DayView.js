@@ -71,7 +71,7 @@ export default class DayView extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(DBG) console.log('newProps:', newProps);
+    if(DBG) 
     
     this.genChronoList(newProps.tasksToRender);
   }
@@ -341,6 +341,7 @@ export default class DayView extends React.Component {
   }
 
   render() {
+    console.log('tasksToRender', this.props.tasksToRender)
     return (
       <Content style={styles.viewContainer}
         scrollEnabled={this.state.scrollable}

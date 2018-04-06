@@ -10,7 +10,7 @@ create table userinfo(
 create table task(
     taskid serial primary key not null,
     taskname text not null,
-    duedateate bigint,
+    duedate bigint,
     starttime bigint,
     description text,
     completed boolean DEFAULT false,
