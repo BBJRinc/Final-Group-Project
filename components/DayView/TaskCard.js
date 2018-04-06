@@ -23,6 +23,8 @@ const DBG_GHOST = false;
 // const GRABBER_BACKGROUND = 'rgba(0, 255, 0, .3)';
 const GRABBER_BACKGROUND = 'rgba(0, 0, 0, 0)';
 
+const LONG_PRESS_STYLE = 'rgba(255, 255, 255, 0.5)';
+
 /*------------------------------------------------------------------------------
 -----Takes props of:------------------------------------------------------------
 -------title: Text on the card--------------------------------------------------
@@ -44,6 +46,9 @@ class TaskCard extends React.Component {
       ghostStyle: {
         opacity: GHOST_OPACITY,
       },
+      longPressStyle: {
+        backgroundColor: 'rgba(0 ,0, 0, 0)'
+      }
     }
   }
 
@@ -144,7 +149,10 @@ class TaskCard extends React.Component {
           if(DBG) console.timeEnd('long press');
           this.tap = false;
           // this.showGhost();
-          this.setState({unlocked: true})
+          this.setState({
+            unlocked: true,
+            longPressStyle: { backgroundColor: LONG_PRESS_STYLE }
+          })
           this.setZIndex()
           this.props.scrollable(false);
           this.state.pan.setValue({x: this.props.cardLeft, y: this.props.cardTop})
@@ -192,7 +200,10 @@ class TaskCard extends React.Component {
   endMoveGesture() {
     // if(!DBG_GHOST) this.hideGhost();
     this.props.scrollable(true);
-    this.setState({unlocked: false});
+    this.setState({
+      unlocked: false,
+      longPressStyle: { backgroundColor: 'rgba(0, 0, 0, 0)'}
+    });
     if(DBG) console.timeEnd('long press');
     // if(DBG) console.log('this.pressTimer:', this.pressTimer);
     this.clearZIndex()
@@ -328,37 +339,50 @@ class TaskCard extends React.Component {
         ------------------------------------------------------------------------------*/}
         {false? 
           <Container style={{position: 'absolute',
-            top: 5,
-            right: 20,
-            display: 'flex',
-            flex: 0}}>
+              top: 5,
+              right: 20,
+              display: 'flex',
+              flex: 0}}>
             <Text style={styles.debugText}>{this.props.title}</Text>
-            <Text style={styles.debugText}>{this.state.gestureShield ? 'Shields up' : 'Shields down'}</Text>
-            <Text style={styles.debugText}>{this.props.scrollable ? 'Scrollable' : 'Scroll Locked'}</Text>
+            <Text style={styles.debugText}>{this.state.gestureShield ?
+              'Shields up' : 'Shields down'}</Text>
+            <Text style={styles.debugText}>{this.props.scrollable ?
+              'Scrollable' : 'Scroll Locked'}</Text>
             <Text style={styles.debugText}>{this.state.zIndexVal.zIndex}</Text>
           </Container>
           : null
         }
-        <Container pointerEvents='none' style={[styles.card, propStyles]} onLayout={(event) => {this.onLayout(event)}} >
-          <Text>{this.props.title}</Text>
+
+        {/*------------------------------------------------------------------------------
+        -----Original display task card--------------------------------------------------
+        ------------------------------------------------------------------------------*/}
+        <Container pointerEvents='none'
+            style={[styles.card, propStyles]}
+            onLayout={(event) => {this.onLayout(event)}} >
+          <Container style={this.state.longPressStyle}>
+            <Text>{this.props.title}</Text>
+          </Container>
         </Container>
 
-
-        <List style={styles.cardHolder}
-        onPress={() => console.log(this.props.title)}>
+        {/*------------------------------------------------------------------------------
+        -----Ghost display---------------------------------------------------------------
+        ------------------------------------------------------------------------------*/}
+        {/* <List style={styles.cardHolder}
+        onPress={() => console.log(this.props.title)}> */}
           {/* // pointerEvents='none'> */}
-          <Animated.View style={[styles.card,
-              propStyles,
-              // styles.ghost,
-              this.state.ghostStyle,
-              this.state.pan.getLayout(),
-            ]}
-            onPress={() => console.log(this.props.title)}
-            onLayout={(e) => this.ghostLayout(e)}
-            // pointerEvents={this.state.disableGhostPointer}
-            // ref={(ref) => this.ghostRef = ref}
-            ref="ghostRef"
-            >
+          <Animated.View
+              style={[styles.card,
+                propStyles,
+                // styles.ghost,
+                this.state.ghostStyle,
+                this.state.pan.getLayout(),
+              ]}
+              onPress={() => console.log(this.props.title)}
+              onLayout={(e) => this.ghostLayout(e)}
+              // pointerEvents={this.state.disableGhostPointer}
+              // ref={(ref) => this.ghostRef = ref}
+              ref="ghostRef"
+              >
 
             <Text>{this.props.title}</Text>
             {DBG_GHOST? <Text>{this.state.unlocked ? 'Move me!' : 'Stuck'}</Text> : null}
@@ -368,7 +392,7 @@ class TaskCard extends React.Component {
             <Container style={styles.topGrab} {...this.panResponderTop.panHandlers} />
             <Container style={styles.botGrab} {...this.panResponderBot.panHandlers} />
           </Animated.View>
-        </List>
+        {/* </List> */}
         {this.state.gestureShield? <List style={[styles.gestureShield]} /> : null}
 
       </List>
@@ -392,10 +416,10 @@ let styles = StyleSheet.create({
   },
   card: {
     position: 'absolute',
-    borderRadius: BORDER_RADIUS,
-    borderStyle: 'solid',
-    borderWidth: 2,
-    borderColor: gStyle[theme].dark,
+    // borderRadius: BORDER_RADIUS,
+    // borderStyle: 'solid',
+    // borderWidth: 2,
+    // borderColor: gStyle[theme].dark,
     paddingTop: PADDING_VERT,
     paddingBottom: PADDING_VERT,
   },
