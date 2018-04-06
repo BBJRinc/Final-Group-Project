@@ -40,6 +40,20 @@ export default class Ongoing extends Component{
         });
     }
 
+    updateList() {
+        axios({
+            method: 'get',
+            url: `http://${PubIpAddress}:4040/api/inprogress`,
+            headers: {
+                "token": this.props.token
+            }
+        }).then(resp => {
+            // console.log(resp.data)
+            this.setState({ listViewData: resp.data });
+            this.props.setCount(resp.data.length);
+        });
+    }
+
     deleteTask(id){
         axios.delete(`http://${PubIpAddress}:4040/api/inprogress/${id}`).then(resp => {
             this.setState({listViewData: resp.data});
@@ -53,6 +67,7 @@ export default class Ongoing extends Component{
                     animationType="slide"
                     transparent={false}
                     visible={this.props.visible}
+                    onShow={this.updateList()}
                     onRequestClose={() => this.props.showMenuItem('showOngoing')}
                     >
                     <Header style={styles.header}>
