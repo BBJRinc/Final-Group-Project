@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-const PubIpAddress = '192.168.3.176'
+const PubIpAddress = '192.168.2.121'
 
 export default class Unscheduled extends Component {
     constructor(props) {

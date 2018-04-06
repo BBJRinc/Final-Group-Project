@@ -9,6 +9,8 @@ import Checklist from './Checklist';
 import axios from 'axios';
 import moment from 'moment';
 
+import StartTimePicker from './StartTimePicker.js';
+
 import Labels from './Labels';
 import IconE from 'react-native-vector-icons/Entypo';
 import IconI from 'react-native-vector-icons/Ionicons';
@@ -16,7 +18,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
-const PubIpAddress = '192.168.3.176'
+const PubIpAddress = '192.168.2.121'
 
 export default class TaskDetails extends Component {
     constructor(props) {
@@ -284,18 +286,19 @@ export default class TaskDetails extends Component {
                         </Item>
 
                         {/* Start time component-------------------------------------- */}
-                            <StartTime 
+                        <StartTimePicker
+                            startTime={this.state.startTime}
                             showStartTimePicker={this.state.showStartTimePicker} 
                             setStartTimePicker={this.setStartTimePicker}
                             setTaskStartTime={this.setTaskStartTime} />
-                        <Item regular style={{ height: 35 }} >
-                            <TouchableHighlight
+                        {/* <Item regular style={{ height: 35 }} > */}
+                            {/* <TouchableHighlight
                             onPress={()=>{
                                 this.setStartTimePicker();
                             }}>
                                 <Text>{this.state.startTime===null ? 'Start time...' : this.state.startTime}</Text>
-                            </TouchableHighlight>
-                        </Item>
+                            </TouchableHighlight> */}
+                        {/* </Item> */}
                         <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
                             <IconF active name='clock' size={15} />
                             {/* <Input placeholder='Due date...' placeholderTextColor={'black'}/> */}

@@ -18,8 +18,8 @@ import DayView from './components/DayView/DayView.js';
 import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 import AddTask from './components/TaskDetails/AddTask';
 
+const PubIpAddress = '192.168.3.176';
 
-const PubIpAddress = '192.168.3.176'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -32,9 +32,9 @@ export default class App extends React.Component {
       showTaskDetails: false,
       showOngoing: false,
       showAddTask: false,
-      selectedDay: '',
+      selectedDay: 0,
       selectedTask: {},
-      todaysDateInUnix: '',
+      todaysDateInUnix: 0,
       previousDayTasks: [],
       currentTasks: [],
       nextDayTasks: [],
@@ -78,7 +78,7 @@ export default class App extends React.Component {
 
 
     let utcDay = Math.round(new Date().getTime())
-    console.log('inidial date:', utcDay);
+    console.log('initial date:', utcDay);
     let offSet = moment().utcOffset()
     console.log(offSet)
     offSet = (offSet * 1000) * 60;
@@ -255,6 +255,8 @@ export default class App extends React.Component {
   }
 
   setSelectedTask(createdTask) {
+    console.log('createdTask:', createdTask);
+    
     let task = createdTask[0]
     this.setState({ selectedTask: task })
   }

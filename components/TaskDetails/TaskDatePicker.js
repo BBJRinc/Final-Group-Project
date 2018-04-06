@@ -21,7 +21,7 @@ export default class TaskDatePicker extends Component {
     const finalDate = this.props.selectedDay / 1000
     return (
       <DatePicker
-        style={{ width: 125 }}
+        style={{ width: 300 }}
         date={moment().format('MMMM Do YYYY, h:mm:ss a')}
         showIcon={true}
         mode="datetime"

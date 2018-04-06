@@ -344,11 +344,9 @@ export default class DayView extends React.Component {
     return (
       <Content style={styles.viewContainer}
         scrollEnabled={this.state.scrollable}
-        // ref={ref => {this.scrollView = ref}}
+        ref={ref => {this.scrollView = ref}}
         ref='scrollView'
         onLayout={() => this.scrollToTime()}>
-        {/* <Text>{this.state.scrollable ? 'Scrollable' : 'nonscrolling'}</Text> */}
-        {/* <List scrollEnabled={false}> */}
         {this.renderTimeline()}
 
         {/* </List> */}
