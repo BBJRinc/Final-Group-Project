@@ -11,7 +11,7 @@ export default class TaskDatePicker extends Component {
     }
   }
   setDate(date) {
-    console.log(date, "DSAFSDFASDFASDFASDFASDFASD")
+    // console.log(date, "DSAFSDFASDFASDFASDFASDFASD")
     // let unixdate = moment().format('YYYY-MM-DD, h:m')
     // console.log(unixdate)
     this.setState({ duedate: date })

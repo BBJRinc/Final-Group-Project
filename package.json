@@ -13,6 +13,7 @@
     "body-parser": "^1.18.2",
     "dot-env": "0.0.1",
     "dotenv": "^5.0.1",
+    "enzyme": "^3.3.0",
     "express": "^4.16.3",
     "jsonwebtoken": "^8.2.0",
     "massive": "^4.7.1",
@@ -29,14 +30,16 @@
     "react-navigation": "^1.5.8"
   },
   "devDependencies": {
-    "babel-jest": "22.4.3",
+    "babel-jest": "^22.4.3",
     "babel-preset-react-native": "4.0.0",
-    "jest": "22.4.3",
-    "react-test-renderer": "16.3.0-alpha.2"
+    "jest": "^22.4.3",
+    "react-test-renderer": "^16.3.0-alpha.2"
   },
   "jest": {
     "preset": "react-native",
-    "transformIgnorePatterns":["node_modules/(?!react|@native-base|native-base)"]
+    "transformIgnorePatterns": [
+      "node_modules/(?!react|@native-base|native-base)"
+    ]
   },
   "proxy": "http://localhost:4040"
 }

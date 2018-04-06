@@ -9,7 +9,6 @@ export default class LoginScreen extends Component {
         super(props)
     }
     render() {
-        // console.log('Props inc to LoginScreen Comp ',this.props)
         return (
             <ImageBackground source={require(backImage)}
                 style={{

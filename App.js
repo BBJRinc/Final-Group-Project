@@ -19,7 +19,7 @@ import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 import AddTask from './components/TaskDetails/AddTask';
 
 
-const PubIpAddress = '192.168.3.132'
+const PubIpAddress = '192.168.3.176'
 
 export default class App extends React.Component {
   constructor(props) {
@@ -80,6 +80,7 @@ export default class App extends React.Component {
     let utcDay = Math.round(new Date().getTime())
     console.log('inidial date:', utcDay);
     let offSet = moment().utcOffset()
+    console.log(offSet)
     offSet = (offSet * 1000) * 60;
     let locDay = utcDay + offSet;
     // One day in milliseconds
@@ -108,7 +109,6 @@ export default class App extends React.Component {
 
       // Yesterdays Tasks
       let newYesterday = this.state.selectedDay - oneDay;
-      console.log('yesterdaysDateInUnix: ', newYesterday);
       axios({
         method: 'get',
         url: `http://${PubIpAddress}:4040/api/day/${newYesterday}`,
@@ -122,7 +122,6 @@ export default class App extends React.Component {
 
         // Tomorrows Tasks
         let newTomorrow = this.state.selectedDay + oneDay;
-        console.log('tomorrowsDateInUnix: ', newTomorrow);
         axios({
           method: "get",
           url: `http://${PubIpAddress}:4040/api/day/${newTomorrow}`,
@@ -136,11 +135,6 @@ export default class App extends React.Component {
         }).catch(err => console.log(err));
       }).catch(err => console.log(err));
     }).catch(err => console.log(err));
-
-    console.log('user token: ', this.state.userToken);
-    console.log('previousDayTasks: ', this.state.previousDayTasks);
-    console.log('currentTasks: ', this.state.currentTasks);
-    console.log('nextDayTasks: ', this.state.nextDayTasks);
   } // Compondent did mount ends
 
   /// Methods Begin ///
@@ -158,7 +152,6 @@ export default class App extends React.Component {
   }
 
   showMenuItem(name, clearTask) {
-    // console.log(name)
     if (clearTask) {
       this.setState({
         selectedTask: {}
@@ -170,7 +163,6 @@ export default class App extends React.Component {
   getPreviousDay() {
     let oneDay = 86400000;
     let previousDateUnix = this.state.selectedDay - oneDay;
-    console.log('previousDateUnix: ', previousDateUnix)
     this.setState({
       nextDayTasks: this.state.currentTasks,
       currentTasks: this.state.previousDayTasks,
@@ -188,15 +180,11 @@ export default class App extends React.Component {
         selectedDay: previousDateUnix
       })
     }).catch(err => console.log(err));
-    console.log('previousDayTasks: ', this.state.previousDayTasks);
-    console.log('currentTasks: ', this.state.currentTasks);
-    console.log('nextDayTasks: ', this.state.nextDayTasks);
   }
 
   getNextDay() {
     let oneDay = 86400000;
     let nextDateUnix = this.state.selectedDay + oneDay;
-    console.log('nextDateUnix: ', nextDateUnix)
     this.setState({
       previousDayTasks: this.state.currentTasks,
       currentTasks: this.state.nextDayTasks,
@@ -214,9 +202,6 @@ export default class App extends React.Component {
         selectedDay: nextDateUnix
       })
     }).catch(err => console.log(err));
-    console.log('previousDayTasks: ', this.state.previousDayTasks);
-    console.log('currentTasks: ', this.state.currentTasks);
-    console.log('nextDayTasks: ', this.state.nextDayTasks);
   }
 
   onDayPress(day) {
@@ -259,17 +244,18 @@ export default class App extends React.Component {
   onLogout() {
     AsyncStorage.removeItem('token', (err) => {
       if (err) {
-        // console.log('Error deleting token: ' + err);
+        console.log('Error deleting token: ' + err);
       }
       this.setState({ userToken: null, hasToken: false });
     });
   }
+
   selectedTaskUpdate() {
     this.setState({ selectedTask: {} })
   }
+
   setSelectedTask(createdTask) {
     let task = createdTask[0]
-    // console.log(task)
     this.setState({ selectedTask: task })
   }
 

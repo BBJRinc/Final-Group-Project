@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View>
+  <View
+    style={
+      Array [
+        Object {
+          "backgroundColor": "#F8F8F8",
+          "borderBottomColor": "#a7a6ab",
+          "borderBottomWidth": 0.5,
+          "elevation": 3,
+          "flexDirection": "row",
+          "height": 64,
+          "justifyContent": "center",
+          "left": 0,
+          "paddingLeft": 10,
+          "paddingRight": 10,
+          "paddingTop": 15,
+          "right": 0,
+          "shadowColor": undefined,
+          "shadowOffset": undefined,
+          "shadowOpacity": undefined,
+          "shadowRadius": undefined,
+          "top": 0,
+        },
+        Object {
+          "backgroundColor": "rgba(0, 0, 0, .85)",
+          "height": 35,
+          "justifyContent": "center",
+        },
+      ]
+    }
+    virtual={undefined}
+  >
+    <View
+      Icon={true}
+      style={
+        Array [
+          Object {
+            "alignItems": "flex-start",
+            "alignSelf": "center",
+            "flex": 1,
+          },
+          Object {
+            "flex": 1,
+            "paddingRight": 0,
+          },
+        ]
+      }
+      virtual={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={false}
+        ellipsizeMode="tail"
+        onPress={[Function]}
+        style={
+          Array [
+            Object {
+              "color": "#ffffff",
+              "fontSize": 28,
+            },
+            undefined,
+            Object {
+              "fontFamily": "Feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+    <View
+      style={
+        Array [
+          Object {
+            "alignItems": "center",
+            "alignSelf": "center",
+            "flex": 1,
+          },
+          Object {
+            "flex": 1,
+          },
+        ]
+      }
+      virtual={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Array [
+            Object {
+              "color": "#000",
+              "fontFamily": "System",
+              "fontSize": 16,
+            },
+            Object {
+              "color": "#ffffff",
+              "fontSize": 20,
+              "fontWeight": "bold",
+            },
+          ]
+        }
+        uppercase={false}
+        virtual={undefined}
+      >
+        
+      </Text>
+    </View>
+    <View
+      Icon={true}
+      style={
+        Array [
+          Object {
+            "alignItems": "flex-end",
+            "alignSelf": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "flex-end",
+          },
+          Object {
+            "flex": 1,
+            "paddingLeft": 0,
+          },
+        ]
+      }
+      virtual={undefined}
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={false}
+        ellipsizeMode="tail"
+        onPress={[Function]}
+        style={
+          Array [
+            Object {
+              "color": "#ffffff",
+              "fontSize": 28,
+            },
+            undefined,
+            Object {
+              "fontFamily": "Feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+</View>
+`;
