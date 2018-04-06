@@ -53,6 +53,14 @@ export default class StartTime extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-    },
+        ...Platform.select({
+          ios: {
+            backgroundColor: 'Black',
+          },
+          android: {
+            backgroundColor: 'Black',
+            color:'black'
+          }
+        })
+    }
 })
