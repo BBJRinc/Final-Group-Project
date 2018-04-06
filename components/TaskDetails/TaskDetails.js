@@ -3,7 +3,7 @@ import { Modal, TouchableHighlight } from 'react-native';
 import { Container, Header, CheckBox, Left, Body, Right, Button, Title, Text, Input, Item, Content, Form, Footer, View, SwipeRow } from 'native-base';
 import TaskDatePicker from './TaskDatePicker.js';
 import DurationPicker from './DurationPicker';
-import StartTime from './StartTime';
+import StartTimePicker from './StartTime';
 import Activity from './Activity';
 import Checklist from './Checklist';
 import axios from 'axios';
@@ -283,19 +283,20 @@ export default class TaskDetails extends Component {
                         </Item>
 
                         {/* Start time component-------------------------------------- */}
-                            <StartTime 
+                            <StartTimePicker 
                             showStartTimePicker={this.state.showStartTimePicker} 
                             setStartTimePicker={this.setStartTimePicker}
-                            setTaskStartTime={this.setTaskStartTime} />
+                            setTaskStartTime={this.setTaskStartTime} 
+                            startTime={this.state.startTime} />
                         <Item regular style={[inputSize, margin]} >
                             <TouchableHighlight
                             onPress={()=>{
                                 this.setStartTimePicker();
                             }}>
-                                <Text>{this.state.startTime===null ? 'Start time...' : moment(this.state.startTime).format('MM-DD-YYYY hh:mm')}</Text>
+                                <Text>{this.state.startTime===null ? 'Start time...' : moment(this.state.startTime)}</Text>
                             </TouchableHighlight>
                         </Item>
-                        <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
+                        <Item style={[inputSize, margin]}>
                             <IconF active name='clock' size={15} />
                             {/* <Input placeholder='Due date...' placeholderTextColor={'black'}/> */}
 

@@ -3,7 +3,7 @@ import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
 // import Icon from 'react-native-vector-icons';
 
-export default class TaskDatePicker extends Component {
+export default class StartTimePicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -11,20 +11,21 @@ export default class TaskDatePicker extends Component {
     }
   }
   setDate(date) {
+      console.log(date,'THis is the dated;lkjsd;lfkjas;dlfkja;sdlkfj')
     // console.log(date, "DSAFSDFASDFASDFASDFASDFASD")
     // let unixdate = moment().format('YYYY-MM-DD, h:m')
     // console.log(unixdate)
-    this.setState({ duedate: date })
+    // this.setState({ duedate: date })
   }
   render() {
     console.log(this.state)
-    const finalDate = this.props.duedate / 1000
+    const finalDate = this.props.startTime / 1000
     return (
       <DatePicker
         style={{ width: 125 }}
-        date={this.state.duedate}
+        date={this.state.date}
         showIcon={true}
-        mode="datetime"
+        mode="time"
         format='MMMM Do YYYY, h:mm:ss a'
         confirmBtnText='Save'
         cancelBtnText='Cancel'
@@ -34,7 +35,7 @@ export default class TaskDatePicker extends Component {
           btnConfirm: { height: 20, margin: 0, marginRight: 10, marginTop: 10, padding: 0 },
           btnCancel: { height: 20, margin: 0, marginLeft: 10, marginTop: 10, padding: 0 },
         }}
-        onDateChange={(date) => { this.setState({ date: date }); this.props.selectDate(); }}
+        onDateChange={(date) => { this.setState({ date: date });  this.props.selectDate()}}
       />
     )
   }
