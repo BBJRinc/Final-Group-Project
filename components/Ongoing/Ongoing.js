@@ -4,11 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-<<<<<<< HEAD
 const PubIpAddress = '192.168.3.176'
-=======
-const PubIpAddress = '192.168.3.132';
->>>>>>> master
 
 const datas = [
     {name: 'Simon Mignolet', age: 31},
@@ -54,7 +50,6 @@ export default class Ongoing extends Component{
         }).then(resp => {
             // console.log(resp.data)
             this.setState({ listViewData: resp.data });
-            this.props.setCount(resp.data.length);
         });
     }
 
