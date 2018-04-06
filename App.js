@@ -77,22 +77,25 @@ export default class App extends React.Component {
     }
 
 
-    let newToday = Math.round(new Date().getTime())
+    let utcDay = Math.round(new Date().getTime())
     let offSet = moment().utcOffset()
     offSet = (offSet * 1000) * 60;
-    newToday += offSet;
+    let locDay = utcDay + offSet;
     // One day in milliseconds
     let oneDay = 86400000;
+    utcDay = utcDay % oneDay;
+    locDay = locDay % oneDay;
     // Todays Tasks
-    let todayConv = moment(newToday).format("YYYY-MM-DD")
-    let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
+    // let todayConv = moment(newToday).format("YYYY-MM-DD")
+    // let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
     console.log('todayUnix: ', todayUnix);
     this.setState({
-      selectedDay: todayUnix
+      selectedDay: todayUnix,
+      utcDay,
     })
     axios({
       method: 'get',
-      url: `http://${PubIpAddress}:4040/api/day/${todayUnix}`,
+      url: `http://${PubIpAddress}:4040/api/day/${locDay}`,
       headers: {
         "token": this.state.userToken
       }
