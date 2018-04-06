@@ -16,7 +16,7 @@ import TaskCard from './TaskCard.js';
 --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 
-const DBG = true;
+const DBG = false;
 // const DBG = false;
 
   // DayView segment structure
@@ -48,7 +48,6 @@ const BADGE_SPACE = BADGE_MARGIN_LEFT + BADGE_MARGIN_RIGHT + BADGE_WIDTH;
 const CARD_NONOVERLAP = 30; 
 
 
-
 export default class DayView extends React.Component {
   constructor(props) {
     super(props);
@@ -59,7 +58,6 @@ export default class DayView extends React.Component {
     }
     
     this.setScrollable = this.setScrollable.bind(this);
-    this.scrollView = null;
     
     if(DBG) console.log('constructor props:', props);
     
@@ -68,22 +66,25 @@ export default class DayView extends React.Component {
   componentDidMount() {
       // Fill state with local info
     this.genChronoList()
+    console.log('this.scrollView:', this.scrollView.props);
+    console.log('Test:');
+    
+    
+    // this.scrollView.props.scrollToPosition(200);
   }
 
-  componentWillReceiveProps(newProps) {
-    if(DBG) 
-    
+  componentWillReceiveProps(newProps) {    
     this.genChronoList(newProps.tasksToRender);
   }
 
   genChronoList(props = this.props.tasksToRender) {
     let chronoList = {};
     if(DBG) console.log('props:', props);
-        
+    let offset = new Date().getTimezoneOffset()*60*1000;
     props.forEach((task, index) => {
       let startBlock = 0
-      if(task.starttime > DAYS) {
-        startBlock = this.trimDay(task.starttime);
+      if(task.starttime > this.props.day) {
+        startBlock = this.trimDay(task.starttime - offset);
         startBlock = this.toBlock(startBlock);
       } else {
         startBlock = this.toBlock(task.starttime);
@@ -92,7 +93,7 @@ export default class DayView extends React.Component {
       if (startBlock > SEGMENTS_TO_RENDER) {
         console.log(`Something went wrong! Day overflowed with startBlock #${startBlock} for task: ${task}`);
       }
-      let blockDuration = this.toBlock(task.duration);
+      let blockDuration = this.toBlock(task.duration) || 1;
 
       chronoList[task.taskid] = {
         index,
@@ -133,7 +134,8 @@ export default class DayView extends React.Component {
   setNewTimes(id, newStart, newHeight) {
     let index = this.state.chronoTasks[id].index
     let taskData = this.props.tasksToRender[index];
-
+    console.log('id, newStart, newHeight:', id, newStart, newHeight);
+    
       // Checks if the values fed in exist and if not pulls from state
     if(typeof(newStart) != 'number') {
       newStart = this.state.chronoTasks[id].startBlock*SEGMENT_HEIGHT;
@@ -141,6 +143,7 @@ export default class DayView extends React.Component {
     if(typeof(newHeight) != 'number') {
       newHeight = this.state.chronoTasks[id].blockDuration*SEGMENT_HEIGHT;
     }
+    console.log('id, newStart, newHeight:', id, newStart, newHeight);
     
     
       // Ensures tasks stay within the bounds of the day view
@@ -160,9 +163,10 @@ export default class DayView extends React.Component {
     }
     let newList = {...this.state.chronoTasks};
     newList[id] = newTask;
-
-    this.setState({chronoTasks: newList})
     if(DBG) console.log('this.state.chronoTasks:', this.state.chronoTasks);
+    if(DBG) console.log('newList:', newList);
+    
+    this.setState({chronoTasks: newList})
     
       // Converts from block height to time
     let newStartTime = this.blockToTime(startBlock);
@@ -323,16 +327,17 @@ export default class DayView extends React.Component {
   }
 
   scrollToTime() {
-    let time = new Date().getTime();
+    let time = new Date();
+    let offset = time.getTimezoneOffset() * 60 * 1000;
+    if(DBG) console.log('offset:', offset);
     
-    time = this.trimDay(time);
+    time = this.trimDay(time.getTime()) - offset;
     if (DBG) console.log('new Date(time):', new Date(time));
     
     if (DBG) console.log('time:', time);
     
     time = this.toBlock(time);
     if (DBG) console.log('time:', time);
-    
     
   }
 
@@ -342,14 +347,14 @@ export default class DayView extends React.Component {
 
   render() {
     console.log('tasksToRender', this.props.tasksToRender)
+
     return (
       <Content style={styles.viewContainer}
         scrollEnabled={this.state.scrollable}
-        // ref={ref => {this.scrollView = ref}}
-        ref='scrollView'
+        ref={ref => this.scrollView = ref}
+        // ref='scrollView'
         onLayout={() => this.scrollToTime()}>
-        {/* <Text>{this.state.scrollable ? 'Scrollable' : 'nonscrolling'}</Text> */}
-        {/* <List scrollEnabled={false}> */}
+        {false ? <Text>{this.props.day}</Text> : null }
         {this.renderTimeline()}
 
         {/* </List> */}

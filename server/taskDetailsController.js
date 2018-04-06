@@ -1,4 +1,5 @@
 const moment = require('moment');
+const DAY = 24*60*60*1000;
 
 module.exports={
     addCheckItem: function(req, res){
@@ -119,19 +120,12 @@ module.exports={
         console.log('task:', task);
         
         req.app.get('db').setStartTime(task).then(() => {
-            let newToday = Math.round(new Date().getTime())
-            let offSet = moment().utcOffset()
-            offSet = (offSet * 1000) * 60;
-            newToday += offSet;
-            // One day in milliseconds
-            let oneDay = 86400000;
+            
             // Todays Tasks
-            let todayConv = moment(newToday).format("YYYY-MM-DD");
-            let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf();
-            let endOfDay = todayUnix + oneDay;
-            console.log("start of day " + todayUnix + "End of Day " + endOfDay )
+            let endOfDay = req.body.day + DAY;
+            console.log("start of day " + req.body.day + "End of Day " + endOfDay )
             let day = [
-                todayUnix,
+                req.body.day,
                 endOfDay,
                 req.userid
             ]

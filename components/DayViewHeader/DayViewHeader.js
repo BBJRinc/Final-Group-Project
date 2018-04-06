@@ -3,7 +3,6 @@ import { View, StyleSheet } from "react-native";
 import { Container, Icon, Header, Left, Right, Body, Title, Text } from 'native-base';
 import IconF from 'react-native-vector-icons/Feather';
 import IconEV from 'react-native-vector-icons/EvilIcons';
-import axios from 'axios';
 import moment from 'moment';
 
 export default class DayViewHeader extends Component {

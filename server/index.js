@@ -2,6 +2,7 @@ const express = require('express')
     , massive = require('massive')
     , bodyParser = require('body-parser')
     , jwt = require('jsonwebtoken')
+    , morgan = require('morgan')
     , app = express()
     , tdCtrl = require('./taskDetailsController')
     , userCtrl = require('./userController')
@@ -26,6 +27,7 @@ const unless = function(path, middleware){
 //invoking unless filter then verifyToken middleware, excludes the auth route as a user will not yet have a token to verify
 app.use(unless('/api/auth', tokenAuth.verifyToken));
 
+app.use(morgan('combined'));
 
 massive(CONNECTION_STRING).then(indb => {
     console.log('DB connected')

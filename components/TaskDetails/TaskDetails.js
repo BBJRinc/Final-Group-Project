@@ -7,7 +7,9 @@ import StartTime from './StartTime';
 import Activity from './Activity';
 import Checklist from './Checklist';
 import axios from 'axios';
-import moment from 'moment';
+import moment, { min } from 'moment';
+
+import StartTimePicker from './StartTimePicker.js';
 
 import Labels from './Labels';
 import IconE from 'react-native-vector-icons/Entypo';
@@ -16,7 +18,7 @@ import IconF from 'react-native-vector-icons/Feather';
 import IconFA from 'react-native-vector-icons/FontAwesome';
 import IconSLI from 'react-native-vector-icons/SimpleLineIcons';
 
-const PubIpAddress = '192.168.3.176'
+const PubIpAddress = '192.168.2.121'
 
 export default class TaskDetails extends Component {
     constructor(props) {
@@ -136,6 +138,7 @@ export default class TaskDetails extends Component {
             }
 
         }).then(() => {
+            this.props.forceFetch();
             this.props.selectedTaskUpdate();
         })
     }
@@ -155,9 +158,12 @@ export default class TaskDetails extends Component {
         })
     }
     selectDate(date) {
-        console.log(date)
+        // console.log(date)
         let newDate = moment(date, 'MMMM Do YYYY, h:mm:ss a').valueOf();
-        let finalDate = newDate / 1000
+        newDate = Math.floor(newDate/1000)*1000;
+        // console.log('newDate:', newDate);
+        
+        // let finalDate = newDate / 1000
         this.setState({
             date: date
         })
@@ -177,6 +183,8 @@ export default class TaskDetails extends Component {
         const { minutes, hours } = state
         let minuteMilliseconds = minutes * 1 * (1000 * 60 * 100)
         let hourMilliseconds = hours * 1 * (60 * 60 * 1000)
+        let total = minuteMilliseconds + hourMilliseconds;
+        total = Math.max(total, 15*60*1000)
         this.setState({
             milliseconds: minuteMilliseconds + hourMilliseconds
         });
@@ -200,14 +208,15 @@ export default class TaskDetails extends Component {
         this.setState({ showStartTimePicker: !this.state.showStartTimePicker })
     }
     setTaskStartTime(date){
-        console.log(date.chosenDate)
-        var ts = moment(date, "M/D/YYYY H:mm").unix();
-        var m = moment.unix(ts);
-        console.log(ts*1000)
+        // console.log('setTaskStartTime:', date)
+        var ts = moment(date, "H:mm").unix();
+        // console.log('ts:', ts);
+        // var m = moment.unix(ts);
+        console.log('setTaskStartTime:', ts*1000)
         this.setState({startTime:ts*1000})
     }
     render() {
-        console.log(this.state)
+        // console.log(this.state)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
                 <Modal
@@ -284,18 +293,19 @@ export default class TaskDetails extends Component {
                         </Item>
 
                         {/* Start time component-------------------------------------- */}
-                            <StartTime 
+                        <StartTimePicker
+                            startTime={this.state.startTime}
                             showStartTimePicker={this.state.showStartTimePicker} 
                             setStartTimePicker={this.setStartTimePicker}
                             setTaskStartTime={this.setTaskStartTime} />
-                        <Item regular style={{ height: 35 }} >
-                            <TouchableHighlight
+                        {/* <Item regular style={{ height: 35 }} > */}
+                            {/* <TouchableHighlight
                             onPress={()=>{
                                 this.setStartTimePicker();
                             }}>
                                 <Text>{this.state.startTime===null ? 'Start time...' : this.state.startTime}</Text>
-                            </TouchableHighlight>
-                        </Item>
+                            </TouchableHighlight> */}
+                        {/* </Item> */}
                         <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
                             <IconF active name='clock' size={15} />
                             {/* <Input placeholder='Due date...' placeholderTextColor={'black'}/> */}

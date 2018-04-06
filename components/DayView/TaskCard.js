@@ -10,7 +10,7 @@ let testTheme = global.theme
 
 // 
 const GHOST_OPACITY = 0.4;
-const BORDER_RADIUS = 5;
+const BORDER_RADIUS = 2;
 const PADDING_VERT = 5;
 const PADDING_LEFT = 10;
 const GRABBER_HEIGHT = 10;
@@ -277,8 +277,6 @@ class TaskCard extends React.Component {
 
   componentWillReceiveProps(newProps) {
     // if(DBG) console.log('newProps:', newProps);
-    if(DBG) 
-    
     
     if(newProps.cardTop != this.state.ghostStyle.top) {
       this.state.pan.setValue({
@@ -312,8 +310,6 @@ class TaskCard extends React.Component {
     
     if(DBG) console.log('this.ghostTop+e.nativeEvent.layout.height:', this.ghostTop+e.nativeEvent.layout.height);
     
-    
-    
   }
 
   render() {
@@ -327,6 +323,8 @@ class TaskCard extends React.Component {
     let color = {
       backgroundColor: this.props.color,
     }
+    
+    if(DBG) console.log('task card this.props:', this.props);
     
     
     return(
@@ -360,16 +358,16 @@ class TaskCard extends React.Component {
         <Container pointerEvents='none'
             style={[styles.card, propStyles]}
             onLayout={(event) => {this.onLayout(event)}} >
-          <Container style={this.state.longPressStyle}>
-            <Text>{this.props.title}</Text>
-          </Container>
+          <Container style={[this.state.longPressStyle, {...StyleSheet.absoluteFillObject}]} />
+          <Text>{this.props.title}</Text>
+          {/* <Text>{this.state.longPressStyle.backgroundColor}</Text> */}
         </Container>
 
         {/*------------------------------------------------------------------------------
         -----Ghost display---------------------------------------------------------------
         ------------------------------------------------------------------------------*/}
-        {/* <List style={styles.cardHolder}
-        onPress={() => console.log(this.props.title)}> */}
+        <List style={styles.cardHolder}
+        onPress={() => console.log(this.props.title)}>
           {/* // pointerEvents='none'> */}
           <Animated.View
               style={[styles.card,
@@ -387,13 +385,13 @@ class TaskCard extends React.Component {
 
             <Text>{this.props.title}</Text>
             {DBG_GHOST? <Text>{this.state.unlocked ? 'Move me!' : 'Stuck'}</Text> : null}
-
+            {/* <Text>{propStyles.top}</Text> */}
             
             <Container style={styles.cardGrab} {...this.panResponderMid.panHandlers} />
             <Container style={styles.topGrab} {...this.panResponderTop.panHandlers} />
             <Container style={styles.botGrab} {...this.panResponderBot.panHandlers} />
           </Animated.View>
-        {/* </List> */}
+        </List>
         {this.state.gestureShield? <List style={[styles.gestureShield]} /> : null}
 
       </List>
@@ -417,10 +415,11 @@ let styles = StyleSheet.create({
   },
   card: {
     position: 'absolute',
-    // borderRadius: BORDER_RADIUS,
+    borderRadius: BORDER_RADIUS,
     // borderStyle: 'solid',
     // borderWidth: 2,
     // borderColor: gStyle[theme].dark,
+    paddingLeft: PADDING_LEFT,
     paddingTop: PADDING_VERT,
     paddingBottom: PADDING_VERT,
   },

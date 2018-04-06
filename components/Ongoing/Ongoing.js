@@ -4,7 +4,7 @@ import { Container, Header, Content, Button, Icon, List, ListItem, Text, Left, R
 import FooterMenu from '../Footer/FooterMenu';
 import axios from 'axios';
 
-const PubIpAddress = '192.168.3.176'
+const PubIpAddress = '192.168.2.121'
 
 const datas = [
     {name: 'Simon Mignolet', age: 31},
@@ -66,7 +66,7 @@ export default class Ongoing extends Component{
                     animationType="slide"
                     transparent={false}
                     visible={this.props.visible}
-                    onShow={this.updateList()}
+                    onShow={() => this.updateList}
                     onRequestClose={() => this.props.showMenuItem('showOngoing')}
                     >
                     <Header style={styles.header}>
