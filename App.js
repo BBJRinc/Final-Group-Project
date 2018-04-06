@@ -76,26 +76,31 @@ export default class App extends React.Component {
       })
     }
 
-
+    console.log('New Date: ', new Date())
     let utcDay = Math.round(new Date().getTime())
     console.log('inidial date:', utcDay);
     let offSet = moment().utcOffset()
     console.log(offSet)
     offSet = (offSet * 1000) * 60;
+    console.log('OFFSET: ', offSet)
     let locDay = utcDay + offSet;
     // One day in milliseconds
     let oneDay = 86400000;
-    utcDay = Math.floor(utcDay/oneDay)*oneDay;
-    locDay = Math.floor(locDay/oneDay)*oneDay;
-    console.log('utcDay:', utcDay);
-    console.log('locDay: ', locDay);
+    locDay += oneDay;
+    // utcDay = Math.floor(utcDay/oneDay)*oneDay;
+    // locDay = Math.floor(locDay/oneDay)*oneDay;
+    let todayConv = moment(utcDay).format("YYYY-MM-DD")
+    let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
+    console.log('todayUnix:', todayUnix);
+    console.log('LOCDAY: ', locDay);
     // Todays Tasks
     // let todayConv = moment(newToday).format("YYYY-MM-DD")
     // let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
     this.setState({
-      selectedDay: locDay,
+      selectedDay: todayUnix,
       utcDay,
     })
+    console.log('SELECTEDDAY: ', this.state.selectedDay)
     axios({
       method: 'get',
       url: `http://${PubIpAddress}:4040/api/day/${locDay}`,
@@ -219,12 +224,12 @@ export default class App extends React.Component {
     this.showMenuItem(listName);
   }
 
-  changeTimes(taskid, start, duration){
+  changeTimes(taskid, start, duration) {
     console.log('~~~~~~~~~~~~~changeTimes taskid:', taskid);
     console.log('start:', start);
     console.log('duration:', duration);
-    
-    
+
+
     axios({
       method: 'put',
       url: `http://${PubIpAddress}:4040/api/starttime/${taskid}`,
@@ -237,7 +242,7 @@ export default class App extends React.Component {
       }
     }).then(resp => {
       console.log('changeTimes response:', resp)
-      this.setState({currentTasks: resp.data});
+      this.setState({ currentTasks: resp.data });
     });
   };
 
@@ -290,12 +295,12 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             {/* <Content> */}
-              <DayView tasksToRender={this.state.currentTasks} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} utcDay={this.state.utcDay} />
-              <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
-              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay}/>
-              <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
-              <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
-              <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
+            <DayView tasksToRender={dummyData} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} utcDay={this.state.utcDay} />
+            <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
+            <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay} />
+            <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
+            <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
+            <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
             {/* </Content> */}
             <FooterMenu logout={this.onLogout} showMenuItem={this.showMenuItem} openDrawer={this.openDrawer} unschedCount={this.state.unscheduledCount} />
           </Container>
