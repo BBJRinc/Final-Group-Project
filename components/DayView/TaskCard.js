@@ -277,7 +277,8 @@ class TaskCard extends React.Component {
 
   componentWillReceiveProps(newProps) {
     // if(DBG) console.log('newProps:', newProps);
-    if(DBG) console.log('Props recieved');
+    if(DBG) 
+    
     
     if(newProps.cardTop != this.state.ghostStyle.top) {
       this.state.pan.setValue({

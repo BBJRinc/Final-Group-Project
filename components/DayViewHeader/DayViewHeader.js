@@ -7,23 +7,13 @@ import axios from 'axios';
 import moment from 'moment';
 
 export default class DayViewHeader extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            dateToDisplay: ''
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let date = moment(nextProps.selectedDay).format("ll")
-        this.setState({
-            dateToDisplay: date
-        })
-    }
 
     render() {
-        // console.log('day header props', this.props)
+        console.log('this.props.selectedDay: ', this.props.selectedDay)
+        let date = moment(this.props.selectedDay).format("ll")
+        // let newDate = new Date().toDateString()
+        //  moment(this.props.selectedDay).format("ll")
+        // console.log('day header date', newDate)
         const { nextDay, previousDay } = this.props
         return (
                 <Header style={styles.header}>
@@ -36,7 +26,7 @@ export default class DayViewHeader extends Component {
                     </Left>
                     <Body style={styles.body}>
                         <Text style={styles.text}>
-                            {this.state.dateToDisplay}
+                            {date}
                         </Text>
                     </Body>
 
