@@ -1,29 +1,29 @@
-create table userInfo(
-    userId serial primary key not null,
-    givenName varchar(60),
-    familyName varchar(60),
-    createdAt timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+create table userinfo(
+    userid serial primary key not null,
+    givenname varchar(60),
+    familyname varchar(60),
+    createdat timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     email text,
     auth_id text
 );
 
 create table task(
-    taskId serial primary key not null,
-    taskName text not null,
-    dueDate integer,
-    startTime integer,
+    taskid serial primary key not null,
+    taskname text not null,
+    duedateate bigint,
+    starttime bigint,
     description text,
     completed boolean DEFAULT false,
-    createdAt timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updateAt integer,
+    createdat timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updateat integer,
     duration integer,
-    color text DEFAULT '#ffffff',
-    isRecurring boolean DEFAULT false,
-    userId integer references userInfo(userId)
+    color text DEFAULT '#838c91',
+    isrecurring boolean DEFAULT false,
+    userid integer references userinfo(userid)
 );
 
 create table days(
-    recurringDaysId serial primary key not null,
+    recurringdaysid serial primary key not null,
     sun boolean DEFAULT false,
     mon boolean DEFAULT false,
     tue boolean DEFAULT false,
@@ -31,23 +31,23 @@ create table days(
     thu boolean DEFAULT false,
     fri boolean DEFAULT false,
     sat boolean DEFAULT false,
-    taskId integer references task(taskId)
+    taskid integer references task(taskid)
 );
 
-create table checklistItem(
-    checklistItemId serial primary key not null,
+create table checklistitem(
+    checklistitemid serial primary key not null,
     content text,
-    createdAt timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updatedAt integer,
-    taskId integer references task(taskId),
+    createdat timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updatedat bigint,
+    taskid integer references task(taskid),
     completed boolean DEFAULT false
 );
 
 create table comments(
-    commentId serial primary key not null,
+    commentid serial primary key not null,
     content text,
-    createdAt timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updatedAt integer,
-    taskId integer references task(taskId),
-    userId integer references userInfo(userId)
+    createdat timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updatedat bigint,
+    taskid integer references task(taskid),
+    userid integer references userinfo(userid)
 );
