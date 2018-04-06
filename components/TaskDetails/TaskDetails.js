@@ -3,6 +3,7 @@ import { Modal, TouchableHighlight } from 'react-native';
 import { Container, Header, CheckBox, Left, Body, Right, Button, Title, Text, Input, Item, Content, Form, Footer, View, SwipeRow } from 'native-base';
 import TaskDatePicker from './TaskDatePicker.js';
 import DurationPicker from './DurationPicker';
+import StartTime from './StartTime';
 import Activity from './Activity';
 import Checklist from './Checklist';
 import axios from 'axios';
@@ -32,19 +33,21 @@ export default class TaskDetails extends Component {
             activity: [],
             taskname: '',
             color: '#838C91',
-            user: '',
+            user: 'Brandon Allred',
             comment: '',
             comments: [],
             hours: '00',
             minutes: '00',
             milliseconds: 0,
+            selectedDay:null,
             completed: false,
             durationModalVisable: false,
             showChecklist: false,
             LabelModalVisable: false,
             startTime: null,
             editTitle: false,
-            date: null
+            date: null,
+            showStartTimePicker: false
             // members: [],
             // newChecklistItem: '',
             // modalVisable:false,
@@ -55,21 +58,22 @@ export default class TaskDetails extends Component {
         this.cancelDuration = this.cancelDuration.bind(this)
         this.setModalVisible = this.setModalVisible.bind(this)
         this.updateChecklist = this.updateChecklist.bind(this)
+        this.setStartTimePicker = this.setStartTimePicker.bind(this)
+        this.setTaskStartTime = this.setTaskStartTime.bind(this)
     }
     componentWillReceiveProps(nextProps) {
-        // console.log("The Selected Task Is: " + nextProps.selectedTask)
         if (nextProps.selectedTask.taskid) {
             const {
             taskid, taskname, updatedat,
                 userid, starttime, isrecurring, duration,
                 duedate, description, createdat, completed,
-                comments, color, checkitems, token } = nextProps.selectedTask
+                comments, color, checkitems, token, selectedDay } = nextProps.selectedTask
 
             this.setState({
                 userID: userid || '',
                 userToken: this.props.token,
                 taskid: taskid,
-                taskname: taskname ,
+                taskname: taskname,
                 createdDate: createdat,
                 description: description || '',
                 duedate: duedate || null,
@@ -80,7 +84,8 @@ export default class TaskDetails extends Component {
                 comments: comments || [],
                 milliseconds: duration || 0,
                 completed: completed || false,
-                startTime: starttime || null
+                startTime: starttime || null,
+                selectedDay:this.props.selectedDay
             });
         } else {
             this.setState({
@@ -122,20 +127,18 @@ export default class TaskDetails extends Component {
             data: {
                 taskname: this.state.taskname,
                 duedate: this.state.duedate,
-                starttime: this.state.starttime,
+                starttime: this.state.startTime,
                 description: this.state.description,
                 completed: this.state.completed,
                 color: this.state.color,
                 isrecurring: this.state.isrecurring,
                 duration: this.state.milliseconds
             }
+
         }).then(() => {
             this.props.selectedTaskUpdate();
         })
     }
-
-
-
     editDescription(value) {
         this.setState({ description: value })
     }
@@ -152,10 +155,11 @@ export default class TaskDetails extends Component {
         })
     }
     selectDate(date) {
-        let newDate = moment(date, "YYYY-MM-DD").valueOf()
+        console.log(date)
+        let newDate = moment(date, 'MMMM Do YYYY, h:mm:ss a').valueOf();
         let finalDate = newDate / 1000
         this.setState({
-            date: finalDate
+            date: date
         })
     }
 
@@ -192,7 +196,18 @@ export default class TaskDetails extends Component {
     editTitle() {
         this.setState({ editTitle: !this.state.editting })
     }
+    setStartTimePicker() {
+        this.setState({ showStartTimePicker: !this.state.showStartTimePicker })
+    }
+    setTaskStartTime(date){
+        console.log(date.chosenDate)
+        var ts = moment(date, "M/D/YYYY H:mm").unix();
+        var m = moment.unix(ts);
+        console.log(ts*1000)
+        this.setState({startTime:ts*1000})
+    }
     render() {
+        console.log(this.state)
         const { inlineLabelStyle, padding, margin, separate, inputSize, header, inputColor, inputRight, inputBox_1, header_top, header_bottom, createChecklist, Label, addItemMargin, userInitialStyle, activityContent, iconSize, commentStyle, labelStyle } = styles
         return (
                 <Modal
@@ -267,6 +282,20 @@ export default class TaskDetails extends Component {
                         <Item regular style={inputBox_1} >
                             <Input placeholder='Tap to add a description' onChangeText={(description) => this.setState({ description })} value={this.state.description} />
                         </Item>
+
+                        {/* Start time component-------------------------------------- */}
+                            <StartTime 
+                            showStartTimePicker={this.state.showStartTimePicker} 
+                            setStartTimePicker={this.setStartTimePicker}
+                            setTaskStartTime={this.setTaskStartTime} />
+                        <Item regular style={{ height: 35 }} >
+                            <TouchableHighlight
+                            onPress={()=>{
+                                this.setStartTimePicker();
+                            }}>
+                                <Text>{this.state.startTime===null ? 'Start time...' : this.state.startTime}</Text>
+                            </TouchableHighlight>
+                        </Item>
                         <Item style={[inputSize, margin, { justifyContent: 'space-between' }]}>
                             <IconF active name='clock' size={15} />
                             {/* <Input placeholder='Due date...' placeholderTextColor={'black'}/> */}
@@ -275,7 +304,18 @@ export default class TaskDetails extends Component {
 
                             <TaskDatePicker
                                 selectDate={this.selectDate}
-                                date={this.state.date} />
+                                duedate={this.state.duedate}
+                                selectedDay={this.state.selectedDay} 
+                                placeholder={'hello'}/>
+                                {/* <TouchableHighlight style={{ alignItems: 'center' }}
+                                onPress={() => {
+                                    this.setStartTimePicker(!this.state.showStartTimePicker);
+                                }}>
+                                <Text style={{ color: '#585858', fontSize: 17 }}>
+                                    <IconE name='time-slot' size={15} color={'#303030'} />
+                                    {this.state.duedate === null ? this.state.selectedDay / (60 * 60 * 1000) : this.state.duedate / (60 * 60 * 1000)}
+                                </Text>
+                            </TouchableHighlight> */}
 
                             {/* This is the DurationPicker -------------------------------------------- */}
 
@@ -298,7 +338,6 @@ export default class TaskDetails extends Component {
                         <Item style={labelStyle}>
                             <IconSLI active name='tag' size={15} />
                             <Labels
-                                LabelModalVisible={this.setLabelModalVisible}
                                 labelColor={this.handleLabelColor}
                                 color={this.state.color}
                                 isVisable={this.state.LabelModalVisable} />
@@ -323,6 +362,8 @@ export default class TaskDetails extends Component {
                             <Input disabled placeholder='Activity' style={[padding, inputSize]} placeholder='Activity' />
                             <IconSLI name='settings' style={{ paddingRight: 15 }} size={15} />
                         </Item>
+
+
                         <Activity
                             user={this.state.user}
                             taskid={this.state.taskid}

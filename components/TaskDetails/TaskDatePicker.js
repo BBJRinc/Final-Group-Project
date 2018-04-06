@@ -1,34 +1,41 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
-import Icon from 'react-native-vector-icons';
+// import Icon from 'react-native-vector-icons';
 
 export default class TaskDatePicker extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      date: ''
+    }
   }
-  render(){
-    const finalDate = this.props.date/1000
+  setDate(date) {
+    // console.log(date, "DSAFSDFASDFASDFASDFASDFASD")
+    // let unixdate = moment().format('YYYY-MM-DD, h:m')
+    // console.log(unixdate)
+    this.setState({ duedate: date })
+  }
+  render() {
+    console.log(this.state)
+    const finalDate = this.props.selectedDay / 1000
     return (
       <DatePicker
-        style={{width: 125}}
-        date={this.state.date}
+        style={{ width: 125 }}
+        date={moment().format('MMMM Do YYYY, h:mm:ss a')}
         showIcon={true}
         mode="datetime"
-        placeholder={this.props.date === "" ? "Due date..." : moment.unix(finalDate).format('MM-DD-YYYY')}
-        format="YYYY-MM-DD"
-        minDate="2017-05-01"
-        maxDate="2021-06-01"
+        format='MMMM Do YYYY, h:mm:ss a'
         confirmBtnText='Save'
         cancelBtnText='Cancel'
+        placeholder={this.state.date}
         color='black'
         customStyles={{
-          dateInput:{borderWidth: 0},
-          btnConfirm:{height:20, margin:0, marginRight:10, marginTop:10, padding:0},
-          btnCancel:{height:20, margin:0, marginLeft:10, marginTop:10, padding:0},
-          }}
-        onDateChange={(date) => {this.props.selectDate(date)}}
+          dateInput: { borderWidth: 0, height: 20, width: 30 },
+          btnConfirm: { height: 20, margin: 0, marginRight: 10, marginTop: 10, padding: 0 },
+          btnCancel: { height: 20, margin: 0, marginLeft: 10, marginTop: 10, padding: 0 },
+        }}
+        onDateChange={(date) => { this.setState({ date: date }); this.props.selectDate(); }}
       />
     )
   }

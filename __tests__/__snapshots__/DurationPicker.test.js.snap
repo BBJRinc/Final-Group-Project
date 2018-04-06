@@ -1,0 +1,340 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View>
+  <Modal
+    animationType="slide"
+    hardwareAccelerated={false}
+    onRequestClose={[Function]}
+    transparent={false}
+    visible={true}
+  >
+    <View
+      style={
+        Object {
+          "backgroundColor": "black",
+        }
+      }
+    >
+      <View>
+        <View
+          style={
+            Array [
+              Object {
+                "backgroundColor": "#F8F8F8",
+                "borderBottomColor": "#a7a6ab",
+                "borderBottomWidth": 0.5,
+                "elevation": 3,
+                "flexDirection": "row",
+                "height": 64,
+                "justifyContent": "center",
+                "left": 0,
+                "paddingLeft": 10,
+                "paddingRight": 10,
+                "paddingTop": 15,
+                "right": 0,
+                "top": 0,
+              },
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#1b1b1b",
+              },
+            ]
+          }
+          virtual={undefined}
+        />
+      </View>
+      <View
+        style={
+          Object {
+            "backgroundColor": "#000",
+            "flexDirection": "row",
+            "justifyContent": "center",
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "borderBottomColor": "#1b1b1b",
+              "borderTopColor": "#1b1b1b",
+              "borderWidth": 0.75,
+              "flexDirection": "row",
+              "height": 35,
+              "justifyContent": "space-between",
+              "marginLeft": 50,
+              "marginTop": 90,
+              "paddingLeft": 70,
+              "position": "absolute",
+              "width": 275,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#fff",
+                "fontSize": 15,
+                "paddingTop": 8,
+              }
+            }
+          >
+            hours
+          </Text>
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={undefined}
+          >
+            min
+          </Text>
+        </View>
+        <View
+          style={
+            Object {
+              "paddingLeft": 25,
+              "width": 200,
+            }
+          }
+        >
+          <RCTPicker
+            items={
+              Array [
+                Object {
+                  "label": "00",
+                  "textColor": 4294967295,
+                  "value": "00",
+                },
+                Object {
+                  "label": "01",
+                  "textColor": 4294967295,
+                  "value": "01",
+                },
+                Object {
+                  "label": "02",
+                  "textColor": 4294967295,
+                  "value": "02",
+                },
+                Object {
+                  "label": "03",
+                  "textColor": 4294967295,
+                  "value": "03",
+                },
+                Object {
+                  "label": "04",
+                  "textColor": 4294967295,
+                  "value": "04",
+                },
+                Object {
+                  "label": "05",
+                  "textColor": 4294967295,
+                  "value": "05",
+                },
+                Object {
+                  "label": "06",
+                  "textColor": 4294967295,
+                  "value": "06",
+                },
+                Object {
+                  "label": "07",
+                  "textColor": 4294967295,
+                  "value": "07",
+                },
+                Object {
+                  "label": "08",
+                  "textColor": 4294967295,
+                  "value": "08",
+                },
+                Object {
+                  "label": "09",
+                  "textColor": 4294967295,
+                  "value": "09",
+                },
+                Object {
+                  "label": "10",
+                  "textColor": 4294967295,
+                  "value": "10",
+                },
+                Object {
+                  "label": "11",
+                  "textColor": 4294967295,
+                  "value": "11",
+                },
+                Object {
+                  "label": "12",
+                  "textColor": 4294967295,
+                  "value": "12",
+                },
+                Object {
+                  "label": "13",
+                  "textColor": 4294967295,
+                  "value": "13",
+                },
+                Object {
+                  "label": "14",
+                  "textColor": 4294967295,
+                  "value": "14",
+                },
+                Object {
+                  "label": "15",
+                  "textColor": 4294967295,
+                  "value": "15",
+                },
+                Object {
+                  "label": "16",
+                  "textColor": 4294967295,
+                  "value": "16",
+                },
+                Object {
+                  "label": "17",
+                  "textColor": 4294967295,
+                  "value": "17",
+                },
+                Object {
+                  "label": "18",
+                  "textColor": 4294967295,
+                  "value": "18",
+                },
+                Object {
+                  "label": "19",
+                  "textColor": 4294967295,
+                  "value": "19",
+                },
+                Object {
+                  "label": "20",
+                  "textColor": 4294967295,
+                  "value": "20",
+                },
+                Object {
+                  "label": "21",
+                  "textColor": 4294967295,
+                  "value": "21",
+                },
+                Object {
+                  "label": "22",
+                  "textColor": 4294967295,
+                  "value": "22",
+                },
+                Object {
+                  "label": "23",
+                  "textColor": 4294967295,
+                  "value": "23",
+                },
+                Object {
+                  "label": "24",
+                  "textColor": 4294967295,
+                  "value": "24",
+                },
+              ]
+            }
+            onChange={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            selectedIndex={0}
+            style={
+              Array [
+                Object {
+                  "height": 216,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+        <View
+          style={
+            Object {
+              "paddingRight": 50,
+              "width": 200,
+            }
+          }
+        >
+          <RCTPicker
+            items={
+              Array [
+                Object {
+                  "label": "00",
+                  "textColor": 4294967295,
+                  "value": "00",
+                },
+                Object {
+                  "label": "15",
+                  "textColor": 4294967295,
+                  "value": ".15",
+                },
+                Object {
+                  "label": "30",
+                  "textColor": 4294967295,
+                  "value": ".30",
+                },
+                Object {
+                  "label": "45",
+                  "textColor": 4294967295,
+                  "value": ".45",
+                },
+              ]
+            }
+            onChange={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            selectedIndex={0}
+            style={
+              Array [
+                Object {
+                  "height": 216,
+                },
+                undefined,
+              ]
+            }
+          />
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#1b1b1b",
+            "flexDirection": "row",
+            "height": 35,
+            "justifyContent": "space-between",
+            "marginBottom": 300,
+            "paddingLeft": 20,
+            "paddingRight": 20,
+          }
+        }
+      >
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          onPress={[Function]}
+          style={
+            Object {
+              "color": "#fff",
+            }
+          }
+        >
+          Cancel
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          onPress={[Function]}
+          style={
+            Object {
+              "color": "#fff",
+            }
+          }
+        >
+          Save
+        </Text>
+      </View>
+    </View>
+  </Modal>
+</View>
+`;

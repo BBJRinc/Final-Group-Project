@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, Alert, StatusBar, Image, AsyncStorage } from 'react-native';
 import { Container, Content, Drawer } from 'native-base';
 import axios from 'axios';
+import dummyData from './dummyData.json'
 import FooterMenu from './components/Footer/FooterMenu';
 import Unscheduled from './components/Unscheduled/Unscheduled';
 import TaskDetails from './components/TaskDetails/TaskDetails';
@@ -17,7 +18,6 @@ import DayView from './components/DayView/DayView.js';
 import DayViewHeader from './components/DayViewHeader/DayViewHeader';
 import AddTask from './components/TaskDetails/AddTask';
 
-import dummyData from './dummyData.json';
 
 const PubIpAddress = '192.168.3.176'
 
@@ -65,6 +65,7 @@ export default class App extends React.Component {
     SplashScreen.hide();
 
     let checkToken = await AsyncStorage.getItem('token').then(res => {
+      console.log(res)
       return res;
     }).catch(err => console.log(err));
 
@@ -76,23 +77,28 @@ export default class App extends React.Component {
     }
 
 
-    let newToday = Math.round(new Date().getTime())
+    let utcDay = Math.round(new Date().getTime())
+    console.log('inidial date:', utcDay);
     let offSet = moment().utcOffset()
     console.log(offSet)
     offSet = (offSet * 1000) * 60;
-    newToday += offSet;
-    console.log('newToday in App.js: ', newToday)
+    let locDay = utcDay + offSet;
+    // One day in milliseconds
     let oneDay = 86400000;
-
+    utcDay = Math.floor(utcDay/oneDay)*oneDay;
+    locDay = Math.floor(locDay/oneDay)*oneDay;
+    console.log('utcDay:', utcDay);
+    console.log('locDay: ', locDay);
     // Todays Tasks
-    let todayConv = moment(newToday).format("YYYY-MM-DD")
-    let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
+    // let todayConv = moment(newToday).format("YYYY-MM-DD")
+    // let todayUnix = moment(todayConv, "YYYY-MM-DD").valueOf()
     this.setState({
-      selectedDay: todayUnix
+      selectedDay: locDay,
+      utcDay,
     })
     axios({
       method: 'get',
-      url: `http://${PubIpAddress}:4040/api/day/${todayUnix}`,
+      url: `http://${PubIpAddress}:4040/api/day/${locDay}`,
       headers: {
         "token": this.state.userToken
       }
@@ -284,9 +290,9 @@ export default class App extends React.Component {
           <Container>
             <DayViewHeader selectedDay={this.state.selectedDay} nextDay={this.getNextDay} previousDay={this.getPreviousDay} />
             {/* <Content> */}
-              <DayView tasksToRender={this.state.currentTasks} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} />
+              <DayView tasksToRender={this.state.currentTasks} changeTimes={this.changeTimes} onTaskPress={this.onTaskPress} day={this.state.selectedDay} utcDay={this.state.utcDay} />
               <AddTask visible={this.state.showAddTask} showMenuItem={this.showMenuItem} token={this.state.userToken} setSelectedTask={this.setSelectedTask} />
-              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} />
+              <TaskDetails selectedTask={this.state.selectedTask} showTaskDetails={this.state.showTaskDetails} showMenuItem={this.showMenuItem} token={this.state.userToken} user={this.state.user} selectedTaskUpdate={this.selectedTaskUpdate} selectedDay={this.state.selectedDay}/>
               <CalendarScreen visible={this.state.showCalendar} onDayPress={this.onDayPress} showMenuItem={this.showMenuItem} />
               <Unscheduled visible={this.state.showTasks} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} setCount={this.setUnscheduledCount} token={this.state.userToken} />
               <Ongoing visible={this.state.showOngoing} showMenuItem={this.showMenuItem} onTaskPress={this.onTaskPress} token={this.state.userToken} />
